@@ -3,7 +3,7 @@
 ## Check Go
 You'll need Go 1.19 or newer for this workshop. 
 
-This workshop uses a [Go Fiber](https://gofiber.io/) application, which requires Go 1.17 or newer, but Testcontainers for Go is compatible with Go 1.19+.
+This workshop uses a [Gin](https://gin-gonic.com) application, which requires Go 1.13 or newer, but Testcontainers for Go is compatible with Go 1.19+.
 
 ## Check Docker
 
@@ -54,6 +54,7 @@ Clone the following project from GitHub to your computer:
 ## Download the dependencies
 
 ```shell
+go get github.com/google/uuid
 go get github.com/jackc/pgx/v5
 go get github.com/testcontainers/testcontainers-go
 go get github.com/testcontainers/testcontainers-go/modules/postgres
