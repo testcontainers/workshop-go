@@ -63,4 +63,27 @@ func TestNewRepository(t *testing.T) {
 		assert.Equal(t, uid, talk.UUID)
 		assert.Equal(t, title, talk.Title)
 	})
+
+	t.Run("Exists by UUID", func(t *testing.T) {
+		uid := uuid.NewString()
+		title := "Delightful Integration Tests with Testcontainers for Go"
+
+		talk := talks.Talk{
+			UUID:  uid,
+			Title: title,
+		}
+
+		err = talksRepo.Create(ctx, &talk)
+		assert.NoError(t, err)
+
+		found := talksRepo.Exists(ctx, uid)
+		assert.True(t, found)
+	})
+
+	t.Run("Does not exist by UUID", func(t *testing.T) {
+		uid := uuid.NewString()
+
+		found := talksRepo.Exists(ctx, uid)
+		assert.False(t, found)
+	})
 }

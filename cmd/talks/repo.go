@@ -34,6 +34,13 @@ func (r Repository) Create(ctx context.Context, talk *Talk) error {
 	return r.conn.QueryRow(ctx, query, talk.UUID, talk.Title).Scan(&talk.ID)
 }
 
+// Exists retrieves a talk from the database by its UUID.
+func (r Repository) Exists(ctx context.Context, uid string) bool {
+	_, err := r.GetByUUID(ctx, uid)
+
+	return err == nil
+}
+
 // GetByUUID retrieves a talk from the database by its UUID.
 func (r Repository) GetByUUID(ctx context.Context, uid string) (Talk, error) {
 	query := "SELECT id, uuid, title FROM talks WHERE uuid = $1"
