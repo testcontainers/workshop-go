@@ -54,7 +54,12 @@ Clone the following project from GitHub to your computer:
 ## Download the dependencies
 
 ```shell
-go mod download
+go get github.com/jackc/pgx/v5
+go get github.com/testcontainers/testcontainers-go
+go get github.com/testcontainers/testcontainers-go/modules/postgres
+go get github.com/testcontainers/testcontainers-go/modules/redis
+go get github.com/testcontainers/testcontainers-go/modules/redpanda
+go get github.com/stretchr/testify
 ```
 
 ## \(optionally\) Pull the required images before doing the workshop
