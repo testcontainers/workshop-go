@@ -11,7 +11,7 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/wait"
-	"github.com/testcontainers/workshop-go/talks"
+	"github.com/testcontainers/workshop-go/internal/talks"
 )
 
 func TestNewRepository(t *testing.T) {

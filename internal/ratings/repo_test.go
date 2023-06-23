@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	tcRedis "github.com/testcontainers/testcontainers-go/modules/redis"
-	"github.com/testcontainers/workshop-go/ratings"
+	"github.com/testcontainers/workshop-go/internal/ratings"
 )
 
 func TestNewRepository(t *testing.T) {
