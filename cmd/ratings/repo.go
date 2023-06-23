@@ -42,6 +42,10 @@ func (r *Repository) Add(ctx context.Context, rating Rating) {
 	_ = r.client.IncrBy(ctx, toKey(rating.TalkUuid), rating.Value).Val()
 }
 
+func (r *Repository) FindAllByByUUID(ctx context.Context, uid string) []string {
+	return r.client.Keys(ctx, toKey(uid)).Val()
+}
+
 // Get retrieves a rating for a talk identified by its UUID from the Redis store.
 func (r *Repository) Get(ctx context.Context, uid string) string {
 	return r.client.Get(ctx, toKey(uid)).Val()

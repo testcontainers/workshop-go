@@ -56,5 +56,8 @@ func TestNewRepository(t *testing.T) {
 
 		result := repo.Get(ctx, rating.TalkUuid)
 		assert.Equal(t, fmt.Sprintf("%d", incr*int64(max)), result)
+
+		values := repo.FindAllByByUUID(ctx, rating.TalkUuid)
+		assert.Len(t, values, max)
 	})
 }
