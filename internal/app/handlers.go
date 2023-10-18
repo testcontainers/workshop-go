@@ -7,7 +7,9 @@ import (
 )
 
 func Root(c *gin.Context) {
-	c.HTML(http.StatusOK, "raw.tmpl", gin.H{})
+	c.HTML(http.StatusOK, "metadata.tmpl", gin.H{
+		"metadata": Connections,
+	})
 }
 
 func AddRating(c *gin.Context) {
