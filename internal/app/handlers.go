@@ -16,21 +16,26 @@ func Root(c *gin.Context) {
 	})
 }
 
+type ratingForPost struct {
+	UUID   string `json:"talkId" form:"talkId" binding:"required"`
+	Rating int64  `json:"value" form:"value" binding:"required"`
+}
+
 // AddRating is the handler for the `POST /ratings` endpoint.
 // It will add a new rating to the store, where the rating is read from the JSON payload
 // using the following format:
 //
 //	{
-//	  "talk_uuid": "123",
-//	  "rating": 5
+//	  "talkId": "123",
+//	  "value": 5
 //	}
 //
 // If the talk with the given UUID exists in the Talks repository, it will send the rating
 // to the Streams repository, which will send it to the broker. If the talk does not exist,
 // or any of the repositories cannot be created, it will return an error.
 func AddRating(c *gin.Context) {
-	var rating ratings.Rating
-	err := c.ShouldBind(&rating)
+	var r ratingForPost
+	err := c.ShouldBind(&r)
 	if err != nil {
 		handleError(c, http.StatusInternalServerError, err)
 		return
@@ -42,8 +47,8 @@ func AddRating(c *gin.Context) {
 		return
 	}
 
-	if !talksRepo.Exists(c, rating.TalkUuid) {
-		handleError(c, http.StatusNotFound, fmt.Errorf("talk with UUID %s does not exist", rating.TalkUuid))
+	if !talksRepo.Exists(c, r.UUID) {
+		handleError(c, http.StatusNotFound, fmt.Errorf("talk with UUID %s does not exist", r.UUID))
 		return
 	}
 
@@ -53,7 +58,23 @@ func AddRating(c *gin.Context) {
 		return
 	}
 
-	err = streamsRepo.SendRating(c, rating)
+	ratingsRepo, err := ratings.NewRepository(c, Connections.Ratings)
+	if err != nil {
+		handleError(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	rating := ratings.Rating{
+		TalkUuid: r.UUID,
+		Value:    r.Rating,
+	}
+
+	ratingsCallback := func() error {
+		_, err := ratingsRepo.Add(c, rating)
+		return err
+	}
+
+	err = streamsRepo.SendRating(c, rating, ratingsCallback)
 	if err != nil {
 		handleError(c, http.StatusInternalServerError, err)
 		return
