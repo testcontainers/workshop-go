@@ -36,28 +36,31 @@ func TestNewRepository(t *testing.T) {
 			Value:    5,
 		}
 
-		repo.Add(ctx, rating)
-
-		result := repo.Get(ctx, rating.TalkUuid)
-		assert.Equal(t, "5", result)
+		result, err := repo.Add(ctx, rating)
+		assert.NoError(t, err)
+		assert.Equal(t, 5, result)
 	})
 
 	t.Run("Add multiple ratings", func(t *testing.T) {
-		var incr int64 = 2
-		rating := ratings.Rating{
-			TalkUuid: "uuid67890",
-			Value:    incr,
-		}
-
+		takUUID := "uuid67890"
 		max := 100
+		distribution := 5
+
 		for i := 0; i < max; i++ {
-			repo.Add(ctx, rating)
+			rating := ratings.Rating{
+				TalkUuid: takUUID,
+				Value:    int64(i % distribution), // creates a distribution of ratings, 20 of each
+			}
+
+			// don't care about the result
+			_, _ = repo.Add(ctx, rating)
 		}
 
-		result := repo.Get(ctx, rating.TalkUuid)
-		assert.Equal(t, fmt.Sprintf("%d", incr*int64(max)), result)
+		values := repo.FindAllByUUID(ctx, takUUID)
+		assert.Len(t, values, distribution)
 
-		values := repo.FindAllByByUUID(ctx, rating.TalkUuid)
-		assert.Len(t, values, 1)
+		for i := 0; i < distribution; i++ {
+			assert.Equal(t, fmt.Sprintf("%d", (max/distribution)), values[fmt.Sprintf("%d", i)])
+		}
 	})
 }

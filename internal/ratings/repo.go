@@ -2,6 +2,7 @@ package ratings
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -37,18 +38,14 @@ func NewRepository(ctx context.Context, connStr string) (*Repository, error) {
 	return &Repository{client: cli}, nil
 }
 
-// Add adds a new rating for a talk identified by its UUID to the Redis store.
-func (r *Repository) Add(ctx context.Context, rating Rating) {
-	_ = r.client.IncrBy(ctx, toKey(rating.TalkUuid), rating.Value).Val()
+// Add increments in one the counter for the given rating value and talk UUID.
+func (r *Repository) Add(ctx context.Context, rating Rating) (int64, error) {
+	return r.client.HIncrBy(ctx, toKey(rating.TalkUuid), fmt.Sprintf("%d", rating.Value), 1).Result()
 }
 
-func (r *Repository) FindAllByByUUID(ctx context.Context, uid string) []string {
-	return r.client.Keys(ctx, toKey(uid)).Val()
-}
-
-// Get retrieves a rating for a talk identified by its UUID from the Redis store.
-func (r *Repository) Get(ctx context.Context, uid string) string {
-	return r.client.Get(ctx, toKey(uid)).Val()
+// FindAllByUUID returns all the ratings and their counters for the given talk UUID.
+func (r *Repository) FindAllByUUID(ctx context.Context, uid string) map[string]string {
+	return r.client.HGetAll(ctx, toKey(uid)).Val()
 }
 
 // toKey is a helper function that returns the uuid prefixed with "ratings/".
