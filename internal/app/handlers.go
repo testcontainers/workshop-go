@@ -16,6 +16,8 @@ func Root(c *gin.Context) {
 	})
 }
 
+// ratingForPost is the struct that will be used to read the JSON payload
+// from the POST request when a new rating is added.
 type ratingForPost struct {
 	UUID   string `json:"talkId" form:"talkId" binding:"required"`
 	Rating int64  `json:"value" form:"value" binding:"required"`
@@ -85,6 +87,8 @@ func AddRating(c *gin.Context) {
 	})
 }
 
+// talkForRatings is the struct that will be used to get a talk UUID from the query string
+// of the GET request when the ratings for a talk are requested.
 type talkForRatings struct {
 	UUID string `json:"talkId" form:"talkId" binding:"required"`
 }
