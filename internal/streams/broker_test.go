@@ -2,6 +2,7 @@ package streams_test
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -29,9 +30,25 @@ func TestBroker(t *testing.T) {
 	repo, err := streams.NewStream(ctx, seedBroker)
 	require.NoError(t, err)
 
-	err = repo.SendRating(ctx, ratings.Rating{
-		TalkUuid: "uuid12345",
-		Value:    5,
+	t.Run("Send Rating without callback", func(t *testing.T) {
+		noopFn := func() error { return nil }
+
+		err = repo.SendRating(ctx, ratings.Rating{
+			TalkUuid: "uuid12345",
+			Value:    5,
+		}, noopFn)
+		require.NoError(t, err)
 	})
-	require.NoError(t, err)
+
+	t.Run("Send Rating with error in callback", func(t *testing.T) {
+		var ErrInCallback error = errors.New("error in callback")
+
+		errorFn := func() error { return ErrInCallback }
+
+		err = repo.SendRating(ctx, ratings.Rating{
+			TalkUuid: "uuid12345",
+			Value:    5,
+		}, errorFn)
+		require.ErrorIs(t, ErrInCallback, err)
+	})
 }

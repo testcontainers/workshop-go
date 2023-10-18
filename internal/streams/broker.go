@@ -29,9 +29,10 @@ func NewStream(ctx context.Context, connStr string) (*Repository, error) {
 	return &Repository{client: cli}, nil
 }
 
-// SendRating sends a rating to the broker in an asynchronous way. It will notifiy the caller
-// if the operation errored or if the context was cancelled.
-func (r *Repository) SendRating(ctx context.Context, rating ratings.Rating) error {
+// SendRating sends a rating to the broker in an asynchronous way, executing a callback
+// when the record is produced. It will notifiy the caller if the operation errored or
+// if the context was cancelled.
+func (r *Repository) SendRating(ctx context.Context, rating ratings.Rating, produceCallback func() error) error {
 	record := &kgo.Record{Topic: RatingsTopic, Value: []byte("test")}
 
 	errChan := make(chan error, 1)
@@ -41,6 +42,13 @@ func (r *Repository) SendRating(ctx context.Context, rating ratings.Rating) erro
 			errChan <- err
 			return
 		}
+
+		err = produceCallback()
+		if err != nil {
+			errChan <- err
+			return
+		}
+
 		errChan <- nil
 	})
 
