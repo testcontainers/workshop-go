@@ -23,6 +23,7 @@ import (
 // testcontainers-go to start up the following containers:
 // - Redis: store for ratings
 // All the containers will contribute their connection strings to the Connections struct.
+// Please read this blog post for more information: https://www.atomicjar.com/2023/08/local-development-of-go-applications-with-testcontainers/
 func init() {
 	startupDependenciesFns := []func() (testcontainers.Container, error){
 		startRatingsStore,
