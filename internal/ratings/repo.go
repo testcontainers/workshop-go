@@ -14,9 +14,6 @@ type Repository struct {
 
 // NewRepository creates a new repository. It will receive a context and the Redis connection string.
 func NewRepository(ctx context.Context, connStr string) (*Repository, error) {
-	// You will likely want to wrap your Redis package of choice in an
-	// interface to aid in unit testing and limit lock-in throughtout your
-	// codebase but that's out of scope for this example
 	options, err := redis.ParseURL(connStr)
 	if err != nil {
 		return nil, err
