@@ -2,12 +2,15 @@ package app
 
 import "os"
 
+// The connection string for each of the services needed by the application.
+// The application will need them to connect to services, reading it from
+// the right environment variable in production, or from the container in development.
 type connections struct {
-	// The connection string for the ratings store. The application will need it to connect to the store,
-	// reading it from the RATINGS_CONNECTION environment variable in production, or from the container in development.
-	Ratings string
+	Ratings string // Read from the RATINGS_CONNECTION environment variable
+	Talks   string // Read from the TALKS_CONNECTION environment variable
 }
 
 var Connections *connections = &connections{
 	Ratings: os.Getenv("RATINGS_CONNECTION"),
+	Talks:   os.Getenv("TALKS_CONNECTION"),
 }
