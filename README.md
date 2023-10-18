@@ -8,3 +8,4 @@ This workshop will explain how to use Testcontainers for Go ([https://golang.tes
 
 * [Introduction](README.md)
 * [Step 1: Getting Started](step-1-getting-started.md)
+* [Step 2: Getting Started](step-2-exploring-the-app.md)
