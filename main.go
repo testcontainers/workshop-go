@@ -8,7 +8,7 @@ import (
 func main() {
 	router := gin.Default()
 
-	router.LoadHTMLGlob("templates/**/*")
+	router.LoadHTMLGlob("templates/*.tmpl")
 
 	router.GET("/", app.Root)
 	router.GET("/ratings", app.Ratings)
