@@ -1,7 +1,7 @@
 # Step 1: Getting Started
 
 ## Check Go
-You'll need Go 1.19 or newer for this workshop. 
+You'll need Go 1.20 or newer for this workshop. 
 
 This workshop uses a [Gin](https://gin-gonic.com) application, which requires Go 1.13 or newer, but Testcontainers for Go is compatible with Go 1.19+.
 
@@ -16,31 +16,30 @@ Make sure you have a Docker environment available on your machine.
 ```shell
 $ docker version
 Client:
- Cloud integration: v1.0.31
- Version:           20.10.23
- API version:       1.41
- Go version:        go1.18.10
- Git commit:        7155243
- Built:             Thu Jan 19 17:35:19 2023
+ Cloud integration: v1.0.35
+ Version:           24.0.2
+ API version:       1.43
+ Go version:        go1.20.4
+ Git commit:        cb74dfc
+ Built:             Thu May 25 21:51:16 2023
  OS/Arch:           darwin/arm64
- Context:           default
- Experimental:      true
+ Context:           desktop-linux
 
-Server: Docker Desktop 4.17.0 (99724)
+Server: Docker Desktop 4.21.1 (114176)
  Engine:
-  Version:          20.10.23
-  API version:      1.41 (minimum version 1.12)
-  Go version:       go1.18.10
-  Git commit:       6051f14
-  Built:            Thu Jan 19 17:31:28 2023
+  Version:          24.0.2
+  API version:      1.43 (minimum version 1.12)
+  Go version:       go1.20.4
+  Git commit:       659604f
+  Built:            Thu May 25 21:50:59 2023
   OS/Arch:          linux/arm64
   Experimental:     false
  containerd:
-  Version:          1.6.18
-  GitCommit:        2456e983eb9e37e47538f59ea18f2043c9a73640
+  Version:          1.6.21
+  GitCommit:        3dce8eb055cbb6872793272b4f20ed16117344f8
  runc:
-  Version:          1.1.4
-  GitCommit:        v1.1.4-0-g5fd4c4d
+  Version:          1.1.7
+  GitCommit:        v1.1.7-0-g860f061
  docker-init:
   Version:          0.19.0
   GitCommit:        de40ad0
