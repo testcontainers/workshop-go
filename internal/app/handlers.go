@@ -32,30 +32,30 @@ func AddRating(c *gin.Context) {
 	var rating ratings.Rating
 	err := c.ShouldBind(&rating)
 	if err != nil {
-		handleError(c, err)
+		handleError(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	talksRepo, err := talks.NewRepository(c, Connections.Talks)
 	if err != nil {
-		handleError(c, err)
+		handleError(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	if !talksRepo.Exists(c, rating.TalkUuid) {
-		handleError(c, fmt.Errorf("talk with UUID %s does not exist", rating.TalkUuid))
+		handleError(c, http.StatusNotFound, fmt.Errorf("talk with UUID %s does not exist", rating.TalkUuid))
 		return
 	}
 
 	streamsRepo, err := streams.NewStream(c, Connections.Streams)
 	if err != nil {
-		handleError(c, err)
+		handleError(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	err = streamsRepo.SendRating(c, rating)
 	if err != nil {
-		handleError(c, err)
+		handleError(c, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -73,24 +73,24 @@ type talkForRatings struct {
 func Ratings(c *gin.Context) {
 	var talk talkForRatings
 	if err := c.ShouldBind(&talk); err != nil {
-		handleError(c, err)
+		handleError(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	talksRepo, err := talks.NewRepository(c, Connections.Talks)
 	if err != nil {
-		handleError(c, err)
+		handleError(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	if !talksRepo.Exists(c, talk.UUID) {
-		handleError(c, fmt.Errorf("talk with UUID %s does not exist", talk.UUID))
+		handleError(c, http.StatusNotFound, fmt.Errorf("talk with UUID %s does not exist", talk.UUID))
 		return
 	}
 
 	ratingsRepo, err := ratings.NewRepository(c, Connections.Ratings)
 	if err != nil {
-		handleError(c, err)
+		handleError(c, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -101,8 +101,8 @@ func Ratings(c *gin.Context) {
 	})
 }
 
-func handleError(c *gin.Context, err error) {
-	c.HTML(http.StatusInternalServerError, "error.tmpl", gin.H{
+func handleError(c *gin.Context, code int, err error) {
+	c.HTML(code, "error.tmpl", gin.H{
 		"message": err.Error(),
 	})
 }
