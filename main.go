@@ -1,10 +1,10 @@
 package main
 
 import (
-	"net/http"
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
+	"github.com/testcontainers/workshop-go/internal/app"
 )
 
 func main() {
@@ -12,9 +12,7 @@ func main() {
 
 	router.LoadHTMLFiles(filepath.Join("testdata", "raw.tmpl"))
 
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "raw.tmpl", gin.H{})
-	})
+	router.GET("/", app.Root)
 
 	router.Run(":8080")
 }
