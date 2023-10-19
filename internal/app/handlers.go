@@ -82,7 +82,7 @@ func AddRating(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "ratings-add.tmpl", gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"rating": rating,
 	})
 }
