@@ -3,6 +3,7 @@ package ratings
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -16,6 +17,7 @@ type Repository struct {
 func NewRepository(ctx context.Context, connStr string) (*Repository, error) {
 	options, err := redis.ParseURL(connStr)
 	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "Unable to connect to Redis: %v\n", err)
 		return nil, err
 	}
 
