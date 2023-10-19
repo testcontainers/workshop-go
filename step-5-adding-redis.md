@@ -274,7 +274,7 @@ Unable to ping the streams: unable to dial: dial tcp :9092: connect: connection 
 [GIN] 2023/10/19 - 14:40:04 | 500 |   64.879083ms |       127.0.0.1 | POST     "/ratings"
 ```
 
-If you recall correctly, the application was using a message queue to send the ratings before storing them in Redis (see `internal/app/handlers.go`), so we need to add a message queue for that. Let's fix it.
+If you recall correctly, the application was using a message queue to send the ratings before storing them in Redis (see `internal/app/handlers.go`), so we need to add a message queue for that. Let's fix it, but first stop the application with `Ctrl+C` and the application and the dependencies will be terminated.
 
 ### 
 [Next](step-6-adding-redpanda.md)

@@ -211,7 +211,7 @@ On the contrary, if you open again the ratings endpoint from the API (http://loc
 redis: invalid URL scheme:
 ```
 
-Now it seems the application is able to connect to the database, but not to Redis. Let's fix it.
+Now it seems the application is able to connect to the database, but not to Redis. Let's fix it, but first stop the application with `Ctrl+C` and the application and the dependencies will be terminated by the signals we added in the `init` function.
 
 ### 
 [Next](step-5-adding-redis.md)
