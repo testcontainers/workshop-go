@@ -35,11 +35,5 @@ The API is a [Gin](https://gin-gonic.com) REST controller and exposes two endpoi
 
 Check `internal/app/handlers.go`.
 
-## Running the application locally
-
-There is a Makefile with the `dev` target, which starts the application in `local dev mode`, including all the runtime dependencies (Redis, Redpanda and Postgres) as Docker containers, thanks to Testcontainers for Go.
-
-To understand how the `local dev mode` works, please read this blog post: https://www.atomicjar.com/2023/08/local-development-of-go-applications-with-testcontainers/
-
 ### 
-[Next](step-3-adding-some-tests.md)
+[Next](step-3-running-the-app-locally.md)
