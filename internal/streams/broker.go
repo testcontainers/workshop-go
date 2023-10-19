@@ -2,6 +2,8 @@ package streams
 
 import (
 	"context"
+	"fmt"
+	"os"
 
 	"github.com/testcontainers/workshop-go/internal/ratings"
 	"github.com/twmb/franz-go/pkg/kgo"
@@ -22,7 +24,14 @@ func NewStream(ctx context.Context, connStr string) (*Repository, error) {
 		kgo.AllowAutoTopicCreation(),
 	)
 	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "Unable to connect to the streams: %v\n", err)
 		// You probably want to retry here
+		return nil, err
+	}
+
+	err = cli.Ping(ctx)
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "Unable to ping the streams: %v\n", err)
 		return nil, err
 	}
 
