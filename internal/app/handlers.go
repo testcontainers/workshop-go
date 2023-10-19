@@ -127,7 +127,7 @@ func Ratings(c *gin.Context) {
 }
 
 func handleError(c *gin.Context, code int, err error) {
-	c.HTML(code, "error.tmpl", gin.H{
+	c.JSON(code, gin.H{
 		"message": err.Error(),
 	})
 }
