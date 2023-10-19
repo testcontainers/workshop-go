@@ -183,10 +183,7 @@ More on this: https://golang.testcontainers.org/features/garbage_collector/
  - using code:  gin.SetMode(gin.ReleaseMode)
 
 [GIN-debug] Loaded HTML Templates (5): 
-        - ratings-add.tmpl
-        - ratings-list.tmpl
         - 
-        - error.tmpl
         - metadata.tmpl
 
 [GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)

@@ -24,10 +24,7 @@ go run ./...
 
 [GIN-debug] Loaded HTML Templates (5): 
         - 
-        - error.tmpl
         - metadata.tmpl
-        - ratings-add.tmpl
-        - ratings-list.tmpl
 
 [GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
 [GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)

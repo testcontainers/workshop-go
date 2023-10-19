@@ -121,7 +121,7 @@ func Ratings(c *gin.Context) {
 
 	histogram := ratingsRepo.FindAllByUUID(c, talk.UUID)
 
-	c.HTML(http.StatusOK, "ratings-list.tmpl", gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"ratings": histogram,
 	})
 }
