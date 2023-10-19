@@ -6,21 +6,21 @@ The app is a simple microservice for rating conference talks. It provides a web 
 
 ### SQL database with the talks
 
-When a rating is submitted, we must verify that the talk for the given ID is present in our database.
+When a rating is submitted, you must verify that the talk for the given ID is present in the database.
 
-Our database of choice is PostgreSQL, accessed with [jackc/pgx](https://github.com/jackc/pgx) PostgreSQL Driver.
+The database of choice is PostgreSQL, accessed with [jackc/pgx](https://github.com/jackc/pgx) PostgreSQL Driver.
 
 Check `internal/talks/repo.go`.
 
 ### Redis
 
-We store the ratings in Redis database with [redis/go-redis](https://github.com/redis/go-redis) Redis client.
+The application stores the ratings in a Redis store with [redis/go-redis](https://github.com/redis/go-redis) Redis client.
 
 Check `internal/ratings/repo.go`.
 
 ### Redpanda
 
-We use ES/CQRS to materialize the events into the state. Redpanda acts as a broker and we use the Testcontainers' Redpanda module.
+The application uses ES/CQRS to materialize the events into the state. Redpanda acts as a broker and the [twmb/franz-go](https://github.com/twmb/franz-go) Kafa client.
 
 Check `internal/streams/broker.go`.
 
@@ -28,18 +28,13 @@ Check `internal/streams/broker.go`.
 
 ### API
 
-The API is a [Gin](https://gin-gonic.com) REST controller and exposes two endpoints:
+The API is a [Gin](https://gin-gonic.com) REST controller and exposes three endpoints:
 
 * `POST /ratings { "talkId": ?, "value": 1-5 }` to add a rating for a talk
 * `GET /ratings?talkId=?` to get the histogram of ratings of the given talk
+* `GET /` returns metadata about the application, including the connection strings to all the backend services (PostgreSQL, Redis, Redpanda).
 
 Check `internal/app/handlers.go`.
 
-## Running the application locally
-
-There is a Makefile with the `dev` target, which starts the application in `local dev mode`, including all the runtime dependencies (Redis, Redpanda and Postgres) as Docker containers, thanks to Testcontainers for Go.
-
-To understand how the `local dev mode` works, please read this blog post: https://www.atomicjar.com/2023/08/local-development-of-go-applications-with-testcontainers/
-
 ### 
-[Next](step-3-adding-some-tests.md)
+[Next](step-3-running-the-app-locally.md)

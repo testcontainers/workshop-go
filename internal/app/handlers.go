@@ -11,7 +11,7 @@ import (
 )
 
 func Root(c *gin.Context) {
-	c.HTML(http.StatusOK, "metadata.tmpl", gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"metadata": Connections,
 	})
 }
@@ -82,7 +82,7 @@ func AddRating(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "ratings-add.tmpl", gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"rating": rating,
 	})
 }
@@ -121,13 +121,13 @@ func Ratings(c *gin.Context) {
 
 	histogram := ratingsRepo.FindAllByUUID(c, talk.UUID)
 
-	c.HTML(http.StatusOK, "ratings-list.tmpl", gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"ratings": histogram,
 	})
 }
 
 func handleError(c *gin.Context, code int, err error) {
-	c.HTML(code, "error.tmpl", gin.H{
+	c.JSON(code, gin.H{
 		"message": err.Error(),
 	})
 }
