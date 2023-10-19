@@ -6,21 +6,21 @@ The app is a simple microservice for rating conference talks. It provides a web 
 
 ### SQL database with the talks
 
-When a rating is submitted, we must verify that the talk for the given ID is present in our database.
+When a rating is submitted, you must verify that the talk for the given ID is present in the database.
 
-Our database of choice is PostgreSQL, accessed with [jackc/pgx](https://github.com/jackc/pgx) PostgreSQL Driver.
+The database of choice is PostgreSQL, accessed with [jackc/pgx](https://github.com/jackc/pgx) PostgreSQL Driver.
 
 Check `internal/talks/repo.go`.
 
 ### Redis
 
-We store the ratings in Redis database with [redis/go-redis](https://github.com/redis/go-redis) Redis client.
+The application stores the ratings in a Redis store with [redis/go-redis](https://github.com/redis/go-redis) Redis client.
 
 Check `internal/ratings/repo.go`.
 
 ### Redpanda
 
-We use ES/CQRS to materialize the events into the state. Redpanda acts as a broker and we use the Testcontainers' Redpanda module.
+The application uses ES/CQRS to materialize the events into the state. Redpanda acts as a broker and the [twmb/franz-go](https://github.com/twmb/franz-go) Kafa client.
 
 Check `internal/streams/broker.go`.
 

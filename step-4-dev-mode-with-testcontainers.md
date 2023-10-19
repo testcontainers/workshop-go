@@ -1,12 +1,12 @@
 # Step 4: Dev mode with Testcontainers
 
-Remember the Makefile in the root of the project with the `dev` target? The one that starts the application in `local dev mode`. We are going to learn in this workshop how to leverage Go's build tags and init functions to selectively execute code when a `dev` tag is passed to the Go toolchain, only while developing our application. So when the application is started, it will start the runtime dependencies as Docker containers, leveraging Testcontainers for Go.
+Remember the Makefile in the root of the project with the `dev` target? The one that starts the application in `local dev mode`. You are going to learn in this workshop how to leverage Go's build tags and init functions to selectively execute code when a `dev` tag is passed to the Go toolchain, only while developing our application. So when the application is started, it will start the runtime dependencies as Docker containers, leveraging Testcontainers for Go.
 
 To understand how the `local dev mode` with Testcontainers for Go works, please read the following blog post: https://www.atomicjar.com/2023/08/local-development-of-go-applications-with-testcontainers/
 
 ## Adding Talks store
 
-When the application started, it failed because we need to connect to a Postgres database including some data before we can do anything useful with the talks.
+When the application started, it failed because you need to connect to a Postgres database including some data before you can do anything useful with the talks.
 
 Let's add a `tesdata/dev-db.sql` file with the following content:
 
@@ -128,11 +128,11 @@ func startTalksStore() (testcontainers.Container, error) {
 
 ```
 
-Let's understand what we have done here:
+Let's understand what you have done here:
 
 - The first two lines include the build tag `dev` and the build constraint `+build dev`. This means that the code in this file will only be compiled when the `dev` tag is passed to the Go toolchain.
 - The `init` function will be executed when the application starts. It will start the runtime dependencies as Docker containers, leveraging Testcontainers for Go.
-- The `init` function contains a `startupDependenciesFns` slice with the functions that will start the containers. In this case, we only have one function, `startTalksStore`.
+- The `init` function contains a `startupDependenciesFns` slice with the functions that will start the containers. In this case, you only have one function, `startTalksStore`.
 - The `init` function also contains a `gracefulStop` channel to stop the dependencies when the application is stopped.
 - The `shutdownDependencies` function will stop the dependencies when the application is stopped.
 - The `startTalksStore` function will start a Postgres database with the `testdata/dev-db.sql` file as initialization script.
@@ -142,7 +142,7 @@ Now run `go mod tidy` from the root of the project to download the Go dependenci
 
 ## Update the make dev target
 
-The `make dev` target in the Makefile is using the `go run` command to start the application. We need to pass the `dev` build tag to the Go toolchain, so the `init` function in `internal/app/dev_dependencies.go` is executed.
+The `make dev` target in the Makefile is using the `go run` command to start the application. You need to pass the `dev` build tag to the Go toolchain, so the `init` function in `internal/app/dev_dependencies.go` is executed.
 
 Update the `make dev` target in the Makefile to pass the `dev` build tag:
 
@@ -151,7 +151,7 @@ dev:
 	TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
 ```
 
-We need to disable Ryuk in development mode, because we are starting the containers from the application, and Ryuk will try to stop them at some point, which will make the application fail as the database will be stopped. To know more about Ryuk as the resource reaper, please read https://golang.testcontainers.org/features/garbage_collector/#ryuk.
+You need to disable Ryuk in development mode, because you are starting the containers from the application, and Ryuk will try to stop them at some point, which will make the application fail as the database will be stopped. To know more about Ryuk as the resource reaper, please read https://golang.testcontainers.org/features/garbage_collector/#ryuk.
 
 Finally, run the application again with `make dev`. This time, the application will start the Postgres database and the application will be able to connect to it.
 
@@ -205,13 +205,13 @@ CONTAINER ID   IMAGE                  COMMAND                  CREATED          
 85197615f2ef   postgres:15.3-alpine   "docker-entrypoint.s…"   12 minutes ago   Up 12 minutes   0.0.0.0:32769->5432/tcp, :::32769->5432/tcp   silly_ellis
 ```
 
-On the contrary, if you open again the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), we'll still get a 500 error, but different:
+On the contrary, if you open again the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), you'll still get a 500 error, but different:
 
 ```text
 redis: invalid URL scheme:
 ```
 
-Now it seems the application is able to connect to the database, but not to Redis. Let's fix it, but first stop the application with `Ctrl+C` and the application and the dependencies will be terminated by the signals we added in the `init` function.
+Now it seems the application is able to connect to the database, but not to Redis. Let's fix it, but first stop the application with `Ctrl+C` and the application and the dependencies will be terminated by the signals you added in the `init` function.
 
 ### 
 [Next](step-5-adding-redis.md)

@@ -1,6 +1,6 @@
 # Step 6: Adding Redpanda
 
-When the application started, it failed because we need to connect to a message queue before we can adds the ratings for a talk.
+When the application started, it failed because you need to connect to a message queue before you can adds the ratings for a talk.
 
 Let's add a Redpanda instance using Testcontainers for Go.
 

@@ -37,9 +37,9 @@ Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-
 [GIN-debug] Listening and serving HTTP on :8080
 ```
 
-If we open the browser in the URL http://localhost:8080, we will see an empty page.
+If you open the browser in the URL http://localhost:8080, you will see an empty page.
 
-On the contrary, if we open the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), we will get a 500 error and a similar message:
+On the contrary, if you open the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), you will get a 500 error and a similar message:
 
 ```text
 Unable to connect to database: failed to connect to `host=/private/tmp user=mdelapenya database=`: dial error (dial unix /private/tmp/.s.PGSQL.5432: connect: no such file or directory)

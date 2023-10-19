@@ -1,6 +1,6 @@
 # Step 7: Adding Integration Tests
 
-Ok, we have a working application, but we don't have any tests. Let's add some integration tests to verify that the application works as expected.
+Ok, you have a working application, but you don't have any tests. Let's add some integration tests to verify that the application works as expected.
 
 ## Integration tests for the Ratings store
 
@@ -83,7 +83,7 @@ This test will start a Redis container, and it will define two tests:
 
 The package has been named with the `_test` suffix to indicate that it contains tests. This is a convention in Go and forces you to consume your code as a package, which is a good practice.
 
-Now run `go mod tidy` from the root of the project to download the Go dependencies, as we are using `testify` as the assertions library.
+Now run `go mod tidy` from the root of the project to download the Go dependencies, as the workshop is using [testify](https://github.com/stretchr/testify) as the assertions library.
 
 Finally, run your tests with `go test -v -count=1 ./internal/ratings` from the root of the project. You should see the following output:
 
@@ -190,7 +190,7 @@ This test will start a Redpanda container, and it will define two tests:
 
 Please notice that the package has been named with the `_test` suffix for the same reasons describe above.
 
-There is no need to run `go mod tidy` again, as we have already downloaded the Go dependencies.
+There is no need to run `go mod tidy` again, as you have already downloaded the Go dependencies.
 
 Finally, run your tests with `go test -v -count=1 ./internal/streams` from the root of the project. You should see the following output:
 
@@ -330,7 +330,7 @@ This test will start a Postgres container, and it will define three tests:
 
 Please notice that the package has been named with the `_test` suffix for the same reasons describe above.
 
-There is no need to run `go mod tidy` again, as we have already downloaded the Go dependencies.
+There is no need to run `go mod tidy` again, as you have already downloaded the Go dependencies.
 
 Finally, run your tests with `go test -v -count=1 ./internal/talks` from the root of the project. You should see the following output:
 
