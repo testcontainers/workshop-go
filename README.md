@@ -14,3 +14,4 @@ This workshop will explain how to use Testcontainers for Go ([https://golang.tes
 * [Step 5: Adding Redis](step-5-adding-redis.md)
 * [Step 6: Adding Redpanda](step-6-adding-repanda.md)
 * [Step 7: Adding Integration Tests](step-7-adding-integration-tests.md)
+* [Step 8: Adding Integration Tests for the API](step-8-integration-tests-for-api.md)
