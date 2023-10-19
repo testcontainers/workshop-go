@@ -11,7 +11,7 @@ import (
 )
 
 func Root(c *gin.Context) {
-	c.HTML(http.StatusOK, "metadata.tmpl", gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"metadata": Connections,
 	})
 }

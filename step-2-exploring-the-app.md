@@ -28,10 +28,11 @@ Check `internal/streams/broker.go`.
 
 ### API
 
-The API is a [Gin](https://gin-gonic.com) REST controller and exposes two endpoints:
+The API is a [Gin](https://gin-gonic.com) REST controller and exposes three endpoints:
 
 * `POST /ratings { "talkId": ?, "value": 1-5 }` to add a rating for a talk
 * `GET /ratings?talkId=?` to get the histogram of ratings of the given talk
+* `GET /` returns metadata about the application, including the connection strings to all the backend services (PostgreSQL, Redis, Redpanda).
 
 Check `internal/app/handlers.go`.
 

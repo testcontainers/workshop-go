@@ -252,10 +252,6 @@ More on this: https://golang.testcontainers.org/features/garbage_collector/
  - using env:   export GIN_MODE=release
  - using code:  gin.SetMode(gin.ReleaseMode)
 
-[GIN-debug] Loaded HTML Templates (5): 
-        - 
-        - metadata.tmpl
-
 [GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
 [GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
 [GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
@@ -287,7 +283,7 @@ In a terminal, let's send a POST request with `curl`:
 
 ```shell
 curl -X POST -H "Content-Type: application/json" http://localhost:8080/ratings -d '{"talkId":"testcontainers-integration-testing", "value":5}'
-{"rating":{"talk_uuid":"testcontainers-integration-testing","value":5}}%  
+{"rating":{"talk_uuid":"testcontainers-integration-testing","value":5}}%
 ```
 
 The log entry for the POST request:
@@ -299,7 +295,14 @@ The log entry for the POST request:
 If you open now the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), then a 200 OK response code is returned, and the first ratings for the given talk is there. The `5` rating has been voted `1` time!
 
 ```text
-map[5:1]
+{"ratings":{"5":"1"}}
+```
+
+With `curl`:
+
+```shell
+curl -X GET http://localhost:8080/ratings\?talkId\=testcontainers-integration-testing                                                         
+{"ratings":{"5":"1"}}%
 ```
 
 Play around sending multiple POST requests for the two talks, and check the histogram that is created for the different rating values.

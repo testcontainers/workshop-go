@@ -222,10 +222,6 @@ More on this: https://golang.testcontainers.org/features/garbage_collector/
  - using env:   export GIN_MODE=release
  - using code:  gin.SetMode(gin.ReleaseMode)
 
-[GIN-debug] Loaded HTML Templates (5): 
-        - 
-        - metadata.tmpl
-
 [GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
 [GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
 [GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
@@ -246,7 +242,14 @@ f77dfdf91c37   redis:6-alpine         "docker-entrypoint.s…"   About a minute 
 If you open now the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), then a 200 OK response code is returned, but there are no ratings for the given talk:
 
 ```text
-map[]
+{"ratings":{}}
+```
+
+With `curl`:
+
+```shell
+curl -X GET http://localhost:8080/ratings\?talkId\=testcontainers-integration-testing                                                         
+{"ratings":{}}% 
 ```
 
 Now it seems the application is able to connect to the database, and to Redis. Let's try to send a POST request adding a rating for the talk. If you remember, the API accepted a JSON payload with the following format:
