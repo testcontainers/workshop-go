@@ -67,10 +67,9 @@ go get github.com/stretchr/testify
 This might be helpful if the internet connection at the workshop venue is somewhat slow.
 
 ```text
-docker pull postgres:14-alpine
+docker pull postgres:15.3-alpine
 docker pull redis:6-alpine
-docker pull openjdk:8-jre-alpine
-docker pull confluentinc/cp-kafka:6.2.1
+docker pull docker.redpanda.com/redpandadata/redpanda:v23.1.7
 ```
 
 ### 
