@@ -26,19 +26,6 @@ import (
 	"github.com/testcontainers/workshop-go/internal/app"
 )
 
-func TestRootRoute(t *testing.T) {
-	router := app.SetupRouter()
-
-	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/", nil)
-	router.ServeHTTP(w, req)
-
-	assert.Equal(t, http.StatusOK, w.Code)
-
-	// the metadata is empty because we do not have real dependencies started
-	assert.Equal(t, `{"metadata":{"ratings":"","streams":"","talks":""}}`, w.Body.String())
-}
-
 func TestRoutesFailBecauseDependenciesAreNotStarted(t *testing.T) {
 	router := app.SetupRouter()
 
@@ -71,12 +58,15 @@ func TestRoutesFailBecauseDependenciesAreNotStarted(t *testing.T) {
 
 ```
 
-Let's check what we are doing here. For the first test method, `TestRootRoute`, we are doing the following:
+Let's check what you are doing here:
 
-- We are creating a new `httptest.Recorder` to record the response.
-- We are creating a new `http.Request` with the `GET` method and the `/` path.
-- We are calling the `ServeHTTP` method on the router with the `httptest.Recorder` and the `http.Request`.
-- We are asserting that the response code is `200`.
-- We are asserting that the response body is `{"metadata":{"Ratings":"","Streams":"","Talks":""}}`. The values of the connection strings are empty because we do not have any dependency started.
+- You are setting up the Gin's router, with the `app.SetupRouter` function.
+- a new `httptest.Recorder` is used to record the response.
+- each subtest defines a new `http.Request`, with the right method and path.
+- the `ServeHTTP` method on the router is called with the `httptest.Recorder` and the `http.Request`.
+- the `TestRoutesFailBecauseDependenciesAreNotStarted` test method is verifying that the routes that depend on the repositories are failing with a `500 Internal Server error` response code. That's because the runtime dependencies are not started for this test.
 
-The second test method, `TestRoutesFailBecauseDependenciesAreNotStarted`, is verifying that the routes that depend on the repositories are failing with a `500 Internal Server error` response code. That's because the runtime dependencies are not started for this test.
+This unit test is not very useful, but it is a good starting point to understand how to test the HTTP endpoints.
+
+### 
+[Next](step-9-e2e-tests-with-real-dependencies.md)
