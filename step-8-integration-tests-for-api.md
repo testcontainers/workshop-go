@@ -58,6 +58,10 @@ func TestRoutesFailBecauseDependenciesAreNotStarted(t *testing.T) {
 		w := httptest.NewRecorder()
 		req, err := http.NewRequest("POST", "/ratings", bytes.NewReader(body))
 		require.NoError(t, err)
+
+		// we need to set the content type header because we are sending a body
+		req.Header.Add("Content-Type", "application/json")
+
 		router.ServeHTTP(w, req)
 
 		// we are receiving a 500 because the ratings repository is not started
