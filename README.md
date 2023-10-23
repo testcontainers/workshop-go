@@ -15,3 +15,4 @@ This workshop will explain how to use Testcontainers for Go ([https://golang.tes
 * [Step 6: Adding Redpanda](step-6-adding-repanda.md)
 * [Step 7: Adding Integration Tests](step-7-adding-integration-tests.md)
 * [Step 8: Adding Integration Tests for the API](step-8-integration-tests-for-api.md)
+* [Step 9: End-To-End Tests with real dependencies](step-9-e2e-tests-with-real-dependencies.md)
