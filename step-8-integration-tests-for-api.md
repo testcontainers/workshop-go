@@ -36,7 +36,7 @@ func TestRootRoute(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	// the metadata is empty because we do not have real dependencies started
-	assert.Equal(t, `{"metadata":{"Ratings":"","Streams":"","Talks":""}}`, w.Body.String())
+	assert.Equal(t, `{"metadata":{"ratings":"","streams":"","talks":""}}`, w.Body.String())
 }
 
 func TestRoutesFailBecauseDependenciesAreNotStarted(t *testing.T) {
