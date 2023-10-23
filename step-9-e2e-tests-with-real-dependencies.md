@@ -21,6 +21,25 @@ The code in this file will be executed if and only if the build tags used in the
 
 Now copy the `testdata` directory from the root directory of the project to the `internal/app` directory. This step is needed because the relative path to access the SQL script to initialize the database is different when running the tests from the root directory of the project or from the `internal/app` directory. Therefore, we need a `dev-db.sql` file in that package to be used for testing. This will allow having different data for the tests and for the application in `local dev mode`.
 
+## Adding Make goals for running the tests
+
+In order to simplify the experience of running the integration and the E2E tests, let's update the Makefile in the root of the project with two new targets. Please replace the content of the Makefile with the following:
+
+```makefile
+dev:
+	TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
+
+test-integration:
+	go test -v -count=1 ./...
+
+test-e2e:
+	go test -v -count=1 -tags e2e ./internal/app
+```
+
+The `test-integration` will run the integration tests, and the `test-e2e` will run the E2E tests.
+
+At this moment the E2E tests live in the `internal/app` directory, only. Therefore the Make goal will specify that directory when running the E2E tests.
+
 ## E2E Testing the HTTP endpoints
 
 Let's replace the entire content of the `router_test.go` file in the `internal/app` directory with the following content:
@@ -80,7 +99,7 @@ func TestRoutesWithDependencies(t *testing.T) {
 If we run the test in this file, we are going to see that it fails because the dependencies are indeed started, therefore no error should be thrown:
 
 ```bash
-go test -v -count=1 -tags e2e ./... -run TestRoutesWithDependencies
+make test-e2e
 ?       github.com/testcontainers/workshop-go   [no test files]
 2023/10/23 14:35:06 github.com/testcontainers/testcontainers-go - Connected to docker: 
   Server Version: 78+testcontainerscloud (via Testcontainers Desktop 1.4.18)
@@ -196,3 +215,20 @@ func TestRootRouteWithDependencies(t *testing.T) {
 
 - It uses the `Metadata` struct from the `internal/app/metadata.go` file to unmarshal the response into a response struct.
 - It asserts that the different connection strings are set. Because the ports in which each dependency is started are random, we are only checking that the connection strings contain the expected values, without checking the exact port.
+
+Running the tests again with `make test-e2e` shows that the new test is also passing:
+
+```bash
+=== RUN   TestRootRouteWithDependencies
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:   export GIN_MODE=release
+ - using code:  gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
+[GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
+[GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
+[GIN] 2023/10/23 - 15:32:22 | 200 |     131.458µs |                 | GET      "/"
+--- PASS: TestRootRouteWithDependencies (0.00s)
+``````
