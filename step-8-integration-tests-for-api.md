@@ -52,7 +52,7 @@ func TestRoutesFailBecauseDependenciesAreNotStarted(t *testing.T) {
 		assert.Equal(t, http.StatusInternalServerError, w.Code)
 	})
 
-	t.Run("POST /ratings", func(t *testing.T) {
+	t.Run("POST /ratings fails", func(t *testing.T) {
 		body := []byte(`{"talkId":"testcontainers-integration-testing","value":5}`)
 
 		w := httptest.NewRecorder()
