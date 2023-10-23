@@ -7,7 +7,5 @@ import (
 func main() {
 	router := app.SetupRouter()
 
-	router.LoadHTMLGlob("templates/*.tmpl")
-
 	router.Run(":8080")
 }
