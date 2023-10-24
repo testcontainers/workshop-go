@@ -8,7 +8,7 @@ To understand how the `local dev mode` with Testcontainers for Go works, please 
 
 When the application started, it failed because you need to connect to a Postgres database including some data before you can do anything useful with the talks.
 
-Let's add a `tesdata/dev-db.sql` file with the following content:
+Let's add a `testdata/dev-db.sql` file with the following content:
 
 ```sql
 CREATE TABLE IF NOT EXISTS talks (
