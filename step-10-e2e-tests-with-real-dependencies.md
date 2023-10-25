@@ -1,4 +1,4 @@
-# Step 9: End-To-End tests with real dependencies
+# Step 10: End-To-End tests with real dependencies
 
 In the previous step we added integration tests for the API, and for that we used the [`net/httptest`](https://pkg.go.dev/net/http/httptest) package from the standard library. But the HTTP handlers in the application are checking for the existence of the dependencies, and if they are not there, they return an error (see `internal/app/handlers.go`).
 

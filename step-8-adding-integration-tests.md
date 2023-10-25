@@ -1,4 +1,4 @@
-# Step 7: Adding Integration Tests
+# Step 8: Adding Integration Tests
 
 Ok, you have a working application, but you don't have any tests. Let's add some integration tests to verify that the application works as expected.
 
@@ -373,4 +373,4 @@ _NOTE: if you experiment longer test execution times it could caused by the need
 We have now added integration tests for the three stores of our application. Let's add some integration tests for the API.
 
 ### 
-[Next](step-8-integration-tests-for-api.md)
+[Next](step-9-integration-tests-for-api.md)

@@ -6,12 +6,14 @@ import "os"
 // The application will need them to connect to services, reading it from
 // the right environment variable in production, or from the container in development.
 type Metadata struct {
-	Ratings string `json:"ratings"` // Read from the RATINGS_CONNECTION environment variable
-	Streams string `json:"streams"` // Read from the STREAMS_CONNECTION environment variable
-	Talks   string `json:"talks"`   // Read from the TALKS_CONNECTION environment variable
+	Lambda  string `json:"ratings_lambda"` // Read from the RATINGS_LAMBDA_URL environment variable
+	Ratings string `json:"ratings"`        // Read from the RATINGS_CONNECTION environment variable
+	Streams string `json:"streams"`        // Read from the STREAMS_CONNECTION environment variable
+	Talks   string `json:"talks"`          // Read from the TALKS_CONNECTION environment variable
 }
 
 var Connections *Metadata = &Metadata{
+	Lambda:  os.Getenv("RATINGS_LAMBDA_URL"),
 	Ratings: os.Getenv("RATINGS_CONNECTION"),
 	Streams: os.Getenv("STREAMS_CONNECTION"),
 	Talks:   os.Getenv("TALKS_CONNECTION"),
