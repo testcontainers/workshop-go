@@ -4,7 +4,7 @@ When the application started, it failed because you need to connect to a Redis d
 
 Let's add a Redis instance using Testcontainers for Go.
 
-1. Add the following `internal/app/dev_dependencies.go` file, add the following imports:
+1. In the `internal/app/dev_dependencies.go` file, add the following imports:
 
 ```go
 import (
@@ -230,7 +230,7 @@ Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-
 [GIN-debug] Listening and serving HTTP on :8080
 ```
 
-If the second terminal, check the containers, you will see the Redis store running alongside the Postgres database:
+In the second terminal, check the containers, you will see the Redis store running alongside the Postgres database:
 
 ```text
 $ docker ps
