@@ -56,6 +56,7 @@ Clone the following project from GitHub to your computer:
 go get github.com/google/uuid
 go get github.com/jackc/pgx/v5
 go get github.com/testcontainers/testcontainers-go
+go get github.com/testcontainers/testcontainers-go/modules/localstack
 go get github.com/testcontainers/testcontainers-go/modules/postgres
 go get github.com/testcontainers/testcontainers-go/modules/redis
 go get github.com/testcontainers/testcontainers-go/modules/redpanda
