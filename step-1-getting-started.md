@@ -3,7 +3,7 @@
 ## Check Go
 You'll need Go 1.20 or newer for this workshop. 
 
-This workshop uses a [Gin](https://gin-gonic.com) application, which requires Go 1.13 or newer, but Testcontainers for Go is compatible with Go 1.19+.
+This workshop uses a [Gin](https://gin-gonic.com) application, which requires Go 1.13 or newer, but Testcontainers for Go is compatible with Go 1.20+.
 
 ## Check Docker
 
