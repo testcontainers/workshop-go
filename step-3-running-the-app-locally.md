@@ -30,18 +30,23 @@ Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-
 [GIN-debug] Listening and serving HTTP on :8080
 ```
 
-If you open the browser in the URL http://localhost:8080, you will see an empty page.
+If you open the browser in the URL http://localhost:8080, you will see the metadata of the application, but all the values are empty:
+
+```json
+{"metadata":{"ratings_lambda":"","ratings":"","streams":"","talks":""}}
+```
 
 On the contrary, if you open the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), you will get a 500 error and a similar message:
 
 ```text
-Unable to connect to database: failed to connect to `host=/private/tmp user=mdelapenya database=`: dial error (dial unix /private/tmp/.s.PGSQL.5432: connect: no such file or directory)
+{"message":"failed to connect to `host=/private/tmp user=mdelapenya database=`: dial error (dial unix /private/tmp/.s.PGSQL.5432: connect: no such file or directory)"}
 ```
 
 The logs will show the following:
 
 ```text
-[GIN] 2023/10/19 - 12:56:33 | 500 |    8.656166ms |             ::1 | GET      "/ratings?talkId=testcontainers-integration-testing"
+Unable to connect to database: failed to connect to `host=/private/tmp user=mdelapenya database=`: dial error (dial unix /private/tmp/.s.PGSQL.5432: connect: no such file or directory)
+[GIN] 2023/10/26 - 10:48:47 | 500 |    4.249166ms |             ::1 | GET      "/ratings?talkId=testcontainers-integration-testing"
 ```
 
 It seems the application is not able to connect to the database. Let's fix it.

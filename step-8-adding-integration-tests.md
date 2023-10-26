@@ -1,4 +1,4 @@
-# Step 7: Adding Integration Tests
+# Step 8: Adding Integration Tests
 
 Ok, you have a working application, but you don't have any tests. Let's add some integration tests to verify that the application works as expected.
 
@@ -370,7 +370,195 @@ ok      github.com/testcontainers/workshop-go/internal/talks    2.995s
 
 _NOTE: if you experiment longer test execution times it could caused by the need of pulling the images from the registry._
 
-We have now added integration tests for the three stores of our application. Let's add some integration tests for the API.
+## Integration tests for the Ratings Lambda
+
+Let's add a new file `internal/ratings/lambda_client_test.go` with the following content:
+
+```go
+package ratings_test
+
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
+	"path/filepath"
+	"strings"
+	"testing"
+
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/exec"
+	"github.com/testcontainers/testcontainers-go/modules/localstack"
+	"github.com/testcontainers/workshop-go/internal/ratings"
+)
+
+func TestGetStats(t *testing.T) {
+	ctx := context.Background()
+
+	flagsFn := func() string {
+		labels := testcontainers.GenericLabels()
+		flags := ""
+		for k, v := range labels {
+			flags = fmt.Sprintf("%s -l %s=%s", flags, k, v)
+		}
+		return flags
+	}
+
+	c, err := localstack.RunContainer(ctx,
+		testcontainers.WithImage("localstack/localstack:2.3.0"),
+		testcontainers.CustomizeRequest(testcontainers.GenericContainerRequest{
+			ContainerRequest: testcontainers.ContainerRequest{
+				Env: map[string]string{
+					"SERVICES":            "lambda",
+					"LAMBDA_DOCKER_FLAGS": flagsFn(),
+				},
+				Files: []testcontainers.ContainerFile{
+					{
+						HostFilePath:      filepath.Join("..", "..", "testdata", "function.zip"), // path to the root of the project
+						ContainerFilePath: "/tmp/function.zip",
+					},
+				},
+			},
+		}),
+	)
+	if err != nil {
+		t.Fatalf("failed to start localstack container: %s", err)
+	}
+
+	lambdaName := "localstack-lambda-url-example"
+
+	// the three commands below are doing the following:
+	// 1. create a lambda function
+	// 2. create the URL function configuration for the lambda function
+	// 3. wait for the lambda function to be active
+	lambdaCommands := [][]string{
+		{
+			"awslocal", "lambda",
+			"create-function", "--function-name", lambdaName,
+			"--runtime", "nodejs18.x",
+			"--zip-file",
+			"fileb:///tmp/function.zip",
+			"--handler", "index.handler",
+			"--role", "arn:aws:iam::000000000000:role/lambda-role",
+		},
+		{"awslocal", "lambda", "create-function-url-config", "--function-name", lambdaName, "--auth-type", "NONE"},
+		{"awslocal", "lambda", "wait", "function-active-v2", "--function-name", lambdaName},
+	}
+	for _, cmd := range lambdaCommands {
+		_, _, err := c.Exec(ctx, cmd)
+		if err != nil {
+			t.Fatalf("failed to execute command %s: %s", cmd, err)
+		}
+	}
+
+	// 4. get the URL for the lambda function
+	cmd := []string{
+		"awslocal", "lambda", "list-function-url-configs", "--function-name", lambdaName,
+	}
+	_, reader, err := c.Exec(ctx, cmd, exec.Multiplexed())
+	if err != nil {
+		t.Fatalf("failed to execute command %s: %s", cmd, err)
+	}
+
+	buf := new(bytes.Buffer)
+	_, err = buf.ReadFrom(reader)
+	if err != nil {
+		t.Fatalf("failed to read from reader: %s", err)
+	}
+
+	content := buf.Bytes()
+
+	type FunctionURLConfig struct {
+		FunctionURLConfigs []struct {
+			FunctionURL      string `json:"FunctionUrl"`
+			FunctionArn      string `json:"FunctionArn"`
+			CreationTime     string `json:"CreationTime"`
+			LastModifiedTime string `json:"LastModifiedTime"`
+			AuthType         string `json:"AuthType"`
+		} `json:"FunctionUrlConfigs"`
+	}
+
+	v := &FunctionURLConfig{}
+	err = json.Unmarshal(content, v)
+	if err != nil {
+		t.Fatalf("failed to unmarshal content: %s", err)
+	}
+
+	functionURL := v.FunctionURLConfigs[0].FunctionURL
+
+	// replace the port with the one exposed by the container
+	mappedPort, err := c.MappedPort(ctx, "4566/tcp")
+	if err != nil {
+		panic(err)
+	}
+
+	url := strings.ReplaceAll(functionURL, "4566", mappedPort.Port())
+
+	// now we can test the lambda function
+	lambdaClient := ratings.NewLambdaClient(url)
+
+	histogram := map[string]string{
+		"0": "10",
+		"1": "20",
+		"2": "30",
+		"3": "40",
+		"4": "50",
+		"5": "60",
+	}
+
+	stats, err := lambdaClient.GetStats(histogram)
+	if err != nil {
+		t.Fatalf("failed to get stats: %s", err)
+	}
+
+	expected := `{"avg":3.3333333333333335,"totalCount":210}`
+	if string(stats) != expected {
+		t.Fatalf("expected %s, got %s", expected, string(stats))
+	}
+}
+
+```
+
+This test will start a LocalStack container, and it will define one test to verify that the lambda function returns the stats for a given rating ratings:
+
+* `Retrieve the stats for a given histogram of ratings`: it will call the lambda deployed in the LocalStack instance, using a map of ratings as the histogram, and it will verify that the result includes the calculated average and the total count of ratings.
+
+Please notice that the package has been named with the `_test` suffix for the same reasons describe above.
+
+There is no need to run `go mod tidy` again, as you have already downloaded the Go dependencies.
+
+Finally, run your tests with `go test -v -count=1 ./internal/ratings -run TestGetStats` from the root of the project. You should see the following output:
+
+```text
+=== RUN   TestGetStats
+2023/10/25 18:50:32 github.com/testcontainers/testcontainers-go - Connected to docker:
+  Server Version: 78+testcontainerscloud (via Testcontainers Desktop 1.4.18)
+  API Version: 1.43
+  Operating System: Ubuntu 22.04.3 LTS
+  Total Memory: 15689 MB
+  Resolved Docker Host: tcp://127.0.0.1:56978
+  Resolved Docker Socket Path: /var/run/docker.sock
+  Test SessionID: 05830d69843b1ee75edd702cb6619a3ce35d91d663f3b383c05d6bd09cc9a7cf
+  Test ProcessID: e0d77bac-0800-4d80-88a3-d837d9d453d5
+2023/10/25 18:50:32 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
+2023/10/25 18:50:32 🐳 Creating container for image docker.io/testcontainers/ryuk:0.5.1
+2023/10/25 18:50:32 ✅ Container created: c60a1d058454
+2023/10/25 18:50:32 🐳 Starting container: c60a1d058454
+2023/10/25 18:50:33 ✅ Container started: c60a1d058454
+2023/10/25 18:50:33 🚧 Waiting for container id c60a1d058454 image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
+2023/10/25 18:50:33 🐳 Creating container for image localstack/localstack:2.3.0
+2023/10/25 18:50:33 ✅ Container created: f1c037cde35b
+2023/10/25 18:50:33 🐳 Starting container: f1c037cde35b
+2023/10/25 18:50:33 ✅ Container started: f1c037cde35b
+2023/10/25 18:50:33 🚧 Waiting for container id f1c037cde35b image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x14000026b58 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x104a44180 ResponseMatcher:0x104b10d40 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> PollInterval:100ms UserInfo:}
+--- PASS: TestGetStats (13.10s)
+PASS
+ok  	github.com/testcontainers/workshop-go/internal/ratings	13.378s
+```
+
+_NOTE: if you experiment longer test execution times it could caused by the need of pulling the images from the registry._
+
+We have now added integration tests for the three stores of our application, and our AWS lambda. Let's add some integration tests for the API.
 
 ### 
-[Next](step-8-integration-tests-for-api.md)
+[Next](step-9-integration-tests-for-api.md)

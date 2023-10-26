@@ -1,4 +1,4 @@
-# Step 8: Integration tests for the API
+# Step 9: Integration tests for the API
 
 In this step you will add integration tests for the API, and for that we are going to use the [`net/httptest`](https://pkg.go.dev/net/http/httptest) package from the standard library.
 
@@ -69,4 +69,4 @@ Let's check what you are doing here:
 This unit test is not very useful, but it is a good starting point to understand how to test the HTTP endpoints.
 
 ### 
-[Next](step-9-e2e-tests-with-real-dependencies.md)
+[Next](step-10-e2e-tests-with-real-dependencies.md)

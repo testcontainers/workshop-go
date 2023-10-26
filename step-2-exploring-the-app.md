@@ -1,6 +1,6 @@
 # Step 2: Exploring the app
 
-The app is a simple microservice for rating conference talks. It provides a web API to track the ratings of the talks in real time, storing the results in a PostgreSQL database and a Redis cache, and using Redpanda as a broker for the event stream.
+The app is a simple microservice for rating conference talks. It provides a web API to track the ratings of the talks in real time, storing the results in a PostgreSQL database and a Redis cache, and using Redpanda as a broker for the event stream. Finally, it will use an AWS lambda function to calculate some statistics about the ratings of a talk.
 
 ## Storage layer
 
@@ -23,6 +23,14 @@ Check `internal/ratings/repo.go`.
 The application uses ES/CQRS to materialize the events into the state. Redpanda acts as a broker and the [twmb/franz-go](https://github.com/twmb/franz-go) Kafa client.
 
 Check `internal/streams/broker.go`.
+
+## Cloud layer
+
+### AWS Lambdas
+
+The application uses AWS lambda functions to calculate some rating statistics of a talk. The lambda functions are invoked by the application when the ratings for a talk are requested, using HTTP calls to the function URL of the lambda.
+
+Check `internal/ratings/lambda_client.go`.
 
 ## Web application
 

@@ -1,7 +1,9 @@
 package app
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -93,6 +95,11 @@ type talkForRatings struct {
 	UUID string `json:"talkId" form:"talkId" binding:"required"`
 }
 
+type statsResponse struct {
+	Avg        float64 `json:"avg"`
+	TotalCount int64   `json:"totalCount"`
+}
+
 // Ratings is the handler for the `GET /ratings?talkId=xxx` endpoint. It will require a talkId parameter
 // in the query string and will return all the ratings for the given talk UUID.
 func Ratings(c *gin.Context) {
@@ -121,8 +128,32 @@ func Ratings(c *gin.Context) {
 
 	histogram := ratingsRepo.FindAllByUUID(c, talk.UUID)
 
+	// call the lambda function to get the stats
+	lambdaClient := ratings.NewLambdaClient(Connections.Lambda)
+	stats, err := lambdaClient.GetStats(histogram)
+	if err != nil {
+		// do not fail if the lambda function is not available, simply do not aggregate the stats
+		log.Printf("error calling lambda function: %s", err.Error())
+		c.JSON(http.StatusOK, gin.H{
+			"ratings": histogram,
+		})
+		return
+	}
+
+	statsResp := &statsResponse{}
+	err = json.Unmarshal(stats, statsResp)
+	if err != nil {
+		// do not fail if the lambda function is not available, simply do not aggregate the stats
+		log.Printf("error unmarshalling lambda response: %s", err.Error())
+		c.JSON(http.StatusOK, gin.H{
+			"ratings": histogram,
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"ratings": histogram,
+		"stats":   statsResp,
 	})
 }
 

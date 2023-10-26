@@ -3,7 +3,7 @@
 ## Check Go
 You'll need Go 1.20 or newer for this workshop. 
 
-This workshop uses a [Gin](https://gin-gonic.com) application, which requires Go 1.13 or newer, but Testcontainers for Go is compatible with Go 1.19+.
+This workshop uses a [Gin](https://gin-gonic.com) application, which requires Go 1.13 or newer, but Testcontainers for Go is compatible with Go 1.20+.
 
 ## Check Docker
 
@@ -23,26 +23,26 @@ Client:
  Git commit:        cb74dfc
  Built:             Thu May 25 21:51:16 2023
  OS/Arch:           darwin/arm64
- Context:           desktop-linux
+ Context:           tcd
 
-Server: Docker Desktop 4.21.1 (114176)
+Server: Testcontainers Cloud
  Engine:
-  Version:          24.0.2
+  Version:          78+testcontainerscloud
   API version:      1.43 (minimum version 1.12)
   Go version:       go1.20.4
-  Git commit:       659604f
-  Built:            Thu May 25 21:50:59 2023
-  OS/Arch:          linux/arm64
+  Git commit:       659604f9ee
+  Built:            Mon Jun  5 07:15:55 2023
+  OS/Arch:          linux/amd64
   Experimental:     false
  containerd:
-  Version:          1.6.21
-  GitCommit:        3dce8eb055cbb6872793272b4f20ed16117344f8
+  Version:          v1.7.1
+  GitCommit:        1677a17964311325ed1c31e2c0a3589ce6d5c30d
  runc:
   Version:          1.1.7
-  GitCommit:        v1.1.7-0-g860f061
+  GitCommit:        v1.1.7-0-g860f061b
  docker-init:
   Version:          0.19.0
-  GitCommit:        de40ad0
+  GitCommit:
 ```
 
 ## Download the project
@@ -56,6 +56,7 @@ Clone the following project from GitHub to your computer:
 go get github.com/google/uuid
 go get github.com/jackc/pgx/v5
 go get github.com/testcontainers/testcontainers-go
+go get github.com/testcontainers/testcontainers-go/modules/localstack
 go get github.com/testcontainers/testcontainers-go/modules/postgres
 go get github.com/testcontainers/testcontainers-go/modules/redis
 go get github.com/testcontainers/testcontainers-go/modules/redpanda
@@ -70,6 +71,7 @@ This might be helpful if the internet connection at the workshop venue is somewh
 docker pull postgres:15.3-alpine
 docker pull redis:6-alpine
 docker pull docker.redpanda.com/redpandadata/redpanda:v23.1.7
+docker pull localstack/localstack:2.3.0
 ```
 
 ### 
