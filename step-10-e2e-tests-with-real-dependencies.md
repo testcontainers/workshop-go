@@ -100,35 +100,54 @@ If we run the test in this file, we are going to see that it fails because the d
 
 ```bash
 make test-e2e
-?       github.com/testcontainers/workshop-go   [no test files]
-2023/10/23 14:35:06 github.com/testcontainers/testcontainers-go - Connected to docker: 
+go test -v -count=1 -tags e2e ./internal/app
+# github.com/testcontainers/workshop-go/internal/app.test
+2023/10/25 18:58:21 github.com/testcontainers/testcontainers-go - Connected to docker: 
   Server Version: 78+testcontainerscloud (via Testcontainers Desktop 1.4.18)
   API Version: 1.43
-  Operating System: Ubuntu 20.04 LTS
-  Total Memory: 7407 MB
-  Resolved Docker Host: tcp://127.0.0.1:57158
+  Operating System: Ubuntu 22.04.3 LTS
+  Total Memory: 15689 MB
+  Resolved Docker Host: tcp://127.0.0.1:56978
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: c021f5a70f7c3e005e4389e30df96406ec6d5e6ab6cbdeaec2d9806b543acb00
-  Test ProcessID: b5a46aa8-65d7-442c-8331-4e9a8ce07bae
-2023/10/23 14:35:06 🐳 Creating container for image docker.io/testcontainers/ryuk:0.5.1
-2023/10/23 14:35:06 ✅ Container created: 6b7239ff59ec
-2023/10/23 14:35:06 🐳 Starting container: 6b7239ff59ec
-2023/10/23 14:35:06 ✅ Container started: 6b7239ff59ec
-2023/10/23 14:35:06 🚧 Waiting for container id 6b7239ff59ec image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
-2023/10/23 14:35:07 🐳 Creating container for image redis:6-alpine
-2023/10/23 14:35:07 ✅ Container created: d7332726b2d8
-2023/10/23 14:35:07 🐳 Starting container: d7332726b2d8
-2023/10/23 14:35:07 ✅ Container started: d7332726b2d8
-2023/10/23 14:35:07 🚧 Waiting for container id d7332726b2d8 image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
-2023/10/23 14:35:07 🐳 Creating container for image postgres:15.3-alpine
-2023/10/23 14:35:07 ✅ Container created: bcf2e5b02a9a
-2023/10/23 14:35:07 🐳 Starting container: bcf2e5b02a9a
-2023/10/23 14:35:07 ✅ Container started: bcf2e5b02a9a
-2023/10/23 14:35:07 🚧 Waiting for container id bcf2e5b02a9a image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x14000177218 Strategies:[0x140004f4d50]}
-2023/10/23 14:35:09 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v23.1.7
-2023/10/23 14:35:09 ✅ Container created: f9b685481e62
-2023/10/23 14:35:09 🐳 Starting container: f9b685481e62
-2023/10/23 14:35:09 ✅ Container started: f9b685481e62
+  Test SessionID: 44ff7433ea9c6d6e734cab0e253968ed4ca7daebc03adfc8bd5275fcb94a48f2
+  Test ProcessID: 00b5db03-6ae0-4f59-8198-2e98b746e571
+2023/10/25 18:58:21 🐳 Creating container for image docker.io/testcontainers/ryuk:0.5.1
+2023/10/25 18:58:21 ✅ Container created: 1edcc0c3c6c8
+2023/10/25 18:58:21 🐳 Starting container: 1edcc0c3c6c8
+2023/10/25 18:58:21 ✅ Container started: 1edcc0c3c6c8
+2023/10/25 18:58:21 🚧 Waiting for container id 1edcc0c3c6c8 image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
+2023/10/25 18:58:21 🐳 Creating container for image postgres:15.3-alpine
+2023/10/25 18:58:21 ✅ Container created: 8fc1965aee1f
+2023/10/25 18:58:21 🐳 Starting container: 8fc1965aee1f
+2023/10/25 18:58:22 ✅ Container started: 8fc1965aee1f
+2023/10/25 18:58:22 🚧 Waiting for container id 8fc1965aee1f image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x1400042ae88 Strategies:[0x1400043ce10]}
+2023/10/25 18:58:23 🐳 Creating container for image redis:6-alpine
+2023/10/25 18:58:23 ✅ Container created: e771098b1a3e
+2023/10/25 18:58:23 🐳 Starting container: e771098b1a3e
+2023/10/25 18:58:24 ✅ Container started: e771098b1a3e
+2023/10/25 18:58:24 🚧 Waiting for container id e771098b1a3e image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
+2023/10/25 18:58:24 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v23.1.7
+2023/10/25 18:58:24 ✅ Container created: b86043dd8663
+2023/10/25 18:58:24 🐳 Starting container: b86043dd8663
+2023/10/25 18:58:24 ✅ Container started: b86043dd8663
+2023/10/25 18:58:26 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
+2023/10/25 18:58:26 🐳 Creating container for image localstack/localstack:2.3.0
+2023/10/25 18:58:26 ✅ Container created: 1b55bc25926b
+2023/10/25 18:58:26 🐳 Starting container: 1b55bc25926b
+2023/10/25 18:58:26 ✅ Container started: 1b55bc25926b
+2023/10/25 18:58:26 🚧 Waiting for container id 1b55bc25926b image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x140002980d0 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x102e96480 ResponseMatcher:0x102f67240 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> PollInterval:100ms UserInfo:}
+=== RUN   TestRootRouteWithDependencies
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:   export GIN_MODE=release
+ - using code:  gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
+[GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
+[GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
+[GIN] 2023/10/25 - 18:58:37 | 200 |     415.334µs |                 | GET      "/"
+--- PASS: TestRootRouteWithDependencies (0.00s)
 === RUN   TestRoutesWithDependencies
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
@@ -140,23 +159,15 @@ make test-e2e
 [GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
 [GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
 === RUN   TestRoutesWithDependencies/GET_/ratings
-[GIN] 2023/10/23 - 14:35:10 | 200 |  104.857208ms |                 | GET      "/ratings?talkId=testcontainers-integration-testing"
+2023/10/25 18:58:38 error unmarshalling lambda response: invalid character 'I' looking for beginning of value
+[GIN] 2023/10/25 - 18:58:38 | 200 |  1.002657417s |                 | GET      "/ratings?talkId=testcontainers-integration-testing"
 === RUN   TestRoutesWithDependencies/POST_/ratings
-[GIN] 2023/10/23 - 14:35:11 | 200 |  572.012334ms |                 | POST     "/ratings"
---- PASS: TestRoutesWithDependencies (0.68s)
-    --- PASS: TestRoutesWithDependencies/GET_/ratings (0.11s)
-    --- PASS: TestRoutesWithDependencies/POST_/ratings (0.57s)
+[GIN] 2023/10/25 - 18:58:39 | 200 |  868.640667ms |                 | POST     "/ratings"
+--- PASS: TestRoutesWithDependencies (1.87s)
+    --- PASS: TestRoutesWithDependencies/GET_/ratings (1.00s)
+    --- PASS: TestRoutesWithDependencies/POST_/ratings (0.87s)
 PASS
-ok      github.com/testcontainers/workshop-go/internal/app      4.978s
-testing: warning: no tests to run
-PASS
-ok      github.com/testcontainers/workshop-go/internal/ratings  0.641s [no tests to run]
-testing: warning: no tests to run
-PASS
-ok      github.com/testcontainers/workshop-go/internal/streams  0.302s [no tests to run]
-testing: warning: no tests to run
-PASS
-ok      github.com/testcontainers/workshop-go/internal/talks    0.813s [no tests to run]
+ok      github.com/testcontainers/workshop-go/internal/app      18.910s
 ```
 
 Please take a look at these things:
@@ -210,6 +221,7 @@ func TestRootRouteWithDependencies(t *testing.T) {
 	assert.True(t, strings.Contains(response.Connections.Ratings, "redis://127.0.0.1:"), fmt.Sprintf("expected %s to be a Redis URL", response.Connections.Ratings))
 	assert.True(t, strings.Contains(response.Connections.Streams, "127.0.0.1:"), fmt.Sprintf("expected %s to be Redpanda URL", response.Connections.Streams))
 	assert.True(t, strings.Contains(response.Connections.Talks, "postgres://postgres:postgres@127.0.0.1:"), fmt.Sprintf("expected %s to be a Postgres URL", response.Connections.Talks))
+	assert.True(t, strings.Contains(response.Connections.Lambda, "lambda-url.us-east-1.localhost.localstack.cloud:"), fmt.Sprintf("expected %s to be a Lambda URL", response.Connections.Lambda))
 }
 ```
 
