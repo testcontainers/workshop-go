@@ -53,8 +53,11 @@ func (c *LambdaClient) GetStats(histogram map[string]string) ([]byte, error) {
 		// we are passing the count as an integer, so we don't need to quote it
 		payload += `"` + rating + `": ` + count + `,`
 	}
-	// remove the last comma
-	payload = payload[:len(payload)-1]
+
+	if len(histogram) > 0 {
+		// remove the last comma onl for non-empty histograms
+		payload = payload[:len(payload)-1]
+	}
 	payload += "}}"
 
 	resp, err := c.client.Post(c.url, "application/json", bytes.NewBufferString(payload))
