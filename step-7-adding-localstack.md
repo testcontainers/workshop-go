@@ -1,6 +1,8 @@
-# Step 7: Adding Localstack
+# Step 7: Adding LocalStack
 
-The application is using an AWS lambda function to calculate the average rating of a talk. The lambda functions are invoked by the application when the ratings for a talk are requested, using HTTP calls to the function URL of the lambda.
+The application is using an AWS lambda function to calculate some statistics (average and total count) for the ratings of a talk. The lambda function is invoked by the application any time the ratings for a talk are requested, using HTTP calls to the function URL of the lambda.
+
+To enhance the developer experience of consuming this lambda function while developing the application, you will use LocalStack to emulate the AWS cloud environment locally.
 
 LocalStack is a cloud service emulator that runs in a single container on your laptop or in your CI environment. With LocalStack, you can run your AWS applications or Lambdas entirely on your local machine without connecting to a remote cloud provider!
 
@@ -38,17 +40,17 @@ exports.handler = async (event) => {
 };
 ```
 
-Now `zip` the Javascript file into the `function.zip` file:
+Now, from the `testdata` directory at the root of the project, `zip` the Javascript file into the `function.zip` file:
 
 ```bash
 zip -r function.zip index.js
 ```
 
-This zip file will be used by the lambda function to deploy the function in the Localstack instance.
+This zip file will be used by the lambda function to deploy the function in the LocalStack instance.
 
-## Adding the Localstack instance
+## Adding the LocalStack instance
 
-Let's add a Localstack instance using Testcontainers for Go.
+Let's add a LocalStack instance using Testcontainers for Go.
 
 1. In the `internal/app/dev_dependencies.go` file, add the following imports:
 
@@ -183,9 +185,16 @@ func startRatingsLambda() (testcontainers.Container, error) {
 }
 ```
 
-This function will start a Localstack instance, deploy the lambda function in it, and adds the URL of the lambda function to the `Connections` struct.
+This function will:
+- start a LocalStack instance, copying the zip file into the container before it starts. See the `Files` attribute in the container request.
+- using the `Exec` methods of the container API, execute `awslocal lambda` commands inside the LocalStack container to:
+  - create the lambda from the zip file
+  - create the URL function configuration for the lambda function
+  - wait for the lambda function to be active
+- read the response of executing an `awslocal lambda` command to get the URL of the lambda function, parsing the JSON response to get the URL of the lambda function.
+- add the URL of the lambda function to the `Connections` struct.
 
-3. Update the comments for the init function `startupDependenciesFn` slice to include the Localstack store:
+3. Update the comments for the init function `startupDependenciesFn` slice to include the LocalStack store:
 
 ```go
 // init will be used to start up the containers for development mode. It will use
@@ -193,7 +202,7 @@ This function will start a Localstack instance, deploy the lambda function in it
 // - Postgres: store for talks
 // - Redis: store for ratings
 // - Redpanda: message queue for the ratings
-// - Localstack: cloud emulator for AWS Lambdas
+// - LocalStack: cloud emulator for AWS Lambdas
 // All the containers will contribute their connection strings to the Connections struct.
 // Please read this blog post for more information: https://www.atomicjar.com/2023/08/local-development-of-go-applications-with-testcontainers/
 func init() {
@@ -219,15 +228,19 @@ The complete file should look like this:
 package app
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strings"
 	"syscall"
 	"time"
 
 	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/exec"
 	"github.com/testcontainers/testcontainers-go/modules/localstack"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/modules/redis"
@@ -240,7 +253,7 @@ import (
 // - Postgres: store for talks
 // - Redis: store for ratings
 // - Redpanda: message queue for the ratings
-// - Localstack: cloud emulator for AWS Lambdas
+// - LocalStack: cloud emulator for AWS Lambdas
 // All the containers will contribute their connection strings to the Connections struct.
 // Please read this blog post for more information: https://www.atomicjar.com/2023/08/local-development-of-go-applications-with-testcontainers/
 func init() {
@@ -440,7 +453,7 @@ func startTalksStore() (testcontainers.Container, error) {
 		postgres.WithPassword("postgres"),
 		testcontainers.WithWaitStrategy(
 			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).WithStartupTimeout(5*time.Second)),
+				WithOccurrence(2).WithStartupTimeout(15*time.Second)),
 	)
 	if err != nil {
 		return nil, err
@@ -457,48 +470,47 @@ func startTalksStore() (testcontainers.Container, error) {
 
 ```
 
-Now run `go mod tidy` from the root of the project to download the Go dependencies, only the Testcontainers for Go's Redis module.
+Now run `go mod tidy` from the root of the project to download the Go dependencies, only the Testcontainers for Go's LocalStack module.
 
-Finally, run the application again with `make dev`. This time, the application will start the Redis store and the application will be able to connect to it.
+Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the application again with `make dev`. This time, the application will start the Redis store and the application will be able to connect to it.
 
 ```text
 TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
-github.com/testcontainers/workshop-go/internal/app
-github.com/testcontainers/workshop-go
+# github.com/testcontainers/workshop-go
 
 **********************************************************************************************
 Ryuk has been disabled for the current execution. This can cause unexpected behavior in your environment.
 More on this: https://golang.testcontainers.org/features/garbage_collector/
 **********************************************************************************************
-2023/10/25 17:18:19 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 78+testcontainerscloud (via Testcontainers Desktop 1.4.18)
-  API Version: 1.43
-  Operating System: Ubuntu 22.04.3 LTS
-  Total Memory: 15689 MB
-  Resolved Docker Host: tcp://127.0.0.1:56978
+2023/10/26 12:09:37 github.com/testcontainers/testcontainers-go - Connected to docker: 
+  Server Version: 23.0.6 (via Testcontainers Desktop 1.4.18)
+  API Version: 1.42
+  Operating System: Alpine Linux v3.18
+  Total Memory: 5256 MB
+  Resolved Docker Host: tcp://127.0.0.1:49342
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: 1435e98a6f031d06b4f6faf981e91c33d30284b1da6a6b5eb5e5979b014549c9
-  Test ProcessID: 570696e0-c933-4478-a9b0-468286e0dbe1
-2023/10/25 17:18:19 🐳 Creating container for image postgres:15.3-alpine
-2023/10/25 17:18:19 ✅ Container created: f032cfd9263a
-2023/10/25 17:18:19 🐳 Starting container: f032cfd9263a
-2023/10/25 17:18:19 ✅ Container started: f032cfd9263a
-2023/10/25 17:18:19 🚧 Waiting for container id f032cfd9263a image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x140004214f8 Strategies:[0x14000431200]}
-2023/10/25 17:18:21 🐳 Creating container for image redis:6-alpine
-2023/10/25 17:18:21 ✅ Container created: acbd71c8e808
-2023/10/25 17:18:21 🐳 Starting container: acbd71c8e808
-2023/10/25 17:18:21 ✅ Container started: acbd71c8e808
-2023/10/25 17:18:21 🚧 Waiting for container id acbd71c8e808 image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
-2023/10/25 17:18:21 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v23.1.7
-2023/10/25 17:18:21 ✅ Container created: a49ae549af9c
-2023/10/25 17:18:21 🐳 Starting container: a49ae549af9c
-2023/10/25 17:18:22 ✅ Container started: a49ae549af9c
-2023/10/25 17:18:22 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
-2023/10/25 17:18:22 🐳 Creating container for image localstack/localstack:2.3.0
-2023/10/25 17:18:22 ✅ Container created: 1d0a4c2f4503
-2023/10/25 17:18:22 🐳 Starting container: 1d0a4c2f4503
-2023/10/25 17:18:23 ✅ Container started: 1d0a4c2f4503
-2023/10/25 17:18:23 🚧 Waiting for container id 1d0a4c2f4503 image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x14000636448 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x104e95080 ResponseMatcher:0x104f66690 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> PollInterval:100ms UserInfo:}
+  Test SessionID: daefc07421b8d6bafd1212dbe6e8e550c6fa29cac9a025b46385f75eb5e2cb57
+  Test ProcessID: 884e159f-f492-41d8-b9ee-7fe78b576108
+2023/10/26 12:09:37 🐳 Creating container for image postgres:15.3-alpine
+2023/10/26 12:09:38 ✅ Container created: d5ec7cecb562
+2023/10/26 12:09:38 🐳 Starting container: d5ec7cecb562
+2023/10/26 12:09:38 ✅ Container started: d5ec7cecb562
+2023/10/26 12:09:38 🚧 Waiting for container id d5ec7cecb562 image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x140003fb400 Strategies:[0x1400040b1a0]}
+2023/10/26 12:09:50 🐳 Creating container for image redis:6-alpine
+2023/10/26 12:09:50 ✅ Container created: bf4fcb4cd74c
+2023/10/26 12:09:50 🐳 Starting container: bf4fcb4cd74c
+2023/10/26 12:09:51 ✅ Container started: bf4fcb4cd74c
+2023/10/26 12:09:51 🚧 Waiting for container id bf4fcb4cd74c image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
+2023/10/26 12:09:51 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v23.1.7
+2023/10/26 12:09:51 ✅ Container created: 07fb1e908b1e
+2023/10/26 12:09:51 🐳 Starting container: 07fb1e908b1e
+2023/10/26 12:09:52 ✅ Container started: 07fb1e908b1e
+2023/10/26 12:09:53 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
+2023/10/26 12:09:53 🐳 Creating container for image localstack/localstack:2.3.0
+2023/10/26 12:09:53 ✅ Container created: c514896580c1
+2023/10/26 12:09:53 🐳 Starting container: c514896580c1
+2023/10/26 12:09:53 ✅ Container started: c514896580c1
+2023/10/26 12:09:53 🚧 Waiting for container id c514896580c1 image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x14000369ca0 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x1024f5090 ResponseMatcher:0x1025c66a0 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> PollInterval:100ms UserInfo:}
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
@@ -513,32 +525,42 @@ Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-
 [GIN-debug] Listening and serving HTTP on :8080
 ```
 
-In the second terminal, check the containers, you will see the Localstack instance is running alongside the Postgres database, the Redis store and the Redpanda streaming queue:
+In the second terminal, check the containers, you will see the LocalStack instance is running alongside the Postgres database, the Redis store and the Redpanda streaming queue:
 
 ```text
 $ docker ps
-CONTAINER ID   IMAGE                                               COMMAND                  CREATED              STATUS                        PORTS                                                                                                                                             NAMES
-1d0a4c2f4503   localstack/localstack:2.3.0                         "docker-entrypoint.sh"   About a minute ago   Up About a minute (healthy)   4510-4559/tcp, 5678/tcp, 0.0.0.0:32788->4566/tcp, :::32788->4566/tcp                                                                              distracted_robinson
-a49ae549af9c   docker.redpanda.com/redpandadata/redpanda:v23.1.7   "/entrypoint-tc.sh r…"   About a minute ago   Up About a minute             8082/tcp, 0.0.0.0:32787->8081/tcp, :::32787->8081/tcp, 0.0.0.0:32786->9092/tcp, :::32786->9092/tcp, 0.0.0.0:32785->9644/tcp, :::32785->9644/tcp   strange_mendeleev
-acbd71c8e808   redis:6-alpine                                      "docker-entrypoint.s…"   About a minute ago   Up About a minute             0.0.0.0:32784->6379/tcp, :::32784->6379/tcp                                                                                                       busy_swirles
-f032cfd9263a   postgres:15.3-alpine                                "docker-entrypoint.s…"   About a minute ago   Up About a minute             0.0.0.0:32783->5432/tcp, :::32783->5432/tcp                                                                                                       modest_einstein
+CONTAINER ID   IMAGE                                               COMMAND                  CREATED         STATUS                   PORTS                                                                                                                                             NAMES
+c514896580c1   localstack/localstack:2.3.0                         "docker-entrypoint.sh"   2 minutes ago   Up 2 minutes (healthy)   4510-4559/tcp, 5678/tcp, 0.0.0.0:32792->4566/tcp, :::32792->4566/tcp                                                                              priceless_antonelli
+07fb1e908b1e   docker.redpanda.com/redpandadata/redpanda:v23.1.7   "/entrypoint-tc.sh r…"   3 minutes ago   Up 3 minutes             8082/tcp, 0.0.0.0:32791->8081/tcp, :::32791->8081/tcp, 0.0.0.0:32790->9092/tcp, :::32790->9092/tcp, 0.0.0.0:32789->9644/tcp, :::32789->9644/tcp   loving_murdock
+bf4fcb4cd74c   redis:6-alpine                                      "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes             0.0.0.0:32788->6379/tcp, :::32788->6379/tcp                                                                                                       angry_shirley
+d5ec7cecb562   postgres:15.3-alpine                                "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes             0.0.0.0:32787->5432/tcp, :::32787->5432/tcp                                                                                                       laughing_kare
 ```
 
-The Localstack instance is now running, and a lambda function is deployed in it. We can verify the lambda function is running by sending a request to the function URL. But we first need to obtain the URL of the lambda. Please do a GET request to the `/` endpoint of the API, where you'll get the metadata of the application. Something similar to this:
+The LocalStack instance is now running, and a lambda function is deployed in it. We can verify the lambda function is running by sending a request to the function URL. But we first need to obtain the URL of the lambda. Please do a GET request to the `/` endpoint of the API, where you'll get the metadata of the application. Something similar to this:
 
 ```bash
 $ curl -X GET http://localhost:8080/
-{"metadata":{"ratings_lambda":"http://46aofv7yecnd1ncaaue4qkhtnwok8hyv.lambda-url.us-east-1.localhost.localstack.cloud:32811/","ratings":"redis://127.0.0.1:32784","streams":"127.0.0.1:32786","talks":"postgres://postgres:postgres@127.0.0.1:32783/talks-db?"}}
+```
+
+The JSON response:
+
+```json
+{"metadata":{"ratings_lambda":"http://bwtiue69l3njrfnm2v27qgql2n0dwbew.lambda-url.us-east-1.localhost.localstack.cloud:32773/","ratings":"redis://127.0.0.1:32769","streams":"127.0.0.1:32771","talks":"postgres://postgres:postgres@127.0.0.1:32768/talks-db?"}}
 ```
 
 In your terminal, copy the `ratings_lambda` URL from the response and send a POST request to it with `curl` (please remember to replace the URL with the one you got from the response):
 
 ```bash
-curl -X POST http://46aofv7yecnd1ncaaue4qkhtnwok8hyv.lambda-url.us-east-1.localhost.localstack.cloud:32811/ -d '{"ratings":{"2":"1","4":"3","5":"1"}}' -H "Content-Type: application/json"
+curl -X POST http://bwtiue69l3njrfnm2v27qgql2n0dwbew.lambda-url.us-east-1.localhost.localstack.cloud:32773/ -d '{"ratings":{"2":"1","4":"3","5":"1"}}' -H "Content-Type: application/json"
+```
+
+The JSON response:
+
+```json
 {"avg": 3.8, "totalCount": 5}%
 ```
 
-The response contains the average rating of the talk, and the total number of ratings, calculated in the lambda function.
+Great! the response contains the average rating of the talk, and the total number of ratings, calculated in the lambda function.
 
 ### 
 [Next](step-8-adding-integration-tests.md)

@@ -1,6 +1,6 @@
 # Step 5: Adding Redis
 
-When the application started, it failed because you need to connect to a Redis database before you can do anything useful with the ratings.
+When the application started, and the ratings for a talk were requested, it failed because you need to connect to a Redis database before you can do anything useful with the ratings.
 
 Let's add a Redis instance using Testcontainers for Go.
 
@@ -167,7 +167,7 @@ func startTalksStore() (testcontainers.Container, error) {
 		postgres.WithPassword("postgres"),
 		testcontainers.WithWaitStrategy(
 			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).WithStartupTimeout(5*time.Second)),
+				WithOccurrence(2).WithStartupTimeout(15*time.Second)),
 	)
 	if err != nil {
 		return nil, err
@@ -186,36 +186,35 @@ func startTalksStore() (testcontainers.Container, error) {
 
 Now run `go mod tidy` from the root of the project to download the Go dependencies, only the Testcontainers for Go's Redis module.
 
-Finally, run the application again with `make dev`. This time, the application will start the Redis store and the application will be able to connect to it.
+Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the application again with `make dev`. This time, the application will start the Redis store and the application will be able to connect to it.
 
 ```text
 TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
-github.com/testcontainers/workshop-go/internal/app
-github.com/testcontainers/workshop-go
+# github.com/testcontainers/workshop-go
 
 **********************************************************************************************
 Ryuk has been disabled for the current execution. This can cause unexpected behavior in your environment.
 More on this: https://golang.testcontainers.org/features/garbage_collector/
 **********************************************************************************************
-2023/10/19 14:30:14 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 78+testcontainerscloud (via Testcontainers Desktop 1.4.18)
-  API Version: 1.43
-  Operating System: Ubuntu 20.04 LTS
-  Total Memory: 7407 MB
-  Resolved Docker Host: tcp://127.0.0.1:62250
+2023/10/26 11:33:00 github.com/testcontainers/testcontainers-go - Connected to docker: 
+  Server Version: 23.0.6 (via Testcontainers Desktop 1.4.18)
+  API Version: 1.42
+  Operating System: Alpine Linux v3.18
+  Total Memory: 5256 MB
+  Resolved Docker Host: tcp://127.0.0.1:49342
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: 4f01a36717f20795574c5a04da2025224377b8e0e7e2a99459e73f30de5bbef6
-  Test ProcessID: ba950bae-881a-45b8-909a-9ca627e8ac09
-2023/10/19 14:30:24 🐳 Creating container for image postgres:15.3-alpine
-2023/10/19 14:30:24 ✅ Container created: 622ab97d4266
-2023/10/19 14:30:24 🐳 Starting container: 622ab97d4266
-2023/10/19 14:30:24 ✅ Container started: 622ab97d4266
-2023/10/19 14:30:24 🚧 Waiting for container id 622ab97d4266 image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x140002f7b08 Strategies:[0x14000499950]}
-2023/10/19 14:30:29 🐳 Creating container for image redis:6-alpine
-2023/10/19 14:30:29 ✅ Container created: f77dfdf91c37
-2023/10/19 14:30:29 🐳 Starting container: f77dfdf91c37
-2023/10/19 14:30:30 ✅ Container started: f77dfdf91c37
-2023/10/19 14:30:30 🚧 Waiting for container id f77dfdf91c37 image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
+  Test SessionID: 6ce27d7b447abcd3c04411262c1d734b443219537b237d1edd2a68ec986c6719
+  Test ProcessID: bbd74fe6-11fb-47bf-ae4e-3ef87d0a7ab3
+2023/10/26 11:33:00 🐳 Creating container for image postgres:15.3-alpine
+2023/10/26 11:33:00 ✅ Container created: 964dde9252ec
+2023/10/26 11:33:00 🐳 Starting container: 964dde9252ec
+2023/10/26 11:33:01 ✅ Container started: 964dde9252ec
+2023/10/26 11:33:01 🚧 Waiting for container id 964dde9252ec image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x140003f33f0 Strategies:[0x140004031a0]}
+2023/10/26 11:33:12 🐳 Creating container for image redis:6-alpine
+2023/10/26 11:33:12 ✅ Container created: 27fd807da27b
+2023/10/26 11:33:12 🐳 Starting container: 27fd807da27b
+2023/10/26 11:33:13 ✅ Container started: 27fd807da27b
+2023/10/26 11:33:13 🚧 Waiting for container id 27fd807da27b image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
@@ -234,9 +233,9 @@ In the second terminal, check the containers, you will see the Redis store runni
 
 ```text
 $ docker ps
-CONTAINER ID   IMAGE                  COMMAND                  CREATED              STATUS              PORTS                                         NAMES
-f77dfdf91c37   redis:6-alpine         "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:32769->6379/tcp, :::32769->6379/tcp   laughing_wiles
-622ab97d4266   postgres:15.3-alpine   "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:32768->5432/tcp, :::32768->5432/tcp   vigilant_ptolemy
+CONTAINER ID   IMAGE                  COMMAND                  CREATED          STATUS          PORTS                                         NAMES
+4ef6b38b1baa   redis:6-alpine         "docker-entrypoint.s…"   2 seconds ago    Up 1 second     0.0.0.0:32776->6379/tcp, :::32776->6379/tcp   epic_haslett
+0fe7e41a8954   postgres:15.3-alpine   "docker-entrypoint.s…"   14 seconds ago   Up 13 seconds   0.0.0.0:32775->5432/tcp, :::32775->5432/tcp   affectionate_cori
 ```
 
 If you open now the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), then a 200 OK response code is returned, but there are no ratings for the given talk:
@@ -252,7 +251,15 @@ curl -X GET http://localhost:8080/ratings\?talkId\=testcontainers-integration-te
 {"ratings":{}}% 
 ```
 
-Now it seems the application is able to connect to the database, and to Redis. Let's try to send a POST request adding a rating for the talk. If you remember, the API accepted a JSON payload with the following format:
+If you check the logs, you'll notice an error regarding the connection to the AWS lambda function that is used to calculate some statistics for a given rating. By design, if the AWS lambda is not available, the application will not add the statistics to the response, so it's expected to see this error but a valid HTTP response:
+
+```text
+2023/10/26 11:34:46 error calling lambda function: Post "": unsupported protocol scheme ""
+```
+
+We are going to fix that in the next steps, adding a way to reproduce the AWS lambda but in a local environment, using LocalStack and Testcontainers for Go.
+
+Nevertheless, now it seems the application is able to connect to the database, and to Redis. Let's try to send a POST request adding a rating for the talk. If you remember, the API accepted a JSON payload with the following format:
 
 ```json
 {
@@ -269,12 +276,18 @@ curl -X POST -H "Content-Type: application/json" http://localhost:8080/ratings -
 
 This time, the response is a 500 error, but different:
 
-```text
-Unable to ping the streams: unable to dial: dial tcp :9092: connect: connection refused
-[GIN] 2023/10/19 - 14:40:04 | 500 |   64.879083ms |       127.0.0.1 | POST     "/ratings"
+```json
+{"message":"unable to dial: dial tcp :9092: connect: connection refused"}% 
 ```
 
-If you recall correctly, the application was using a message queue to send the ratings before storing them in Redis (see `internal/app/handlers.go`), so you need to add a message queue for that. Let's fix it, but first stop the application with `Ctrl+C` and the application and the dependencies will be terminated.
+And in the logs, you'll see the following error:
+
+```text
+Unable to ping the streams: unable to dial: dial tcp :9092: connect: connection refused
+[GIN] 2023/10/26 - 11:39:14 | 500 |   40.996542ms |       127.0.0.1 | POST     "/ratings"
+```
+
+If you recall correctly, the application was using a message queue to send the ratings before storing them in Redis (see `internal/app/handlers.go`), so you need to add a message queue for that. Let's fix it, but first stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and the application and the dependencies will be terminated.
 
 ### 
 [Next](step-6-adding-redpanda.md)

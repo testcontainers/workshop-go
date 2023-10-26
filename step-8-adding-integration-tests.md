@@ -519,9 +519,9 @@ func TestGetStats(t *testing.T) {
 
 ```
 
-This test will start a Localstack container, and it will define one test to verify that the lambda function returns the stats for a given rating ratings:
+This test will start a LocalStack container, and it will define one test to verify that the lambda function returns the stats for a given rating ratings:
 
-* `Retrieve the stats for a given histogram of ratings`: it will call the lambda deployed in the Localstack instance, using a map of ratings as the histogram, and it will verify that the result includes the calculated average and the total count of ratings.
+* `Retrieve the stats for a given histogram of ratings`: it will call the lambda deployed in the LocalStack instance, using a map of ratings as the histogram, and it will verify that the result includes the calculated average and the total count of ratings.
 
 Please notice that the package has been named with the `_test` suffix for the same reasons describe above.
 

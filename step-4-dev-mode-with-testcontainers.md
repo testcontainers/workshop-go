@@ -1,6 +1,6 @@
 # Step 4: Dev mode with Testcontainers
 
-Remember the Makefile in the root of the project with the `dev` target? The one that starts the application in `local dev mode`. You are going to learn in this workshop how to leverage Go's build tags and init functions to selectively execute code when a `dev` tag is passed to the Go toolchain, only while developing our application. So when the application is started, it will start the runtime dependencies as Docker containers, leveraging Testcontainers for Go.
+Remember the Makefile in the root of the project with the `dev` target, the one that starts the application in `local dev mode`? You are going to learn in this workshop how to leverage Go's build tags and init functions to selectively execute code when a `dev` tag is passed to the Go toolchain, only while developing our application. So when the application is started, it will start the runtime dependencies as Docker containers, leveraging Testcontainers for Go.
 
 To understand how the `local dev mode` with Testcontainers for Go works, please read the following blog post: https://www.atomicjar.com/2023/08/local-development-of-go-applications-with-testcontainers/
 
@@ -111,7 +111,7 @@ func startTalksStore() (testcontainers.Container, error) {
 		postgres.WithPassword("postgres"),
 		testcontainers.WithWaitStrategy(
 			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).WithStartupTimeout(5*time.Second)),
+				WithOccurrence(2).WithStartupTimeout(15*time.Second)),
 	)
 	if err != nil {
 		return nil, err
@@ -153,7 +153,7 @@ dev:
 
 You need to disable Ryuk in development mode, because you are starting the containers from the application, and Ryuk will try to stop them at some point, which will make the application fail as the database will be stopped. To know more about Ryuk as the resource reaper, please read https://golang.testcontainers.org/features/garbage_collector/#ryuk.
 
-Finally, run the application again with `make dev`. This time, the application will start the Postgres database and the application will be able to connect to it.
+Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the application again with `make dev`. This time, the application will start the Postgres database and the application will be able to connect to it.
 
 ```text
 TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
@@ -162,20 +162,20 @@ TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
 Ryuk has been disabled for the current execution. This can cause unexpected behavior in your environment.
 More on this: https://golang.testcontainers.org/features/garbage_collector/
 **********************************************************************************************
-2023/10/19 13:43:47 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 78+testcontainerscloud (via Testcontainers Desktop 1.4.18)
-  API Version: 1.43
-  Operating System: Ubuntu 20.04 LTS
-  Total Memory: 7407 MB
-  Resolved Docker Host: tcp://127.0.0.1:62250
+2023/10/26 11:24:40 github.com/testcontainers/testcontainers-go - Connected to docker: 
+  Server Version: 23.0.6 (via Testcontainers Desktop 1.4.18)
+  API Version: 1.42
+  Operating System: Alpine Linux v3.18
+  Total Memory: 5256 MB
+  Resolved Docker Host: tcp://127.0.0.1:49342
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: a118388ca063223ef02d32af1652c88ac2a17f6d1ae1b982b1ccdc0f3e95f71b
-  Test ProcessID: 086ce9f4-f97a-452a-8df7-085d49d9ff94
-2023/10/19 13:43:47 🐳 Creating container for image postgres:15.3-alpine
-2023/10/19 13:43:47 ✅ Container created: 3f6fc43cc641
-2023/10/19 13:43:47 🐳 Starting container: 3f6fc43cc641
-2023/10/19 13:43:48 ✅ Container started: 3f6fc43cc641
-2023/10/19 13:43:48 🚧 Waiting for container id 3f6fc43cc641 image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x140002bc968 Strategies:[0x14000488810]}
+  Test SessionID: 81b67cdfeb4575f43b46473fcf4b211e01e4729370afd2fe7bfe697183890bf5
+  Test ProcessID: c759c04a-3f04-427f-a91d-95dbe8ed3b3c
+2023/10/26 11:24:40 🐳 Creating container for image postgres:15.3-alpine
+2023/10/26 11:24:40 ✅ Container created: 2d5155cb8e58
+2023/10/26 11:24:40 🐳 Starting container: 2d5155cb8e58
+2023/10/26 11:24:41 ✅ Container started: 2d5155cb8e58
+2023/10/26 11:24:41 🚧 Waiting for container id 2d5155cb8e58 image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x140003a3470 Strategies:[0x140003bd1a0]}
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
@@ -195,16 +195,18 @@ If you open a second terminal and check the containers, you will see the Postgre
 ```text
 $ docker ps
 CONTAINER ID   IMAGE                  COMMAND                  CREATED          STATUS          PORTS                                         NAMES
-85197615f2ef   postgres:15.3-alpine   "docker-entrypoint.s…"   12 minutes ago   Up 12 minutes   0.0.0.0:32769->5432/tcp, :::32769->5432/tcp   silly_ellis
+2d5155cb8e58   postgres:15.3-alpine   "docker-entrypoint.s…"   36 seconds ago   Up 35 seconds   0.0.0.0:32771->5432/tcp, :::32771->5432/tcp   gifted_villani
 ```
 
-On the contrary, if you open again the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), you'll still get a 500 error, but different:
+On the contrary, if you open again the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), you'll still get a 500 error, but with a different message:
 
 ```text
-redis: invalid URL scheme:
+{"message":"redis: invalid URL scheme: "}
 ```
 
-Now it seems the application is able to connect to the database, but not to Redis. Let's fix it, but first stop the application with `Ctrl+C` and the application and the dependencies will be terminated by the signals you added in the `init` function.
+Now it seems the application is able to connect to the database, but not to Redis. Let's fix it, but first stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd>, so the application and the dependencies are terminated by the signals you added in the `init` function of the `internal/app/dev_dependencies.go` file.
+
+Let's add Redis as a dependency in development mode.
 
 ### 
 [Next](step-5-adding-redis.md)
