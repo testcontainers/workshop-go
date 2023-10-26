@@ -1,8 +1,10 @@
 # Step 10: End-To-End tests with real dependencies
 
-In the previous step we added integration tests for the API, and for that we used the [`net/httptest`](https://pkg.go.dev/net/http/httptest) package from the standard library. But the HTTP handlers in the application are checking for the existence of the dependencies, and if they are not there, they return an error (see `internal/app/handlers.go`).
+In the previous step we added integration tests for the API, and for that we used the [`net/httptest`](https://pkg.go.dev/net/http/httptest) package from the standard library. But the HTTP handlers in the application are consuming other services as runtime dependencies, and if they do not exist, those handlers will return an error (see `internal/app/handlers.go`).
 
-The tests that we added in the previous step are using the `httptest` package to test the handlers, but they are not testing the dependencies, they are simply checking that the handlers return an error. In this step, we are going to reuse what we did for the `local dev mode` and start the dependencies using `Testcontainers`. The tests we are going to add in this step are called `End-To-End` tests (also known as `E2E`), because they are going to test the application with all its dependencies, as the HTTP handlers need them to work.
+The tests that we added in the previous step are using the `httptest` package to test the handlers, but they are not testing the dependencies, they are simply checking that the handlers return an error. In this step, we are going to reuse what we did for the `local dev mode` and start the dependencies using `Testcontainers`.
+
+The tests we are going to add in this step are called `End-To-End` tests (also known as `E2E`), because they are going to test the application with all its dependencies, as the HTTP handlers need them to work.
 
 ## Reusing the `local dev mode` code
 
@@ -19,7 +21,7 @@ Please replace the build tags from to the `internal/app/dev_dependencies.go` fil
 
 The code in this file will be executed if and only if the build tags used in the Go toolchain match `dev` or `e2e`.
 
-Now copy the `testdata` directory from the root directory of the project to the `internal/app` directory. This step is needed because the relative path to access the SQL script to initialize the database is different when running the tests from the root directory of the project or from the `internal/app` directory. Therefore, we need a `dev-db.sql` file in that package to be used for testing. This will allow having different data for the tests and for the application in `local dev mode`.
+Now copy the `testdata` directory from the root directory of the project to the `internal/app` directory. This step is **mandatory** because the relative paths to access the files to initialize the services (SQL file, lambda scripts) are different when running the tests from the root directory of the project or from the `internal/app` directory. Therefore, we need a `dev-db.sql` and a `function.zip` files in that package to be used for testing. This will allow having different data for the tests and for the application in `local dev mode`.
 
 ## Adding Make goals for running the tests
 
@@ -102,52 +104,40 @@ If we run the test in this file, we are going to see that it fails because the d
 make test-e2e
 go test -v -count=1 -tags e2e ./internal/app
 # github.com/testcontainers/workshop-go/internal/app.test
-2023/10/25 18:58:21 github.com/testcontainers/testcontainers-go - Connected to docker: 
+2023/10/26 15:47:35 github.com/testcontainers/testcontainers-go - Connected to docker: 
   Server Version: 24.0.2 (via Testcontainers Desktop 1.4.19)
   API Version: 1.43
   Operating System: Docker Desktop
   Total Memory: 7851 MB
-  Resolved Docker Host: tcp://127.0.0.1:56978
+  Resolved Docker Host: tcp://127.0.0.1:62516
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: 44ff7433ea9c6d6e734cab0e253968ed4ca7daebc03adfc8bd5275fcb94a48f2
-  Test ProcessID: 00b5db03-6ae0-4f59-8198-2e98b746e571
-2023/10/25 18:58:21 🐳 Creating container for image docker.io/testcontainers/ryuk:0.5.1
-2023/10/25 18:58:21 ✅ Container created: 1edcc0c3c6c8
-2023/10/25 18:58:21 🐳 Starting container: 1edcc0c3c6c8
-2023/10/25 18:58:21 ✅ Container started: 1edcc0c3c6c8
-2023/10/25 18:58:21 🚧 Waiting for container id 1edcc0c3c6c8 image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
-2023/10/25 18:58:21 🐳 Creating container for image postgres:15.3-alpine
-2023/10/25 18:58:21 ✅ Container created: 8fc1965aee1f
-2023/10/25 18:58:21 🐳 Starting container: 8fc1965aee1f
-2023/10/25 18:58:22 ✅ Container started: 8fc1965aee1f
-2023/10/25 18:58:22 🚧 Waiting for container id 8fc1965aee1f image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x1400042ae88 Strategies:[0x1400043ce10]}
-2023/10/25 18:58:23 🐳 Creating container for image redis:6-alpine
-2023/10/25 18:58:23 ✅ Container created: e771098b1a3e
-2023/10/25 18:58:23 🐳 Starting container: e771098b1a3e
-2023/10/25 18:58:24 ✅ Container started: e771098b1a3e
-2023/10/25 18:58:24 🚧 Waiting for container id e771098b1a3e image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
-2023/10/25 18:58:24 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v23.1.7
-2023/10/25 18:58:24 ✅ Container created: b86043dd8663
-2023/10/25 18:58:24 🐳 Starting container: b86043dd8663
-2023/10/25 18:58:24 ✅ Container started: b86043dd8663
-2023/10/25 18:58:26 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
-2023/10/25 18:58:26 🐳 Creating container for image localstack/localstack:2.3.0
-2023/10/25 18:58:26 ✅ Container created: 1b55bc25926b
-2023/10/25 18:58:26 🐳 Starting container: 1b55bc25926b
-2023/10/25 18:58:26 ✅ Container started: 1b55bc25926b
-2023/10/25 18:58:26 🚧 Waiting for container id 1b55bc25926b image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x140002980d0 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x102e96480 ResponseMatcher:0x102f67240 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> PollInterval:100ms UserInfo:}
-=== RUN   TestRootRouteWithDependencies
-[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
-
-[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
- - using env:   export GIN_MODE=release
- - using code:  gin.SetMode(gin.ReleaseMode)
-
-[GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
-[GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
-[GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
-[GIN] 2023/10/25 - 18:58:37 | 200 |     415.334µs |                 | GET      "/"
---- PASS: TestRootRouteWithDependencies (0.00s)
+  Test SessionID: 5b15ecebb55dff9ac1874f247e10f951f24282056f874915338e224dc4b28f0a
+  Test ProcessID: d9d9c4ec-502b-4551-b622-87ba36e10c51
+2023/10/26 15:47:35 🐳 Creating container for image docker.io/testcontainers/ryuk:0.5.1
+2023/10/26 15:47:35 ✅ Container created: b5e849015a1f
+2023/10/26 15:47:35 🐳 Starting container: b5e849015a1f
+2023/10/26 15:47:35 ✅ Container started: b5e849015a1f
+2023/10/26 15:47:35 🚧 Waiting for container id b5e849015a1f image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
+2023/10/26 15:47:35 🐳 Creating container for image postgres:15.3-alpine
+2023/10/26 15:47:35 ✅ Container created: e684877e5f36
+2023/10/26 15:47:35 🐳 Starting container: e684877e5f36
+2023/10/26 15:47:35 ✅ Container started: e684877e5f36
+2023/10/26 15:47:35 🚧 Waiting for container id e684877e5f36 image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x140004674b0 Strategies:[0x140004872c0]}
+2023/10/26 15:47:36 🐳 Creating container for image redis:6-alpine
+2023/10/26 15:47:36 ✅ Container created: 35b00406fcff
+2023/10/26 15:47:36 🐳 Starting container: 35b00406fcff
+2023/10/26 15:47:36 ✅ Container started: 35b00406fcff
+2023/10/26 15:47:36 🚧 Waiting for container id 35b00406fcff image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
+2023/10/26 15:47:36 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v23.1.7
+2023/10/26 15:47:36 ✅ Container created: 369384b3a0d4
+2023/10/26 15:47:36 🐳 Starting container: 369384b3a0d4
+2023/10/26 15:47:37 ✅ Container started: 369384b3a0d4
+2023/10/26 15:47:37 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
+2023/10/26 15:47:37 🐳 Creating container for image localstack/localstack:2.3.0
+2023/10/26 15:47:37 ✅ Container created: 87fa13c23a73
+2023/10/26 15:47:37 🐳 Starting container: 87fa13c23a73
+2023/10/26 15:47:37 ✅ Container started: 87fa13c23a73
+2023/10/26 15:47:37 🚧 Waiting for container id 87fa13c23a73 image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x14000549720 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x102afb150 ResponseMatcher:0x102bcbf10 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> PollInterval:100ms UserInfo:}
 === RUN   TestRoutesWithDependencies
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
@@ -159,20 +149,19 @@ go test -v -count=1 -tags e2e ./internal/app
 [GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
 [GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
 === RUN   TestRoutesWithDependencies/GET_/ratings
-2023/10/25 18:58:38 error unmarshalling lambda response: invalid character 'I' looking for beginning of value
-[GIN] 2023/10/25 - 18:58:38 | 200 |  1.002657417s |                 | GET      "/ratings?talkId=testcontainers-integration-testing"
+[GIN] 2023/10/26 - 15:47:47 | 200 |  1.692484375s |                 | GET      "/ratings?talkId=testcontainers-integration-testing"
 === RUN   TestRoutesWithDependencies/POST_/ratings
-[GIN] 2023/10/25 - 18:58:39 | 200 |  868.640667ms |                 | POST     "/ratings"
---- PASS: TestRoutesWithDependencies (1.87s)
-    --- PASS: TestRoutesWithDependencies/GET_/ratings (1.00s)
-    --- PASS: TestRoutesWithDependencies/POST_/ratings (0.87s)
+[GIN] 2023/10/26 - 15:47:48 | 200 |  456.663958ms |                 | POST     "/ratings"
+--- PASS: TestRoutesWithDependencies (2.15s)
+    --- PASS: TestRoutesWithDependencies/GET_/ratings (1.69s)
+    --- PASS: TestRoutesWithDependencies/POST_/ratings (0.46s)
 PASS
-ok      github.com/testcontainers/workshop-go/internal/app      18.910s
+ok      github.com/testcontainers/workshop-go/internal/app      13.193s
 ```
 
 Please take a look at these things:
 
-1. the `e2e` build tag is passed to the Go toolchain (e.g. `-tags e2e`), so the code in the `internal/app/dev_dependencies.go` file is executed for this test execution.
+1. the `e2e` build tag is passed to the Go toolchain (e.g. `-tags e2e`) in the Makefile goal, so the code in the `internal/app/dev_dependencies.go` file is added to this test execution.
 2. both tests for the endpoints (`GET /ratings` and `POST /ratings`) are now passing because the endpoints are returning a `200` instead of a `500`: the dependencies are started, and the endpoints are not returning an error.
 
 ### Adding a test for the `GET /` endpoint
@@ -241,6 +230,6 @@ Running the tests again with `make test-e2e` shows that the new test is also pas
 [GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
 [GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
 [GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
-[GIN] 2023/10/23 - 15:32:22 | 200 |     131.458µs |                 | GET      "/"
+[GIN] 2023/10/26 - 15:50:53 | 200 |     196.083µs |                 | GET      "/"
 --- PASS: TestRootRouteWithDependencies (0.00s)
 ``````
