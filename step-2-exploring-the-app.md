@@ -18,17 +18,19 @@ The application stores the ratings in a Redis store with [redis/go-redis](https:
 
 Check `internal/ratings/repo.go`.
 
-### AWS Lambdas
-
-The application uses AWS lambda functions to calculate the average rating of a talk. The lambda functions are invoked by the application when the ratings for a talk are requested,  using HTTP calls to the function URL of the lambda.
-
-Check `internal/ratings/lambda.go`.
-
 ### Redpanda
 
 The application uses ES/CQRS to materialize the events into the state. Redpanda acts as a broker and the [twmb/franz-go](https://github.com/twmb/franz-go) Kafa client.
 
 Check `internal/streams/broker.go`.
+
+## Cloud layer
+
+### AWS Lambdas
+
+The application uses AWS lambda functions to calculate some rating statistics of a talk. The lambda functions are invoked by the application when the ratings for a talk are requested, using HTTP calls to the function URL of the lambda.
+
+Check `internal/ratings/lambda_client.go`.
 
 ## Web application
 
