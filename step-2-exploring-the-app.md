@@ -1,6 +1,6 @@
 # Step 2: Exploring the app
 
-The app is a simple microservice for rating conference talks. It provides a web API to track the ratings of the talks in real time, storing the results in a PostgreSQL database and a Redis cache, and using Redpanda as a broker for the event stream.
+The app is a simple microservice for rating conference talks. It provides a web API to track the ratings of the talks in real time, storing the results in a PostgreSQL database and a Redis cache, and using Redpanda as a broker for the event stream. Finally, it will use an AWS lambda function to calculate some statistics about the ratings of a talk.
 
 ## Storage layer
 
