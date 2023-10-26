@@ -30,7 +30,11 @@ Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-
 [GIN-debug] Listening and serving HTTP on :8080
 ```
 
-If you open the browser in the URL http://localhost:8080, you will see an empty page.
+If you open the browser in the URL http://localhost:8080, you will see the metadata of the application, but all the values are empty:
+
+```json
+{"metadata":{"ratings_lambda":"","ratings":"","streams":"","talks":""}}
+```
 
 On the contrary, if you open the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), you will get a 500 error and a similar message:
 
