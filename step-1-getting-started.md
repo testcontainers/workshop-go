@@ -70,6 +70,7 @@ This might be helpful if the internet connection at the workshop venue is somewh
 docker pull postgres:15.3-alpine
 docker pull redis:6-alpine
 docker pull docker.redpanda.com/redpandadata/redpanda:v23.1.7
+docker pull localstack/localstack:2.3.0
 ```
 
 ### 
