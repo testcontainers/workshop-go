@@ -90,10 +90,10 @@ Finally, run your tests with `go test -v -count=1 ./internal/ratings` from the r
 ```text
 === RUN   TestNewRepository
 2023/10/19 17:24:24 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 78+testcontainerscloud (via Testcontainers Desktop 1.4.18)
+  Server Version: 24.0.2 (via Testcontainers Desktop 1.4.19)
   API Version: 1.43
-  Operating System: Ubuntu 20.04 LTS
-  Total Memory: 7407 MB
+  Operating System: Docker Desktop
+  Total Memory: 7851 MB
   Resolved Docker Host: tcp://127.0.0.1:62250
   Resolved Docker Socket Path: /var/run/docker.sock
   Test SessionID: fbe36666d79be2fb28c514488a02c767da8b05033f4f9eb09c5863a6efa10f53
@@ -197,10 +197,10 @@ Finally, run your tests with `go test -v -count=1 ./internal/streams` from the r
 ```text
 === RUN   TestBroker
 2023/10/19 17:29:54 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 78+testcontainerscloud (via Testcontainers Desktop 1.4.18)
+  Server Version: 24.0.2 (via Testcontainers Desktop 1.4.19)
   API Version: 1.43
-  Operating System: Ubuntu 20.04 LTS
-  Total Memory: 7407 MB
+  Operating System: Docker Desktop
+  Total Memory: 7851 MB
   Resolved Docker Host: tcp://127.0.0.1:62250
   Resolved Docker Socket Path: /var/run/docker.sock
   Test SessionID: b7cbe505ff02d97f5b7a59b3acd71206c68092791a7e48b07fc6b4a098a56e6c
@@ -337,10 +337,10 @@ Finally, run your tests with `go test -v -count=1 ./internal/talks` from the roo
 ```text
 === RUN   TestNewRepository
 2023/10/19 17:39:09 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 78+testcontainerscloud (via Testcontainers Desktop 1.4.18)
+  Server Version: 24.0.2 (via Testcontainers Desktop 1.4.19)
   API Version: 1.43
-  Operating System: Ubuntu 20.04 LTS
-  Total Memory: 7407 MB
+  Operating System: Docker Desktop
+  Total Memory: 7851 MB
   Resolved Docker Host: tcp://127.0.0.1:62250
   Resolved Docker Socket Path: /var/run/docker.sock
   Test SessionID: b7be60cb63f0433cdafd50b8fe144c791959fd2aa586f8abaefa0661049a1fc8
@@ -532,10 +532,10 @@ Finally, run your tests with `go test -v -count=1 ./internal/ratings -run TestGe
 ```text
 === RUN   TestGetStats
 2023/10/25 18:50:32 github.com/testcontainers/testcontainers-go - Connected to docker:
-  Server Version: 78+testcontainerscloud (via Testcontainers Desktop 1.4.18)
+  Server Version: 24.0.2 (via Testcontainers Desktop 1.4.19)
   API Version: 1.43
-  Operating System: Ubuntu 22.04.3 LTS
-  Total Memory: 15689 MB
+  Operating System: Docker Desktop
+  Total Memory: 7851 MB
   Resolved Docker Host: tcp://127.0.0.1:56978
   Resolved Docker Socket Path: /var/run/docker.sock
   Test SessionID: 05830d69843b1ee75edd702cb6619a3ce35d91d663f3b383c05d6bd09cc9a7cf

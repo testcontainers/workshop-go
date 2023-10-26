@@ -483,10 +483,10 @@ Ryuk has been disabled for the current execution. This can cause unexpected beha
 More on this: https://golang.testcontainers.org/features/garbage_collector/
 **********************************************************************************************
 2023/10/26 12:09:37 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 78+testcontainerscloud (via Testcontainers Desktop 1.4.18)
+  Server Version: 24.0.2 (via Testcontainers Desktop 1.4.19)
   API Version: 1.43
-  Operating System: Ubuntu 20.04 LTS
-  Total Memory: 7407 MB
+  Operating System: Docker Desktop
+  Total Memory: 7851 MB
   Resolved Docker Host: tcp://127.0.0.1:49342
   Resolved Docker Socket Path: /var/run/docker.sock
   Test SessionID: daefc07421b8d6bafd1212dbe6e8e550c6fa29cac9a025b46385f75eb5e2cb57

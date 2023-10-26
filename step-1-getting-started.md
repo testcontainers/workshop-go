@@ -23,26 +23,26 @@ Client:
  Git commit:        cb74dfc
  Built:             Thu May 25 21:51:16 2023
  OS/Arch:           darwin/arm64
- Context:           tcd
+ Context:           desktop-linux
 
-Server: Testcontainers Cloud
+Server: Docker Desktop 4.21.1 (114176)
  Engine:
-  Version:          78+testcontainerscloud
+  Version:          24.0.2
   API version:      1.43 (minimum version 1.12)
   Go version:       go1.20.4
-  Git commit:       659604f9ee
-  Built:            Mon Jun  5 07:15:55 2023
-  OS/Arch:          linux/amd64
+  Git commit:       659604f
+  Built:            Thu May 25 21:50:59 2023
+  OS/Arch:          linux/arm64
   Experimental:     false
  containerd:
-  Version:          v1.7.1
-  GitCommit:        1677a17964311325ed1c31e2c0a3589ce6d5c30d
+  Version:          1.6.21
+  GitCommit:        3dce8eb055cbb6872793272b4f20ed16117344f8
  runc:
   Version:          1.1.7
-  GitCommit:        v1.1.7-0-g860f061b
+  GitCommit:        v1.1.7-0-g860f061
  docker-init:
   Version:          0.19.0
-  GitCommit:
+  GitCommit:        de40ad0
 ```
 
 ## Download the project
