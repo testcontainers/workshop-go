@@ -1,6 +1,6 @@
 # Step 5: Adding Redis
 
-When the application started, and the ratings for a talk were requested, it failed because you need to connect to a Redis database before you can do anything useful with the ratings.
+When the application started, and the ratings for a talk were requested, it failed because we need to connect to a Redis database before we can do anything useful with the ratings.
 
 Let's add a Redis instance using Testcontainers for Go.
 
@@ -229,7 +229,7 @@ Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-
 [GIN-debug] Listening and serving HTTP on :8080
 ```
 
-In the second terminal, check the containers, you will see the Redis store running alongside the Postgres database:
+In the second terminal, check the containers, we will see the Redis store running alongside the Postgres database:
 
 ```text
 $ docker ps
@@ -238,7 +238,7 @@ CONTAINER ID   IMAGE                  COMMAND                  CREATED          
 0fe7e41a8954   postgres:15.3-alpine   "docker-entrypoint.s…"   14 seconds ago   Up 13 seconds   0.0.0.0:32775->5432/tcp, :::32775->5432/tcp   affectionate_cori
 ```
 
-If you open now the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), then a 200 OK response code is returned, but there are no ratings for the given talk:
+If yoweu open now the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), then a 200 OK response code is returned, but there are no ratings for the given talk:
 
 ```text
 {"ratings":{}}
@@ -251,7 +251,7 @@ curl -X GET http://localhost:8080/ratings\?talkId\=testcontainers-integration-te
 {"ratings":{}}% 
 ```
 
-If you check the logs, you'll notice an error regarding the connection to the AWS lambda function that is used to calculate some statistics for a given rating. By design, if the AWS lambda is not available, the application will not add the statistics to the response, so it's expected to see this error but a valid HTTP response:
+If we check the logs, we'll notice an error regarding the connection to the AWS lambda function that is used to calculate some statistics for a given rating. By design, if the AWS lambda is not available, the application will not add the statistics to the response, so it's expected to see this error but a valid HTTP response:
 
 ```text
 2023/10/26 11:34:46 error calling lambda function: Post "": unsupported protocol scheme ""
@@ -259,7 +259,7 @@ If you check the logs, you'll notice an error regarding the connection to the AW
 
 We are going to fix that in the next steps, adding a way to reproduce the AWS lambda but in a local environment, using LocalStack and Testcontainers for Go.
 
-Nevertheless, now it seems the application is able to connect to the database, and to Redis. Let's try to send a POST request adding a rating for the talk. If you remember, the API accepted a JSON payload with the following format:
+Nevertheless, now it seems the application is able to connect to the database, and to Redis. Let's try to send a POST request adding a rating for the talk, using the JSON payload format accepted by the API endopint:
 
 ```json
 {
@@ -280,14 +280,14 @@ This time, the response is a 500 error, but different:
 {"message":"unable to dial: dial tcp :9092: connect: connection refused"}% 
 ```
 
-And in the logs, you'll see the following error:
+And in the logs, we'll see the following error:
 
 ```text
 Unable to ping the streams: unable to dial: dial tcp :9092: connect: connection refused
 [GIN] 2023/10/26 - 11:39:14 | 500 |   40.996542ms |       127.0.0.1 | POST     "/ratings"
 ```
 
-If you recall correctly, the application was using a message queue to send the ratings before storing them in Redis (see `internal/app/handlers.go`), so you need to add a message queue for that. Let's fix it, but first stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and the application and the dependencies will be terminated.
+If we recall correctly, the application was using a message queue to send the ratings before storing them in Redis (see `internal/app/handlers.go`), so we need to add a message queue for that. Let's fix it, but first stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and the application and the dependencies will be terminated.
 
 ### 
 [Next](step-6-adding-redpanda.md)

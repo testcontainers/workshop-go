@@ -2,9 +2,9 @@
 
 The application is using an AWS lambda function to calculate some statistics (average and total count) for the ratings of a talk. The lambda function is invoked by the application any time the ratings for a talk are requested, using HTTP calls to the function URL of the lambda.
 
-To enhance the developer experience of consuming this lambda function while developing the application, you will use LocalStack to emulate the AWS cloud environment locally.
+To enhance the developer experience of consuming this lambda function while developing the application, we will use LocalStack to emulate the AWS cloud environment locally.
 
-LocalStack is a cloud service emulator that runs in a single container on your laptop or in your CI environment. With LocalStack, you can run your AWS applications or Lambdas entirely on your local machine without connecting to a remote cloud provider!
+LocalStack is a cloud service emulator that runs in a single container on your laptop or in your CI environment. With LocalStack, we can run your AWS applications or Lambdas entirely on your local machine without connecting to a remote cloud provider!
 
 ## Creating the lambda function
 
@@ -525,7 +525,7 @@ Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-
 [GIN-debug] Listening and serving HTTP on :8080
 ```
 
-In the second terminal, check the containers, you will see the LocalStack instance is running alongside the Postgres database, the Redis store and the Redpanda streaming queue:
+In the second terminal, check the containers, we will see the LocalStack instance is running alongside the Postgres database, the Redis store and the Redpanda streaming queue:
 
 ```text
 $ docker ps
@@ -536,7 +536,7 @@ bf4fcb4cd74c   redis:6-alpine                                      "docker-entry
 d5ec7cecb562   postgres:15.3-alpine                                "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes             0.0.0.0:32787->5432/tcp, :::32787->5432/tcp                                                                                                       laughing_kare
 ```
 
-The LocalStack instance is now running, and a lambda function is deployed in it. We can verify the lambda function is running by sending a request to the function URL. But we first need to obtain the URL of the lambda. Please do a GET request to the `/` endpoint of the API, where you'll get the metadata of the application. Something similar to this:
+The LocalStack instance is now running, and a lambda function is deployed in it. We can verify the lambda function is running by sending a request to the function URL. But we first need to obtain the URL of the lambda. Please do a GET request to the `/` endpoint of the API, where we'll get the metadata of the application. Something similar to this:
 
 ```bash
 $ curl -X GET http://localhost:8080/
@@ -548,7 +548,7 @@ The JSON response:
 {"metadata":{"ratings_lambda":"http://bwtiue69l3njrfnm2v27qgql2n0dwbew.lambda-url.us-east-1.localhost.localstack.cloud:32773/","ratings":"redis://127.0.0.1:32769","streams":"127.0.0.1:32771","talks":"postgres://postgres:postgres@127.0.0.1:32768/talks-db?"}}
 ```
 
-In your terminal, copy the `ratings_lambda` URL from the response and send a POST request to it with `curl` (please remember to replace the URL with the one you got from the response):
+In your terminal, copy the `ratings_lambda` URL from the response and send a POST request to it with `curl` (please remember to replace the URL with the one we got from the response):
 
 ```bash
 curl -X POST http://bwtiue69l3njrfnm2v27qgql2n0dwbew.lambda-url.us-east-1.localhost.localstack.cloud:32773/ -d '{"ratings":{"2":"1","4":"3","5":"1"}}' -H "Content-Type: application/json"

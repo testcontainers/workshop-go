@@ -1,6 +1,6 @@
 # Step 9: Integration tests for the API
 
-In this step you will add integration tests for the API, and for that we are going to use the [`net/httptest`](https://pkg.go.dev/net/http/httptest) package from the standard library.
+In this step we will add integration tests for the API, and for that we are going to use the [`net/httptest`](https://pkg.go.dev/net/http/httptest) package from the standard library.
 
 ## The `net/httptest` package
 
@@ -58,9 +58,9 @@ func TestRoutesFailBecauseDependenciesAreNotStarted(t *testing.T) {
 
 ```
 
-Let's check what you are doing here:
+Let's check what we are doing here:
 
-- You are setting up the Gin's router, with the `app.SetupRouter` function.
+- We are setting up the Gin's router, with the `app.SetupRouter` function.
 - a new `httptest.Recorder` is used to record the response.
 - each subtest defines a new `http.Request`, with the right method and path.
 - the `ServeHTTP` method on the router is called with the `httptest.Recorder` and the `http.Request`.

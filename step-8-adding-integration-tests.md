@@ -1,6 +1,6 @@
 # Step 8: Adding Integration Tests
 
-Ok, you have a working application, but you don't have any tests. Let's add some integration tests to verify that the application works as expected.
+Ok, we have a working application, but we don't have any tests. Let's add some integration tests to verify that the application works as expected.
 
 ## Integration tests for the Ratings store
 
@@ -81,11 +81,11 @@ This test will start a Redis container, and it will define two tests:
 * `Add rating`: it will add a rating to the store and verify that the result is the same as the one provided
 * `Add multiple ratings`: it will add 100 ratings to the store and verify that the distribution of ratings is correct
 
-The package has been named with the `_test` suffix to indicate that it contains tests. This is a convention in Go and forces you to consume your code as a package, which is a good practice.
+The package has been named with the `_test` suffix to indicate that it contains tests. This is a convention in Go and forces us to consume your code as a package, which is a good practice.
 
 Now run `go mod tidy` from the root of the project to download the Go dependencies, as the workshop is using [testify](https://github.com/stretchr/testify) as the assertions library.
 
-Finally, run your tests with `go test -v -count=1 ./internal/ratings -run TestNewRepository` from the root of the project. You should see the following output:
+Finally, run your tests with `go test -v -count=1 ./internal/ratings -run TestNewRepository` from the root of the project. We should see the following output:
 
 ```text
 === RUN   TestNewRepository
@@ -120,7 +120,7 @@ PASS
 ok      github.com/testcontainers/workshop-go/internal/ratings  0.915s
 ```
 
-_NOTE: if you experiment longer test execution times it could caused by the need of pulling the images from the registry._
+_NOTE: if we experiment longer test execution times it could be caused by the need of pulling the images from the registry._
 
 ## Integration tests for the Streaming queue
 
@@ -191,9 +191,9 @@ This test will start a Redpanda container, and it will define two tests:
 
 Please notice that the package has been named with the `_test` suffix for the same reasons describe above.
 
-There is no need to run `go mod tidy` again, as you have already downloaded the Go dependencies.
+There is no need to run `go mod tidy` again, as we have already downloaded the Go dependencies.
 
-Finally, run your tests with `go test -v -count=1 ./internal/streams -run TestBroker` from the root of the project. You should see the following output:
+Finally, run your tests with `go test -v -count=1 ./internal/streams -run TestBroker` from the root of the project. We should see the following output:
 
 ```text
 === RUN   TestBroker
@@ -224,7 +224,7 @@ PASS
 ok      github.com/testcontainers/workshop-go/internal/streams  1.714s
 ```
 
-_NOTE: if you experiment longer test execution times it could caused by the need of pulling the images from the registry._
+_NOTE: if we experiment longer test execution times it could be caused by the need of pulling the images from the registry._
 
 ## Integration tests for the Talks store
 
@@ -331,9 +331,9 @@ This test will start a Postgres container, and it will define three tests:
 
 Please notice that the package has been named with the `_test` suffix for the same reasons describe above.
 
-There is no need to run `go mod tidy` again, as you have already downloaded the Go dependencies.
+There is no need to run `go mod tidy` again, as we have already downloaded the Go dependencies.
 
-Finally, run your tests with `go test -v -count=1 ./internal/talks -run TestNewRepository` from the root of the project. You should see the following output:
+Finally, run your tests with `go test -v -count=1 ./internal/talks -run TestNewRepository` from the root of the project. We should see the following output:
 
 ```text
 === RUN   TestNewRepository
@@ -369,7 +369,7 @@ PASS
 ok      github.com/testcontainers/workshop-go/internal/talks    1.685s
 ```
 
-_NOTE: if you experiment longer test execution times it could caused by the need of pulling the images from the registry._
+_NOTE: if we experiment longer test execution times it could be caused by the need of pulling the images from the registry._
 
 ## Integration tests for the Ratings Lambda
 
@@ -526,9 +526,9 @@ This test will start a LocalStack container, and it will define one test to veri
 
 Please notice that the package has been named with the `_test` suffix for the same reasons describe above.
 
-There is no need to run `go mod tidy` again, as you have already downloaded the Go dependencies.
+There is no need to run `go mod tidy` again, as we have already downloaded the Go dependencies.
 
-Finally, run your tests with `go test -v -count=1 ./internal/ratings -run TestGetStats` from the root of the project. You should see the following output:
+Finally, run your tests with `go test -v -count=1 ./internal/ratings -run TestGetStats` from the root of the project. We should see the following output:
 
 ```text
 === RUN   TestGetStats
@@ -557,7 +557,7 @@ PASS
 ok      github.com/testcontainers/workshop-go/internal/ratings  8.357s
 ```
 
-_NOTE: if you experiment longer test execution times it could caused by the need of pulling the images from the registry._
+_NOTE: if we experiment longer test execution times it could be caused by the need of pulling the images from the registry._
 
 We have now added integration tests for the three stores of our application, and our AWS lambda. Let's add some integration tests for the API.
 

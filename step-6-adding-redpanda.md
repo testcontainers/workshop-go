@@ -1,6 +1,6 @@
 # Step 6: Adding Redpanda
 
-When the application started, it failed because you need to connect to a message queue before you can adds the ratings for a talk.
+When the application started, it failed because we need to connect to a message queue before we can add the ratings for a talk.
 
 Let's add a Redpanda instance using Testcontainers for Go.
 
@@ -258,7 +258,7 @@ Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-
 [GIN-debug] Listening and serving HTTP on :8080
 ```
 
-In the second terminal, check the containers, you will see the Redpanda streaming queue is running alongside the Postgres database and the Redis store:
+In the second terminal, check the containers, we will see the Redpanda streaming queue is running alongside the Postgres database and the Redis store:
 
 ```text
 $ docker ps
@@ -268,7 +268,7 @@ CONTAINER ID   IMAGE                                               COMMAND      
 00bca83e66ca   postgres:15.3-alpine                                "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes   0.0.0.0:32777->5432/tcp, :::32777->5432/tcp                                                                                                       wizardly_snyder
 ```
 
-Now the application should be able to connect to the database, to Redis and to the Redpanda streaming queue. Let's try to send a POST request adding a rating for the talk. If you remember, the API accepted a JSON payload with the following format:
+Now the application should be able to connect to the database, to Redis and to the Redpanda streaming queue. Let's try to send a POST request adding a rating for the talk. If we remember, the API accepted a JSON payload with the following format:
 
 ```json
 {
@@ -295,7 +295,7 @@ The log entry for the POST request:
 [GIN] 2023/10/26 - 11:48:25 | 200 |  597.468542ms |       127.0.0.1 | POST     "/ratings"
 ```
 
-If you open now the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), then a 200 OK response code is returned, and the first ratings for the given talk is there. It was a five! ⭐️⭐️⭐️⭐️⭐️
+If we open now the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), then a 200 OK response code is returned, and the first ratings for the given talk is there. It was a five! ⭐️⭐️⭐️⭐️⭐️
 
 ```text
 {"ratings":{"5":"1"}}
@@ -310,7 +310,7 @@ curl -X GET http://localhost:8080/ratings\?talkId\=testcontainers-integration-te
 
 Play around sending multiple POST requests for the two talks, and check the histogram that is created for the different rating values.
 
-in any POST request you'll still see the log entry for the AWS lambda failing to be called.
+in any POST request we'll still see the log entry for the AWS lambda failing to be called.
 
 ```text
 2023/10/26 11:48:42 error calling lambda function: Post "": unsupported protocol scheme ""

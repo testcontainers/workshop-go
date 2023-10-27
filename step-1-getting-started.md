@@ -1,17 +1,17 @@
 # Step 1: Getting Started
 
 ## Check Go
-You'll need Go 1.20 or newer for this workshop. 
+We'll need Go 1.20 or newer for this workshop. 
 
 This workshop uses a [Gin](https://gin-gonic.com) application, which requires Go 1.13 or newer, but Testcontainers for Go is compatible with Go 1.20+.
 
 ## Check Docker
 
-Make sure you have a Docker environment available on your machine. 
+Make sure we have a Docker environment available on your machine. 
 
 * It can be [Testcontainers Cloud](https://testcontainers.com/cloud) recommended to avoid straining the conference network by pulling heavy Docker images. 
 
-* It can be local Docker, which you can check by running: 
+* It can be local Docker, which we can check by running: 
 
 ```shell
 $ docker version
