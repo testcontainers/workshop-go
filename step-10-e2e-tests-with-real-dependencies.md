@@ -105,10 +105,10 @@ make test-e2e
 go test -v -count=1 -tags e2e ./internal/app
 # github.com/testcontainers/workshop-go/internal/app.test
 2023/10/26 15:47:35 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 24.0.2 (via Testcontainers Desktop 1.4.19)
-  API Version: 1.43
-  Operating System: Docker Desktop
-  Total Memory: 7851 MB
+  Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
+  API Version: 1.42
+  Operating System: Alpine Linux v3.18
+  Total Memory: 5256 MB
   Resolved Docker Host: tcp://127.0.0.1:62516
   Resolved Docker Socket Path: /var/run/docker.sock
   Test SessionID: 5b15ecebb55dff9ac1874f247e10f951f24282056f874915338e224dc4b28f0a
