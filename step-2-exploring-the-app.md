@@ -6,7 +6,7 @@ The app is a simple microservice for rating conference talks. It provides a web 
 
 ### SQL database with the talks
 
-When a rating is submitted, you must verify that the talk for the given ID is present in the database.
+When a rating is submitted, we must verify that the talk for the given ID is present in the database.
 
 The database of choice is PostgreSQL, accessed with [jackc/pgx](https://github.com/jackc/pgx) PostgreSQL Driver.
 
