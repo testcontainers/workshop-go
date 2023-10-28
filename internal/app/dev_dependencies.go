@@ -102,7 +102,7 @@ func startRatingsLambda() (testcontainers.Container, error) {
 				},
 				Files: []testcontainers.ContainerFile{
 					{
-						HostFilePath:      filepath.Join("testdata", "function.zip"),
+						HostFilePath:      filepath.Join("testdata", "lambda-go", "function.zip"),
 						ContainerFilePath: "/tmp/function.zip",
 					},
 				},
@@ -123,11 +123,10 @@ func startRatingsLambda() (testcontainers.Container, error) {
 		{
 			"awslocal", "lambda",
 			"create-function", "--function-name", lambdaName,
-			"--runtime", "nodejs18.x",
-			"--zip-file",
-			"fileb:///tmp/function.zip",
-			"--handler", "index.handler",
-			"--role", "arn:aws:iam::000000000000:role/lambda-role",
+			"--runtime", "provided.al2",
+			"--handler", "bootstrap",
+			"--role", "arn:aws:iam::111122223333:role/lambda-ex",
+			"--zip-file", "fileb:///tmp/function.zip",
 		},
 		{"awslocal", "lambda", "create-function-url-config", "--function-name", lambdaName, "--auth-type", "NONE"},
 		{"awslocal", "lambda", "wait", "function-active-v2", "--function-name", lambdaName},
