@@ -8,43 +8,115 @@ LocalStack is a cloud service emulator that runs in a single container on your l
 
 ## Creating the lambda function
 
-The lambda function is a simple Node.js function that calculates the average rating of a talk. The function is defined in the `testdata/index.js` file:
+The lambda function is a simple Go function that calculates the average rating of a talk. The function is defined in the `testdata/lambda-go` directory:
 
-```javascript
-// it will receive a json object with a map of entries, where the key is the rating, and the value is the counts of that rating
-exports.handler = async (event) => {
-    let body = JSON.parse(event.body)
-    
-    let ratings = body.ratings;
-    let avg = 0;
+```go
+package main
 
-    let total = 0;
-    let totalCount = 0;
+import (
+	"encoding/json"
+	"fmt"
+	"strconv"
 
-    for (let ratingValue in ratings) {
-        totalCount += parseInt(ratings[ratingValue]);
-        total += parseInt(ratingValue) * ratings[ratingValue];
-    }
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
+)
 
-    avg = total / totalCount;
+type RatingsEvent struct {
+	Ratings map[string]int `json:"ratings"`
+}
 
-    const response = {
-        statusCode: 200,
-        body: JSON.stringify({
-            'avg': avg,
-            'totalCount': totalCount,
-        }),
-    };
+type Response struct {
+	Avg        float64 `json:"avg"`
+	TotalCount int     `json:"totalCount"`
+}
 
-    return response;
-};
+var emptyResponse = Response{
+	Avg:        0,
+	TotalCount: 0,
+}
+
+// HandleStats returns the stats for the given talk, obtained from a call to the Lambda function.
+// The payload is a JSON object with the following structure:
+//
+//	{
+//	  "ratings": {
+//	    "0": 10,
+//	    "1": 20,
+//	    "2": 30,
+//	    "3": 40,
+//	    "4": 50,
+//	    "5": 60
+//	  }
+//	}
+//
+// The response from the Lambda function is a JSON object with the following structure:
+//
+//	{
+//	   "avg": 3.5,
+//	   "totalCount": 210,
+//	}
+func HandleStats(event events.APIGatewayProxyRequest) (Response, error) {
+	fmt.Printf(">>> event: %+v\n", event)
+
+	ratingsEvent := RatingsEvent{}
+	err := json.Unmarshal([]byte(event.Body), &ratingsEvent)
+	if err != nil {
+		fmt.Printf(">>> error: %v\n", err)
+		return emptyResponse, fmt.Errorf("failed to unmarshal ratings event: %s", err)
+	}
+
+	fmt.Println(">>> ratings: ", ratingsEvent)
+	var totalCount int
+	var sum int
+	for rating, count := range ratingsEvent.Ratings {
+		totalCount += count
+
+		r, err := strconv.Atoi(rating)
+		if err != nil {
+			fmt.Printf(">>> error: %v\n", err)
+			return emptyResponse, fmt.Errorf("failed to convert rating %s to int: %s", rating, err)
+		}
+
+		sum += count * r
+		fmt.Printf(">>> sum += %d * %d; Sum: %d\n", count, r, sum)
+	}
+
+	var avg float64
+	if totalCount > 0 {
+		avg = float64(sum) / float64(totalCount)
+	}
+
+	resp := Response{
+		Avg:        avg,
+		TotalCount: totalCount,
+	}
+
+	fmt.Printf(">>> response: %+v\n", resp)
+	return resp, nil
+}
+
+func main() {
+	lambda.Start(HandleStats)
+}
+
 ```
 
-Now, from the `testdata` directory at the root of the project, `zip` the Javascript file into the `function.zip` file:
+Now, create a Makefile in the `testdata/lambda-go` directory. It will simplify how the Go lambda is compiled and packaged for being deployed to LocalStack. Please add the following content:
 
-```bash
-zip -r function.zip index.js
+```Makefile
+mod-tidy:
+	go mod tidy
+
+build-lambda: mod-tidy
+	GOOS=linux go build -tags lambda.norpc -o bootstrap main.go
+
+zip-lambda: build-lambda
+	zip -j function.zip bootstrap
+
 ```
+
+Now, from the root directory of the project, run `make -C testdata/lambda-go zip-lambda`. This will create a zip file with the lambda function.
 
 This zip file will be used by the lambda function to deploy the function in the LocalStack instance.
 
@@ -102,7 +174,7 @@ func startRatingsLambda() (testcontainers.Container, error) {
 				},
 				Files: []testcontainers.ContainerFile{
 					{
-						HostFilePath:      filepath.Join("testdata", "function.zip"),
+						HostFilePath:      filepath.Join("testdata", "lambda-go", "function.zip"), // path to the root of the project
 						ContainerFilePath: "/tmp/function.zip",
 					},
 				},
@@ -123,11 +195,10 @@ func startRatingsLambda() (testcontainers.Container, error) {
 		{
 			"awslocal", "lambda",
 			"create-function", "--function-name", lambdaName,
-			"--runtime", "nodejs18.x",
-			"--zip-file",
-			"fileb:///tmp/function.zip",
-			"--handler", "index.handler",
-			"--role", "arn:aws:iam::000000000000:role/lambda-role",
+			"--runtime", "provided.al2",
+			"--handler", "bootstrap",
+			"--role", "arn:aws:iam::111122223333:role/lambda-ex",
+			"--zip-file", "fileb:///tmp/function.zip",
 		},
 		{"awslocal", "lambda", "create-function-url-config", "--function-name", lambdaName, "--auth-type", "NONE"},
 		{"awslocal", "lambda", "wait", "function-active-v2", "--function-name", lambdaName},
@@ -326,7 +397,7 @@ func startRatingsLambda() (testcontainers.Container, error) {
 				},
 				Files: []testcontainers.ContainerFile{
 					{
-						HostFilePath:      filepath.Join("testdata", "function.zip"),
+						HostFilePath:      filepath.Join("testdata", "lambda-go", "function.zip"),
 						ContainerFilePath: "/tmp/function.zip",
 					},
 				},
@@ -347,11 +418,10 @@ func startRatingsLambda() (testcontainers.Container, error) {
 		{
 			"awslocal", "lambda",
 			"create-function", "--function-name", lambdaName,
-			"--runtime", "nodejs18.x",
-			"--zip-file",
-			"fileb:///tmp/function.zip",
-			"--handler", "index.handler",
-			"--role", "arn:aws:iam::000000000000:role/lambda-role",
+			"--runtime", "provided.al2",
+			"--handler", "bootstrap",
+			"--role", "arn:aws:iam::111122223333:role/lambda-ex",
+			"--zip-file", "fileb:///tmp/function.zip",
 		},
 		{"awslocal", "lambda", "create-function-url-config", "--function-name", lambdaName, "--auth-type", "NONE"},
 		{"awslocal", "lambda", "wait", "function-active-v2", "--function-name", lambdaName},
@@ -551,7 +621,7 @@ The JSON response:
 In your terminal, copy the `ratings_lambda` URL from the response and send a POST request to it with `curl` (please remember to replace the URL with the one we got from the response):
 
 ```bash
-curl -X POST http://bwtiue69l3njrfnm2v27qgql2n0dwbew.lambda-url.us-east-1.localhost.localstack.cloud:32773/ -d '{"ratings":{"2":"1","4":"3","5":"1"}}' -H "Content-Type: application/json"
+curl -X POST http://bwtiue69l3njrfnm2v27qgql2n0dwbew.lambda-url.us-east-1.localhost.localstack.cloud:32773/ -d '{"ratings":{"2":1,"4":3,"5":1}}' -H "Content-Type: application/json"
 ```
 
 The JSON response:

@@ -42,10 +42,8 @@ func NewLambdaClient(lambdaURL string) *LambdaClient {
 // The response from the Lambda function is a JSON object with the following structure:
 //
 //	{
-//	  "stats": {
-//	    "avg": 3.5,
-//	    "totalCount": 210,
-//	  }
+//	   "avg": 3.5,
+//	   "totalCount": 210,
 //	}
 func (c *LambdaClient) GetStats(histogram map[string]string) ([]byte, error) {
 	payload := `{"ratings": {`
