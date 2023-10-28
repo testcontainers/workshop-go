@@ -18,31 +18,31 @@ $ docker version
 Client:
  Cloud integration: v1.0.35
  Version:           24.0.2
- API version:       1.43
+ API version:       1.42 (downgraded from 1.43)
  Go version:        go1.20.4
  Git commit:        cb74dfc
  Built:             Thu May 25 21:51:16 2023
  OS/Arch:           darwin/arm64
- Context:           desktop-linux
+ Context:           tcd
 
-Server: Docker Desktop 4.21.1 (114176)
+Server:
  Engine:
-  Version:          24.0.2
-  API version:      1.43 (minimum version 1.12)
-  Go version:       go1.20.4
-  Git commit:       659604f
-  Built:            Thu May 25 21:50:59 2023
+  Version:          23.0.6
+  API version:      1.42 (minimum version 1.12)
+  Go version:       go1.20.10
+  Git commit:       9dbdbd4b6d7681bd18c897a6ba0376073c2a72ff
+  Built:            Thu Oct 12 14:14:03 2023
   OS/Arch:          linux/arm64
   Experimental:     false
  containerd:
-  Version:          1.6.21
-  GitCommit:        3dce8eb055cbb6872793272b4f20ed16117344f8
+  Version:          v1.7.2
+  GitCommit:        0cae528dd6cb557f7201036e9f43420650207b58
  runc:
   Version:          1.1.7
-  GitCommit:        v1.1.7-0-g860f061
+  GitCommit:        860f061b76bb4fc671f0f9e900f7d80ff93d4eb7
  docker-init:
   Version:          0.19.0
-  GitCommit:        de40ad0
+  GitCommit: 
 ```
 
 ## Download the project
