@@ -66,6 +66,33 @@ Let's check what we are doing here:
 - the `ServeHTTP` method on the router is called with the `httptest.Recorder` and the `http.Request`.
 - the `TestRoutesFailBecauseDependenciesAreNotStarted` test method is verifying that the routes that depend on the repositories are failing with a `500 Internal Server error` response code. That's because the runtime dependencies are not started for this test.
 
+Let's run the test:
+
+```bash
+go test -v -count=1 ./internal/app -run TestRoutesFailBecauseDependenciesAreNotStarted
+=== RUN   TestRoutesFailBecauseDependenciesAreNotStarted
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:   export GIN_MODE=release
+ - using code:  gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
+[GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
+[GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
+=== RUN   TestRoutesFailBecauseDependenciesAreNotStarted/GET_/ratings_fails
+Unable to connect to database: failed to connect to `host=/private/tmp user=mdelapenya database=`: dial error (dial unix /private/tmp/.s.PGSQL.5432: connect: no such file or directory)
+[GIN] 2023/10/30 - 14:29:12 | 500 |    3.623292ms |                 | GET      "/ratings?talkId=testcontainers-integration-testing"
+=== RUN   TestRoutesFailBecauseDependenciesAreNotStarted/POST_/ratings_fails
+Unable to connect to database: failed to connect to `host=/private/tmp user=mdelapenya database=`: dial error (dial unix /private/tmp/.s.PGSQL.5432: connect: no such file or directory)
+[GIN] 2023/10/30 - 14:29:12 | 500 |     105.791µs |                 | POST     "/ratings"
+--- PASS: TestRoutesFailBecauseDependenciesAreNotStarted (0.00s)
+    --- PASS: TestRoutesFailBecauseDependenciesAreNotStarted/GET_/ratings_fails (0.00s)
+    --- PASS: TestRoutesFailBecauseDependenciesAreNotStarted/POST_/ratings_fails (0.00s)
+PASS
+ok      github.com/testcontainers/workshop-go/internal/app      0.308
+```
+
 This unit test is not very useful, but it is a good starting point to understand how to test the HTTP endpoints.
 
 ### 
