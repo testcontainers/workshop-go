@@ -5,7 +5,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	osexec "os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -14,6 +16,24 @@ import (
 	"github.com/testcontainers/testcontainers-go/modules/localstack"
 	"github.com/testcontainers/workshop-go/internal/ratings"
 )
+
+// buildLambda return the path to the ZIP file used to deploy the lambda function.
+func buildLambda() string {
+	_, b, _, _ := runtime.Caller(0)
+	basepath := filepath.Dir(b)
+
+	lambdaPath := filepath.Join(basepath, "..", "..", "lambda-go")
+
+	makeCmd := osexec.Command("make", "zip-lambda")
+	makeCmd.Dir = lambdaPath
+
+	err := makeCmd.Run()
+	if err != nil {
+		panic(fmt.Errorf("failed to zip lambda: %w", err))
+	}
+
+	return filepath.Join(lambdaPath, "function.zip")
+}
 
 func TestGetStats(t *testing.T) {
 	ctx := context.Background()
@@ -27,6 +47,9 @@ func TestGetStats(t *testing.T) {
 		return flags
 	}
 
+	// get the path to the function.zip file, which lives in the lambda-go folder of the project
+	zipFile := buildLambda()
+
 	c, err := localstack.RunContainer(ctx,
 		testcontainers.WithImage("localstack/localstack:2.3.0"),
 		testcontainers.CustomizeRequest(testcontainers.GenericContainerRequest{
@@ -37,7 +60,7 @@ func TestGetStats(t *testing.T) {
 				},
 				Files: []testcontainers.ContainerFile{
 					{
-						HostFilePath:      filepath.Join("..", "..", "testdata", "lambda-go", "function.zip"), // path to the root of the project
+						HostFilePath:      zipFile,
 						ContainerFilePath: "/tmp/function.zip",
 					},
 				},
