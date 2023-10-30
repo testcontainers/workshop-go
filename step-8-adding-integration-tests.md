@@ -383,7 +383,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	osexec "os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -392,6 +394,24 @@ import (
 	"github.com/testcontainers/testcontainers-go/modules/localstack"
 	"github.com/testcontainers/workshop-go/internal/ratings"
 )
+
+// buildLambda return the path to the ZIP file used to deploy the lambda function.
+func buildLambda() string {
+	_, b, _, _ := runtime.Caller(0)
+	basepath := filepath.Dir(b)
+
+	lambdaPath := filepath.Join(basepath, "..", "..", "lambda-go")
+
+	makeCmd := osexec.Command("make", "zip-lambda")
+	makeCmd.Dir = lambdaPath
+
+	err := makeCmd.Run()
+	if err != nil {
+		panic(fmt.Errorf("failed to zip lambda: %w", err))
+	}
+
+	return filepath.Join(lambdaPath, "function.zip")
+}
 
 func TestGetStats(t *testing.T) {
 	ctx := context.Background()
@@ -405,6 +425,9 @@ func TestGetStats(t *testing.T) {
 		return flags
 	}
 
+	// get the path to the function.zip file, which lives in the lambda-go folder of the project
+	zipFile := buildLambda()
+
 	c, err := localstack.RunContainer(ctx,
 		testcontainers.WithImage("localstack/localstack:2.3.0"),
 		testcontainers.CustomizeRequest(testcontainers.GenericContainerRequest{
@@ -415,7 +438,7 @@ func TestGetStats(t *testing.T) {
 				},
 				Files: []testcontainers.ContainerFile{
 					{
-						HostFilePath:      filepath.Join("..", "..", "testdata", "lambda-go", "function.zip"), // path to the root of the project
+						HostFilePath:      zipFile,
 						ContainerFilePath: "/tmp/function.zip",
 					},
 				},
@@ -519,7 +542,7 @@ func TestGetStats(t *testing.T) {
 
 ```
 
-This test will start a LocalStack container, and it will define one test to verify that the lambda function returns the stats for a given rating ratings:
+This test will start a LocalStack container, previously building the ZIP file representing the lambda, and it will define one test to verify that the lambda function returns the stats for a given histogram of ratings:
 
 * `Retrieve the stats for a given histogram of ratings`: it will call the lambda deployed in the LocalStack instance, using a map of ratings as the histogram, and it will verify that the result includes the calculated average and the total count of ratings.
 
@@ -531,29 +554,29 @@ Finally, run your tests with `go test -v -count=1 ./internal/ratings -run TestGe
 
 ```text
 === RUN   TestGetStats
-2023/10/26 15:39:18 github.com/testcontainers/testcontainers-go - Connected to docker: 
+2023/10/30 11:47:46 github.com/testcontainers/testcontainers-go - Connected to docker: 
   Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
   API Version: 1.42
   Operating System: Alpine Linux v3.18
   Total Memory: 5256 MB
-  Resolved Docker Host: tcp://127.0.0.1:62516
+  Resolved Docker Host: tcp://127.0.0.1:54034
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: 0ca0574e4a18316ac8ca83fbef2c0a5d7f89a54b2c0a7a69613117c220ebfe58
-  Test ProcessID: d07f13cd-3eae-411e-991d-e45c5dde742d
-2023/10/26 15:39:18 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
-2023/10/26 15:39:18 🐳 Creating container for image docker.io/testcontainers/ryuk:0.5.1
-2023/10/26 15:39:18 ✅ Container created: e83acae6602a
-2023/10/26 15:39:18 🐳 Starting container: e83acae6602a
-2023/10/26 15:39:18 ✅ Container started: e83acae6602a
-2023/10/26 15:39:18 🚧 Waiting for container id e83acae6602a image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
-2023/10/26 15:39:18 🐳 Creating container for image localstack/localstack:2.3.0
-2023/10/26 15:39:18 ✅ Container created: 11cf0a213798
-2023/10/26 15:39:18 🐳 Starting container: 11cf0a213798
-2023/10/26 15:39:18 ✅ Container started: 11cf0a213798
-2023/10/26 15:39:18 🚧 Waiting for container id 11cf0a213798 image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x140000241a8 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x10117ccd0 ResponseMatcher:0x10124d8d0 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> PollInterval:100ms UserInfo:}
---- PASS: TestGetStats (8.22s)
+  Test SessionID: d2849817a4d14c4fbe4346b3c71ceb2924189b5803ab7eeec60647bd2437cd1d
+  Test ProcessID: 8412c7c5-05fa-4056-9df5-5a86e97ea977
+2023/10/30 11:47:46 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
+2023/10/30 11:47:46 🐳 Creating container for image docker.io/testcontainers/ryuk:0.5.1
+2023/10/30 11:47:46 ✅ Container created: 030f77295e0a
+2023/10/30 11:47:46 🐳 Starting container: 030f77295e0a
+2023/10/30 11:47:47 ✅ Container started: 030f77295e0a
+2023/10/30 11:47:47 🚧 Waiting for container id 030f77295e0a image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
+2023/10/30 11:47:47 🐳 Creating container for image localstack/localstack:2.3.0
+2023/10/30 11:47:47 ✅ Container created: 3c5a990779db
+2023/10/30 11:47:47 🐳 Starting container: 3c5a990779db
+2023/10/30 11:47:48 ✅ Container started: 3c5a990779db
+2023/10/30 11:47:48 🚧 Waiting for container id 3c5a990779db image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x140003dbe18 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x1009d06f0 ResponseMatcher:0x100aa1690 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> PollInterval:100ms UserInfo:}
+--- PASS: TestGetStats (16.88s)
 PASS
-ok      github.com/testcontainers/workshop-go/internal/ratings  8.357s
+ok      github.com/testcontainers/workshop-go/internal/ratings  17.061s
 ```
 
 _NOTE: if we experiment longer test execution times it could be caused by the need of pulling the images from the registry._
