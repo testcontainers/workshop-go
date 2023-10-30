@@ -57,16 +57,12 @@ var emptyResponse = Response{
 //	   "totalCount": 210,
 //	}
 func HandleStats(event events.APIGatewayProxyRequest) (Response, error) {
-	fmt.Printf(">>> event: %+v\n", event)
-
 	ratingsEvent := RatingsEvent{}
 	err := json.Unmarshal([]byte(event.Body), &ratingsEvent)
 	if err != nil {
-		fmt.Printf(">>> error: %v\n", err)
 		return emptyResponse, fmt.Errorf("failed to unmarshal ratings event: %s", err)
 	}
 
-	fmt.Println(">>> ratings: ", ratingsEvent)
 	var totalCount int
 	var sum int
 	for rating, count := range ratingsEvent.Ratings {
@@ -74,12 +70,10 @@ func HandleStats(event events.APIGatewayProxyRequest) (Response, error) {
 
 		r, err := strconv.Atoi(rating)
 		if err != nil {
-			fmt.Printf(">>> error: %v\n", err)
 			return emptyResponse, fmt.Errorf("failed to convert rating %s to int: %s", rating, err)
 		}
 
 		sum += count * r
-		fmt.Printf(">>> sum += %d * %d; Sum: %d\n", count, r, sum)
 	}
 
 	var avg float64
@@ -92,7 +86,6 @@ func HandleStats(event events.APIGatewayProxyRequest) (Response, error) {
 		TotalCount: totalCount,
 	}
 
-	fmt.Printf(">>> response: %+v\n", resp)
 	return resp, nil
 }
 
