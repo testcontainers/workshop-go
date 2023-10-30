@@ -15,7 +15,7 @@ import (
 func TestNewRepository(t *testing.T) {
 	ctx := context.Background()
 
-	redisContainer, err := tcRedis.RunContainer(ctx, testcontainers.WithImage("docker.io/redis:7"))
+	redisContainer, err := tcRedis.RunContainer(ctx, testcontainers.WithImage("docker.io/redis:6-alpine"))
 	require.NoError(t, err)
 	t.Cleanup(func() {
 		if err := redisContainer.Terminate(ctx); err != nil {
