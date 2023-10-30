@@ -1,5 +1,14 @@
 # Step 1: Getting Started
 
+## Check Make
+
+We'll need Make to run the workshop. 
+
+```shell
+$ make --version
+GNU Make 3.81
+```
+
 ## Check Go
 We'll need Go 1.20 or newer for this workshop. 
 
