@@ -18,3 +18,4 @@ This workshop will explain how to use Testcontainers for Go ([https://golang.tes
 * [Step 9: Adding Integration Tests for the API](step-9-integration-tests-for-api.md)
 * [Step 10: End-To-End Tests with real dependencies](step-10-e2e-tests-with-real-dependencies.md)
 * [Step 11: Integration tests for the Go Lambda](step-11-integration-tests-for-the-lambda.md)
+* [Step 12: Exploring the running app](step-12-exploring-the-running-app.md)
