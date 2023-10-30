@@ -28,7 +28,10 @@ Now copy the `testdata` directory from the root directory of the project to the 
 In order to simplify the experience of running the integration and the E2E tests, let's update the Makefile in the root of the project with two new targets. Please replace the content of the Makefile with the following:
 
 ```makefile
-dev:
+build-lambda:
+	$(MAKE) -C lambda-go zip-lambda
+
+dev: build-lambda
 	TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
 
 test-integration:
@@ -104,40 +107,40 @@ If we run the test in this file, we are going to see that it fails because the d
 make test-e2e
 go test -v -count=1 -tags e2e ./internal/app
 # github.com/testcontainers/workshop-go/internal/app.test
-2023/10/26 15:47:35 github.com/testcontainers/testcontainers-go - Connected to docker: 
+2023/10/30 12:05:19 github.com/testcontainers/testcontainers-go - Connected to docker: 
   Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
   API Version: 1.42
   Operating System: Alpine Linux v3.18
   Total Memory: 5256 MB
-  Resolved Docker Host: tcp://127.0.0.1:62516
+  Resolved Docker Host: tcp://127.0.0.1:54034
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: 5b15ecebb55dff9ac1874f247e10f951f24282056f874915338e224dc4b28f0a
-  Test ProcessID: d9d9c4ec-502b-4551-b622-87ba36e10c51
-2023/10/26 15:47:35 🐳 Creating container for image docker.io/testcontainers/ryuk:0.5.1
-2023/10/26 15:47:35 ✅ Container created: b5e849015a1f
-2023/10/26 15:47:35 🐳 Starting container: b5e849015a1f
-2023/10/26 15:47:35 ✅ Container started: b5e849015a1f
-2023/10/26 15:47:35 🚧 Waiting for container id b5e849015a1f image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
-2023/10/26 15:47:35 🐳 Creating container for image postgres:15.3-alpine
-2023/10/26 15:47:35 ✅ Container created: e684877e5f36
-2023/10/26 15:47:35 🐳 Starting container: e684877e5f36
-2023/10/26 15:47:35 ✅ Container started: e684877e5f36
-2023/10/26 15:47:35 🚧 Waiting for container id e684877e5f36 image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x140004674b0 Strategies:[0x140004872c0]}
-2023/10/26 15:47:36 🐳 Creating container for image redis:6-alpine
-2023/10/26 15:47:36 ✅ Container created: 35b00406fcff
-2023/10/26 15:47:36 🐳 Starting container: 35b00406fcff
-2023/10/26 15:47:36 ✅ Container started: 35b00406fcff
-2023/10/26 15:47:36 🚧 Waiting for container id 35b00406fcff image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
-2023/10/26 15:47:36 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v23.1.7
-2023/10/26 15:47:36 ✅ Container created: 369384b3a0d4
-2023/10/26 15:47:36 🐳 Starting container: 369384b3a0d4
-2023/10/26 15:47:37 ✅ Container started: 369384b3a0d4
-2023/10/26 15:47:37 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
-2023/10/26 15:47:37 🐳 Creating container for image localstack/localstack:2.3.0
-2023/10/26 15:47:37 ✅ Container created: 87fa13c23a73
-2023/10/26 15:47:37 🐳 Starting container: 87fa13c23a73
-2023/10/26 15:47:37 ✅ Container started: 87fa13c23a73
-2023/10/26 15:47:37 🚧 Waiting for container id 87fa13c23a73 image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x14000549720 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x102afb150 ResponseMatcher:0x102bcbf10 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> PollInterval:100ms UserInfo:}
+  Test SessionID: 73a32d6903cf954d418566f0823f332d6501d09054c7c2ba6f8c1ae4e2e2e1c8
+  Test ProcessID: 23a6845c-b515-4022-b3d0-0a906531a7ff
+2023/10/30 12:05:19 🐳 Creating container for image docker.io/testcontainers/ryuk:0.5.1
+2023/10/30 12:05:19 ✅ Container created: ab6e9090c2a1
+2023/10/30 12:05:19 🐳 Starting container: ab6e9090c2a1
+2023/10/30 12:05:20 ✅ Container started: ab6e9090c2a1
+2023/10/30 12:05:20 🚧 Waiting for container id ab6e9090c2a1 image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
+2023/10/30 12:05:20 🐳 Creating container for image postgres:15.3-alpine
+2023/10/30 12:05:20 ✅ Container created: 77f3982fb79b
+2023/10/30 12:05:20 🐳 Starting container: 77f3982fb79b
+2023/10/30 12:05:21 ✅ Container started: 77f3982fb79b
+2023/10/30 12:05:21 🚧 Waiting for container id 77f3982fb79b image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x1400040b470 Strategies:[0x1400041d260]}
+2023/10/30 12:05:35 🐳 Creating container for image redis:6-alpine
+2023/10/30 12:05:35 ✅ Container created: bb2d325b0072
+2023/10/30 12:05:35 🐳 Starting container: bb2d325b0072
+2023/10/30 12:05:36 ✅ Container started: bb2d325b0072
+2023/10/30 12:05:36 🚧 Waiting for container id bb2d325b0072 image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
+2023/10/30 12:05:36 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v23.1.7
+2023/10/30 12:05:36 ✅ Container created: bcd56235bf6f
+2023/10/30 12:05:36 🐳 Starting container: bcd56235bf6f
+2023/10/30 12:05:37 ✅ Container started: bcd56235bf6f
+2023/10/30 12:05:38 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
+2023/10/30 12:05:38 🐳 Creating container for image localstack/localstack:2.3.0
+2023/10/30 12:05:38 ✅ Container created: 9fdaa718b1cf
+2023/10/30 12:05:38 🐳 Starting container: 9fdaa718b1cf
+2023/10/30 12:05:39 ✅ Container started: 9fdaa718b1cf
+2023/10/30 12:05:39 🚧 Waiting for container id 9fdaa718b1cf image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x14000170a18 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x1005c6b40 ResponseMatcher:0x100697ca0 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> PollInterval:100ms UserInfo:}
 === RUN   TestRoutesWithDependencies
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
@@ -149,14 +152,14 @@ go test -v -count=1 -tags e2e ./internal/app
 [GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
 [GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
 === RUN   TestRoutesWithDependencies/GET_/ratings
-[GIN] 2023/10/26 - 15:47:47 | 200 |  1.692484375s |                 | GET      "/ratings?talkId=testcontainers-integration-testing"
+[GIN] 2023/10/30 - 12:05:54 | 200 |    1.1012535s |                 | GET      "/ratings?talkId=testcontainers-integration-testing"
 === RUN   TestRoutesWithDependencies/POST_/ratings
-[GIN] 2023/10/26 - 15:47:48 | 200 |  456.663958ms |                 | POST     "/ratings"
---- PASS: TestRoutesWithDependencies (2.15s)
-    --- PASS: TestRoutesWithDependencies/GET_/ratings (1.69s)
-    --- PASS: TestRoutesWithDependencies/POST_/ratings (0.46s)
+[GIN] 2023/10/30 - 12:05:55 | 200 |  453.160167ms |                 | POST     "/ratings"
+--- PASS: TestRoutesWithDependencies (1.55s)
+    --- PASS: TestRoutesWithDependencies/GET_/ratings (1.10s)
+    --- PASS: TestRoutesWithDependencies/POST_/ratings (0.45s)
 PASS
-ok      github.com/testcontainers/workshop-go/internal/app      13.193s
+ok      github.com/testcontainers/workshop-go/internal/app      35.541s
 ```
 
 Please take a look at these things:
@@ -230,6 +233,6 @@ Running the tests again with `make test-e2e` shows that the new test is also pas
 [GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
 [GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
 [GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
-[GIN] 2023/10/26 - 15:50:53 | 200 |     196.083µs |                 | GET      "/"
+[GIN] 2023/10/30 - 12:07:33 | 200 |     111.583µs |                 | GET      "/"
 --- PASS: TestRootRouteWithDependencies (0.00s)
 ``````

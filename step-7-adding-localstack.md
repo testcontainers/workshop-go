@@ -154,8 +154,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	osexec "os/exec"
 	"os/signal"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"syscall"
 	"time"
@@ -170,9 +172,27 @@ import (
 )
 ```
 
-2. Add this function to the file:
+2. Add these two functions to the file:
 
 ```go
+// buildLambda return the path to the ZIP file used to deploy the lambda function.
+func buildLambda() string {
+	_, b, _, _ := runtime.Caller(0)
+	basepath := filepath.Dir(b)
+
+	lambdaPath := filepath.Join(basepath, "..", "..", "lambda-go")
+
+	makeCmd := osexec.Command("make", "zip-lambda")
+	makeCmd.Dir = lambdaPath
+
+	err := makeCmd.Run()
+	if err != nil {
+		panic(fmt.Errorf("failed to zip lambda: %w", err))
+	}
+
+	return filepath.Join(lambdaPath, "function.zip")
+}
+
 func startRatingsLambda() (testcontainers.Container, error) {
 	ctx := context.Background()
 
@@ -195,7 +215,7 @@ func startRatingsLambda() (testcontainers.Container, error) {
 				},
 				Files: []testcontainers.ContainerFile{
 					{
-						HostFilePath:      filepath.Join("lambda-go", "function.zip"), // path to the root of the project
+						HostFilePath:      buildLambda(),
 						ContainerFilePath: "/tmp/function.zip",
 					},
 				},
@@ -277,7 +297,9 @@ func startRatingsLambda() (testcontainers.Container, error) {
 }
 ```
 
-This function will:
+The first function will perform a `make zip-lambda` to build the lambda function and package it as a ZIP file, which is convenient to integrate the `Make` build system into the local development experience.
+
+The second function will:
 - start a LocalStack instance, copying the zip file into the container before it starts. See the `Files` attribute in the container request.
 - using the `Exec` methods of the container API, execute `awslocal lambda` commands inside the LocalStack container to:
   - create the lambda from the zip file
@@ -325,8 +347,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	osexec "os/exec"
 	"os/signal"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"syscall"
 	"time"
@@ -396,6 +420,24 @@ func shutdownDependencies(containers ...testcontainers.Container) error {
 	return nil
 }
 
+// buildLambda return the path to the ZIP file used to deploy the lambda function.
+func buildLambda() string {
+	_, b, _, _ := runtime.Caller(0)
+	basepath := filepath.Dir(b)
+
+	lambdaPath := filepath.Join(basepath, "..", "..", "lambda-go")
+
+	makeCmd := osexec.Command("make", "zip-lambda")
+	makeCmd.Dir = lambdaPath
+
+	err := makeCmd.Run()
+	if err != nil {
+		panic(fmt.Errorf("failed to zip lambda: %w", err))
+	}
+
+	return filepath.Join(lambdaPath, "function.zip")
+}
+
 func startRatingsLambda() (testcontainers.Container, error) {
 	ctx := context.Background()
 
@@ -418,7 +460,7 @@ func startRatingsLambda() (testcontainers.Container, error) {
 				},
 				Files: []testcontainers.ContainerFile{
 					{
-						HostFilePath:      filepath.Join("lambda-go", "function.zip"), // path to the root of the project
+						HostFilePath:      buildLambda(),
 						ContainerFilePath: "/tmp/function.zip",
 					},
 				},
