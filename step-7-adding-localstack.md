@@ -8,7 +8,7 @@ LocalStack is a cloud service emulator that runs in a single container on your l
 
 ## Creating the lambda function
 
-The lambda function is a simple Go function that calculates the average rating of a talk. The function is defined in the `testdata/lambda-go` directory:
+The lambda function is a simple Go function that calculates the average rating of a talk. The function is defined in the `lambda-go` directory:
 
 ```go
 package main
@@ -95,7 +95,18 @@ func main() {
 
 ```
 
-Now, create a Makefile in the `testdata/lambda-go` directory. It will simplify how the Go lambda is compiled and packaged for being deployed to LocalStack. Please add the following content:
+Now, in the `lambda-go` directory, create the `go.mod` file for the lambda function:
+
+```go
+module github.com/testcontainers/workshop-go/lambda-go
+
+go 1.20
+
+require github.com/aws/aws-lambda-go v1.41.0
+
+```
+
+Now, create a Makefile in the `lambda-go` directory. It will simplify how the Go lambda is compiled and packaged as a ZIP file for being deployed to LocalStack. Please add the following content:
 
 ```Makefile
 mod-tidy:
@@ -109,9 +120,26 @@ zip-lambda: build-lambda
 
 ```
 
-Now, from the root directory of the project, run `make -C testdata/lambda-go zip-lambda`. This will create a zip file with the lambda function.
+At this point of the workshop, we are treating the lambda as a dependency of our ratings application. In the following steps, we will see how to add integration tests for the lambda function.
 
-This zip file will be used by the lambda function to deploy the function in the LocalStack instance.
+Finally, to integrate the package of the lambda into the local development mode of the application, please replace the contents of the Makefile in the root of the project with the following:
+
+```Makefile
+build-lambda:
+	$(MAKE) -C lambda-go zip-lambda
+
+dev: build-lambda
+	TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
+
+test-integration:
+	go test -v -count=1 ./...
+
+test-e2e:
+	go test -v -count=1 -tags e2e ./internal/app
+
+```
+
+We are adding a `build-lambda` goal that will build the lambda function and package it as a ZIP file. The `dev` goal will build the lambda function and start the application in development mode. The rest of the goals are the same as before.
 
 ## Adding the LocalStack instance
 
@@ -167,7 +195,7 @@ func startRatingsLambda() (testcontainers.Container, error) {
 				},
 				Files: []testcontainers.ContainerFile{
 					{
-						HostFilePath:      filepath.Join("testdata", "lambda-go", "function.zip"), // path to the root of the project
+						HostFilePath:      filepath.Join("lambda-go", "function.zip"), // path to the root of the project
 						ContainerFilePath: "/tmp/function.zip",
 					},
 				},
@@ -390,7 +418,7 @@ func startRatingsLambda() (testcontainers.Container, error) {
 				},
 				Files: []testcontainers.ContainerFile{
 					{
-						HostFilePath:      filepath.Join("testdata", "lambda-go", "function.zip"),
+						HostFilePath:      filepath.Join("lambda-go", "function.zip"), // path to the root of the project
 						ContainerFilePath: "/tmp/function.zip",
 					},
 				},
