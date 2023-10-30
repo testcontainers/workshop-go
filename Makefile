@@ -1,4 +1,7 @@
-dev:
+build-lambda:
+	$(MAKE) -C lambda-go zip-lambda
+
+dev: build-lambda
 	TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
 
 test-integration:

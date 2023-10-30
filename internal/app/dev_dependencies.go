@@ -102,7 +102,7 @@ func startRatingsLambda() (testcontainers.Container, error) {
 				},
 				Files: []testcontainers.ContainerFile{
 					{
-						HostFilePath:      filepath.Join("testdata", "lambda-go", "function.zip"),
+						HostFilePath:      filepath.Join("lambda-go", "function.zip"), // path to the root of the project
 						ContainerFilePath: "/tmp/function.zip",
 					},
 				},
