@@ -235,4 +235,7 @@ Running the tests again with `make test-e2e` shows that the new test is also pas
 [GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
 [GIN] 2023/10/30 - 12:07:33 | 200 |     111.583µs |                 | GET      "/"
 --- PASS: TestRootRouteWithDependencies (0.00s)
-``````
+```
+
+### 
+[Next](step-11-integration-tests-for-the-lambda.md)
