@@ -32,6 +32,12 @@ The application uses AWS lambda functions to calculate some rating statistics of
 
 Check `internal/ratings/lambda_client.go`.
 
+### Go Lambda
+
+The Go lambda application lives in the `lambda-go` directory. It is a simple lambda function that receives the talk ID and returns some statistics of the talk.
+
+Check `lambda-go/main.go`.
+
 ## Web application
 
 ### API
