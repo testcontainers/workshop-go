@@ -238,7 +238,7 @@ CONTAINER ID   IMAGE                  COMMAND                  CREATED          
 0fe7e41a8954   postgres:15.3-alpine   "docker-entrypoint.s…"   14 seconds ago   Up 13 seconds   0.0.0.0:32775->5432/tcp, :::32775->5432/tcp   affectionate_cori
 ```
 
-If yoweu open now the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), then a 200 OK response code is returned, but there are no ratings for the given talk:
+If you now open the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), then a 200 OK response code is returned, but there are no ratings for the given talk:
 
 ```text
 {"ratings":{}}
