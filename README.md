@@ -2,7 +2,21 @@
 
 # Introduction
 
-This workshop will explain how to use Testcontainers for Go ([https://golang.testcontainers.org](https://golang.testcontainers.org)) in your Go applications.
+Are you ready to streamline your application development and testing processes while building robust Go applications? Use this workshop to unlock the potential of Testcontainers for Go ([https://golang.testcontainers.org](https://golang.testcontainers.org)) and embark on a journey to build a talk rating microservice from the ground up.
+
+In this workshop, we'll guide you through the creation of a feature-rich microservice for rating conference talks, using a variety of technologies such as databases, caches, event brokers and AWS lambdas.
+
+We will put the emphasis in two crucial aspects:
+
+- Containerized Local Development: Learn how to harness the power of Testcontainers for Go to simplify your Go application development workflow.
+- Effortless Integration Testing: Explore how Testcontainers for Go empowers you to write integration tests with ease. See how containerized development naturally translates into seamless integration testing, ensuring your microservice functions as expected in real-world scenarios.
+
+By the end of this workshop, you will:
+
+- Gain mastery in containerized local development, allowing you to confidently manage your application's infrastructure directly in your code.
+- Acquire the skills to write integration tests effortlessly, providing the assurance that your microservice performs flawlessly in diverse environments.
+
+Containerized local development and integration testing can become your greatest allies in building robust and reliable applications. With Testcontainers for Go, they are much easier to achieve.
 
 ## Table of contents
 
