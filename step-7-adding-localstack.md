@@ -601,11 +601,17 @@ Now run `go mod tidy` from the root of the project to download the Go dependenci
 
 Also run `go mod tidy` from the `lambda-go` directory to download the Go dependencies for the lambda function.
 
-Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the application again with `make dev`. This time, the application will start the Redis store and the application will be able to connect to it.
+Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the application again with `make dev`. This time, the application will build the lambda, will start all the services, and the application will be able to connect to it.
 
 ```text
+go mod tidy
+GOOS=linux go build -tags lambda.norpc -o bootstrap main.go
+zip -j function.zip bootstrap
+  adding: bootstrap (deflated 45%)
 TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
-# github.com/testcontainers/workshop-go
+github.com/testcontainers/testcontainers-go/modules/localstack
+github.com/testcontainers/workshop-go/internal/app
+github.com/testcontainers/workshop-go
 
 **********************************************************************************************
 Ryuk has been disabled for the current execution. This can cause unexpected behavior in your environment.
