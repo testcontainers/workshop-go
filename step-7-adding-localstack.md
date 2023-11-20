@@ -131,12 +131,6 @@ build-lambda:
 dev: build-lambda
 	TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
 
-test-integration:
-	go test -v -count=1 ./...
-
-test-e2e:
-	go test -v -count=1 -tags e2e ./internal/app
-
 ```
 
 We are adding a `build-lambda` goal that will build the lambda function and package it as a ZIP file. The `dev` goal will build the lambda function and start the application in development mode. The rest of the goals are the same as before.
