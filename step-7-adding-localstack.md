@@ -597,7 +597,9 @@ func startTalksStore() (testcontainers.Container, error) {
 
 ```
 
-Now run `go mod tidy` from the root of the project to download the Go dependencies, only the Testcontainers for Go's LocalStack module.
+Now run `go mod tidy` from the root of the project to download the Go dependencies, this time only the Testcontainers for Go's LocalStack module.
+
+Also run `go mod tidy` from the `lambda-go` directory to download the Go dependencies for the lambda function.
 
 Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the application again with `make dev`. This time, the application will start the Redis store and the application will be able to connect to it.
 
