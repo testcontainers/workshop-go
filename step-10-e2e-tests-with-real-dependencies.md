@@ -21,7 +21,7 @@ Please replace the build tags from to the `internal/app/dev_dependencies.go` fil
 
 The code in this file will be executed if and only if the build tags used in the Go toolchain match `dev` or `e2e`.
 
-Now copy the `testdata` directory from the root directory of the project to the `internal/app` directory. This step is **mandatory** because the relative paths to access the files to initialize the services (SQL file, lambda scripts) are different when running the tests from the root directory of the project or from the `internal/app` directory. Therefore, we need a `dev-db.sql` and a `function.zip` files in that package to be used for testing. This will allow having different data for the tests and for the application in `local dev mode`.
+Now copy the `testdata` directory from the root directory of the project to the `internal/app` directory. This step is **mandatory** because the relative paths to access the files to initialize the services (SQL file, lambda scripts) are different when running the tests from the root directory of the project or from the `internal/app` directory. Therefore, we need a `dev-db.sql` file in that package to be used for testing. This will allow having different data for the tests and for the application in `local dev mode`.
 
 ## Adding Make goals for running the tests
 
