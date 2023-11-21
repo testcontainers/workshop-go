@@ -131,12 +131,6 @@ build-lambda:
 dev: build-lambda
 	TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
 
-test-integration:
-	go test -v -count=1 ./...
-
-test-e2e:
-	go test -v -count=1 -tags e2e ./internal/app
-
 ```
 
 We are adding a `build-lambda` goal that will build the lambda function and package it as a ZIP file. The `dev` goal will build the lambda function and start the application in development mode. The rest of the goals are the same as before.
@@ -603,13 +597,21 @@ func startTalksStore() (testcontainers.Container, error) {
 
 ```
 
-Now run `go mod tidy` from the root of the project to download the Go dependencies, only the Testcontainers for Go's LocalStack module.
+Now run `go mod tidy` from the root of the project to download the Go dependencies, this time only the Testcontainers for Go's LocalStack module.
 
-Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the application again with `make dev`. This time, the application will start the Redis store and the application will be able to connect to it.
+Also run `go mod tidy` from the `lambda-go` directory to download the Go dependencies for the lambda function.
+
+Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the application again with `make dev`. This time, the application will build the lambda, will start all the services, and the application will be able to connect to it.
 
 ```text
+go mod tidy
+GOOS=linux go build -tags lambda.norpc -o bootstrap main.go
+zip -j function.zip bootstrap
+  adding: bootstrap (deflated 45%)
 TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
-# github.com/testcontainers/workshop-go
+github.com/testcontainers/testcontainers-go/modules/localstack
+github.com/testcontainers/workshop-go/internal/app
+github.com/testcontainers/workshop-go
 
 **********************************************************************************************
 Ryuk has been disabled for the current execution. This can cause unexpected behavior in your environment.

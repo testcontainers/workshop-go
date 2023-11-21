@@ -21,7 +21,7 @@ Please replace the build tags from to the `internal/app/dev_dependencies.go` fil
 
 The code in this file will be executed if and only if the build tags used in the Go toolchain match `dev` or `e2e`.
 
-Now copy the `testdata` directory from the root directory of the project to the `internal/app` directory. This step is **mandatory** because the relative paths to access the files to initialize the services (SQL file, lambda scripts) are different when running the tests from the root directory of the project or from the `internal/app` directory. Therefore, we need a `dev-db.sql` and a `function.zip` files in that package to be used for testing. This will allow having different data for the tests and for the application in `local dev mode`.
+Now copy the `testdata` directory from the root directory of the project to the `internal/app` directory. This step is **mandatory** because the relative paths to access the files to initialize the services (SQL file, lambda scripts) are different when running the tests from the root directory of the project or from the `internal/app` directory. Therefore, we need a `dev-db.sql` file in that package to be used for testing. This will allow having different data for the tests and for the application in `local dev mode`.
 
 ## Adding Make goals for running the tests
 
@@ -166,6 +166,7 @@ Please take a look at these things:
 
 1. the `e2e` build tag is passed to the Go toolchain (e.g. `-tags e2e`) in the Makefile goal, so the code in the `internal/app/dev_dependencies.go` file is added to this test execution.
 2. both tests for the endpoints (`GET /ratings` and `POST /ratings`) are now passing because the endpoints are returning a `200` instead of a `500`: the dependencies are started, and the endpoints are not returning an error.
+3. the containers for the dependencies are removed after the tests are executed, thanks to [Ryuk](https://github.com/testcontainers/moby-ryuk), the resource reaper for Testcontainers.
 
 ### Adding a test for the `GET /` endpoint
 
@@ -180,7 +181,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"strings"
+	"regexp"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -210,15 +211,22 @@ func TestRootRouteWithDependencies(t *testing.T) {
 	require.NoError(t, err)
 
 	// assert that the different connection strings are set
-	assert.True(t, strings.Contains(response.Connections.Ratings, "redis://127.0.0.1:"), fmt.Sprintf("expected %s to be a Redis URL", response.Connections.Ratings))
-	assert.True(t, strings.Contains(response.Connections.Streams, "127.0.0.1:"), fmt.Sprintf("expected %s to be Redpanda URL", response.Connections.Streams))
-	assert.True(t, strings.Contains(response.Connections.Talks, "postgres://postgres:postgres@127.0.0.1:"), fmt.Sprintf("expected %s to be a Postgres URL", response.Connections.Talks))
-	assert.True(t, strings.Contains(response.Connections.Lambda, "lambda-url.us-east-1.localhost.localstack.cloud:"), fmt.Sprintf("expected %s to be a Lambda URL", response.Connections.Lambda))
+	matches(t, response.Connections.Ratings, `redis://(.*):`)
+	matches(t, response.Connections.Streams, `(.*):`)
+	matches(t, response.Connections.Talks, `postgres://postgres:postgres@(.*):`)
+	matches(t, response.Connections.Lambda, `lambda-url.us-east-1.localhost.localstack.cloud:`)
+}
+
+func matches(t *testing.T, actual string, re string) {
+	matched, err := regexp.MatchString(re, actual)
+	require.NoError(t, err)
+
+	assert.True(t, matched, fmt.Sprintf("expected %s to be an URL: %s", actual, re))
 }
 ```
 
 - It uses the `Metadata` struct from the `internal/app/metadata.go` file to unmarshal the response into a response struct.
-- It asserts that the different connection strings are set. Because the ports in which each dependency is started are random, we are only checking that the connection strings contain the expected values, without checking the exact port.
+- It asserts that the different connection strings are set. Because the ports in which each dependency is started are random, we are using a regular expression to check if the connection string is an URL with the expected format.
 
 Running the tests again with `make test-e2e` shows that the new test is also passing:
 
