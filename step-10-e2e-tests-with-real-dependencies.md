@@ -166,6 +166,7 @@ Please take a look at these things:
 
 1. the `e2e` build tag is passed to the Go toolchain (e.g. `-tags e2e`) in the Makefile goal, so the code in the `internal/app/dev_dependencies.go` file is added to this test execution.
 2. both tests for the endpoints (`GET /ratings` and `POST /ratings`) are now passing because the endpoints are returning a `200` instead of a `500`: the dependencies are started, and the endpoints are not returning an error.
+3. the containers for the dependencies are removed after the tests are executed, thanks to [Ryuk](https://github.com/testcontainers/moby-ryuk), the resource reaper for Testcontainers.
 
 ### Adding a test for the `GET /` endpoint
 
