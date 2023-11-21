@@ -18,9 +18,13 @@ This workshop uses a [Gin](https://gin-gonic.com) application, which requires Go
 
 Make sure we have a Docker environment available on your machine. 
 
-* It can be [Testcontainers Cloud](https://testcontainers.com/cloud) recommended to avoid straining the conference network by pulling heavy Docker images. 
+The recommended Docker environment is [Testcontainers Desktop](https://testcontainers.com/desktop), the free companion app that is the perfect for running Testcontainers on your machine. Please download and install it, and create a free account if you don't have one yet.
 
-* It can be local Docker, which we can check by running: 
+With Testcontainers Desktop, we can simply choose the container runtimes we want to use, and Testcontainers Desktop will take care of the rest. At the same time, we can choose running the container in an embedded runtime, which is a lightweight and performant Docker runtime that is bundled with Testcontainers Desktop (_only available for Mac at the moment_), or using [Testcontainers Cloud](https://testcontainers.com/cloud) as a remote runtime (recommended to avoid straining conference networks by pulling heavy Docker images).
+
+If you already have a local Docker runtime (on Linux, For Mac, or For Windows), this workshop works perfectly fine with that as well.
+
+We can check our container runtime by simply running: 
 
 ```shell
 $ docker version
