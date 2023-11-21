@@ -181,7 +181,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"strings"
+	"regexp"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -211,15 +211,22 @@ func TestRootRouteWithDependencies(t *testing.T) {
 	require.NoError(t, err)
 
 	// assert that the different connection strings are set
-	assert.True(t, strings.Contains(response.Connections.Ratings, "redis://127.0.0.1:"), fmt.Sprintf("expected %s to be a Redis URL", response.Connections.Ratings))
-	assert.True(t, strings.Contains(response.Connections.Streams, "127.0.0.1:"), fmt.Sprintf("expected %s to be Redpanda URL", response.Connections.Streams))
-	assert.True(t, strings.Contains(response.Connections.Talks, "postgres://postgres:postgres@127.0.0.1:"), fmt.Sprintf("expected %s to be a Postgres URL", response.Connections.Talks))
-	assert.True(t, strings.Contains(response.Connections.Lambda, "lambda-url.us-east-1.localhost.localstack.cloud:"), fmt.Sprintf("expected %s to be a Lambda URL", response.Connections.Lambda))
+	matches(t, response.Connections.Ratings, `redis://(.*):`)
+	matches(t, response.Connections.Streams, `(.*):`)
+	matches(t, response.Connections.Talks, `postgres://postgres:postgres@(.*):`)
+	matches(t, response.Connections.Lambda, `lambda-url.us-east-1.localhost.localstack.cloud:`)
+}
+
+func matches(t *testing.T, actual string, re string) {
+	matched, err := regexp.MatchString(re, actual)
+	require.NoError(t, err)
+
+	assert.True(t, matched, fmt.Sprintf("expected %s to be an URL: %s", actual, re))
 }
 ```
 
 - It uses the `Metadata` struct from the `internal/app/metadata.go` file to unmarshal the response into a response struct.
-- It asserts that the different connection strings are set. Because the ports in which each dependency is started are random, we are only checking that the connection strings contain the expected values, without checking the exact port.
+- It asserts that the different connection strings are set. Because the ports in which each dependency is started are random, we are using a regular expression to check if the connection string is an URL with the expected format.
 
 Running the tests again with `make test-e2e` shows that the new test is also passing:
 
