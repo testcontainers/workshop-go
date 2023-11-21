@@ -200,7 +200,7 @@ The test above is doing the following:
 
 The test is using the `testcontainers-go` library to start LocalStack and to execute commands inside the container. It is also using the `awslocal` command to interact with the LocalStack container.
 
-Let's update the `Makefile` to add a new target for running the integration tests:
+Let's replace the contents of the `Makefile` for the lambda-go project. We are adding a new target for running the integration tests:
 
 ```makefile
 mod-tidy:
@@ -216,10 +216,11 @@ zip-lambda: build-lambda
 	zip -j function.zip bootstrap
 ```
 
-Now run the integration tests with your IDE or from a terminal:
+Now run the integration tests with your IDE or from a terminal, in the lambda directory, but first update the Go dependencies with the `make mod-tidy` command:
 
 ```shell
-$ make test
+$ cd lambda-go
+$ make mod-tidy test
 go test -v -count=1 ./...
 # github.com/testcontainers/workshop-go/lambda-go.test
 === RUN   TestDeployLambda
