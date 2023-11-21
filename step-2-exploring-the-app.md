@@ -34,9 +34,9 @@ Check `internal/ratings/lambda_client.go`.
 
 ### Go Lambda
 
-The Go lambda application lives in the `lambda-go` directory. It is a simple lambda function that receives the talk ID and returns some statistics of the talk.
+The Go lambda application will live in the `lambda-go` directory. It is a simple lambda function that receives the talk ID and returns some statistics of the talk.
 
-Check `lambda-go/main.go`.
+We'll start adding the code for the lambda in the `Step 7`.
 
 ## Web application
 
