@@ -40,10 +40,7 @@ package app
 import (
 	"context"
 	"fmt"
-	"os"
-	"os/signal"
 	"path/filepath"
-	"syscall"
 	"time"
 
 	"github.com/testcontainers/testcontainers-go"
@@ -61,45 +58,14 @@ func init() {
 		startTalksStore,
 	}
 
-	runtimeDependencies := make([]testcontainers.Container, 0, len(startupDependenciesFns))
-
 	for _, fn := range startupDependenciesFns {
-		c, err := fn()
+		_, err := fn()
 		if err != nil {
 			panic(err)
 		}
-		runtimeDependencies = append(runtimeDependencies, c)
 	}
-
-	// register a graceful shutdown to stop the dependencies when the application is stopped
-	// only in development mode
-	var gracefulStop = make(chan os.Signal)
-	signal.Notify(gracefulStop, syscall.SIGTERM)
-	signal.Notify(gracefulStop, syscall.SIGINT)
-	go func() {
-		// also use the shutdown function when the SIGTERM or SIGINT signals are received
-		sig := <-gracefulStop
-		fmt.Printf("caught sig: %+v\n", sig)
-		err := shutdownDependencies(runtimeDependencies...)
-		if err != nil {
-			os.Exit(1)
-		}
-		os.Exit(0)
-	}()
 }
 
-// helper function to stop the dependencies
-func shutdownDependencies(containers ...testcontainers.Container) error {
-	ctx := context.Background()
-	for _, c := range containers {
-		err := c.Terminate(ctx)
-		if err != nil {
-			return fmt.Errorf("failed to terminate container: %w", err)
-		}
-	}
-
-	return nil
-}
 
 func startTalksStore() (testcontainers.Container, error) {
 	ctx := context.Background()
@@ -133,8 +99,6 @@ Let's understand what we have done here:
 - The first two lines include the build tag `dev` and the build constraint `+build dev`. This means that the code in this file will only be compiled when the `dev` tag is passed to the Go toolchain.
 - The `init` function will be executed when the application starts. It will start the runtime dependencies as Docker containers, leveraging Testcontainers for Go.
 - The `init` function contains a `startupDependenciesFns` slice with the functions that will start the containers. In this case, we only have one function, `startTalksStore`.
-- The `init` function also contains a `gracefulStop` channel to stop the dependencies when the application is stopped.
-- The `shutdownDependencies` function will stop the dependencies when the application is stopped.
 - The `startTalksStore` function will start a Postgres database with the `testdata/dev-db.sql` file as initialization script.
 - The `Connections.Talks` variable receives the connection string used to connect to the database. The code is overriding the default connection string for the database, which is read from an environment variable (see `internal/app/metadata.go`).
 
@@ -148,20 +112,14 @@ Update the `make dev` target in the Makefile to pass the `dev` build tag:
 
 ```makefile
 dev:
-	TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
+	go run -tags dev -v ./...
 ```
-
-We need to disable Ryuk in development mode, because we are starting the containers from the application, and Ryuk will try to stop them at some point, which will make the application fail as the database will be stopped. To know more about Ryuk as the resource reaper, please read https://golang.testcontainers.org/features/garbage_collector/#ryuk.
 
 Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the application again with `make dev`. This time, the application will start the Postgres database and the application will be able to connect to it.
 
 ```text
-TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
+go run -tags dev -v ./...
 
-**********************************************************************************************
-Ryuk has been disabled for the current execution. This can cause unexpected behavior in your environment.
-More on this: https://golang.testcontainers.org/features/garbage_collector/
-**********************************************************************************************
 2023/10/26 11:24:40 github.com/testcontainers/testcontainers-go - Connected to docker: 
   Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
   API Version: 1.42

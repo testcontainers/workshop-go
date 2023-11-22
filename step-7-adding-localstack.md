@@ -129,7 +129,7 @@ build-lambda:
 	$(MAKE) -C lambda-go zip-lambda
 
 dev: build-lambda
-	TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
+	go run -tags dev -v ./...
 
 ```
 
@@ -340,13 +340,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"os"
 	osexec "os/exec"
-	"os/signal"
 	"path/filepath"
 	"runtime"
 	"strings"
-	"syscall"
 	"time"
 
 	"github.com/testcontainers/testcontainers-go"
@@ -374,44 +371,12 @@ func init() {
 		startRatingsLambda,
 	}
 
-	runtimeDependencies := make([]testcontainers.Container, 0, len(startupDependenciesFns))
-
 	for _, fn := range startupDependenciesFns {
-		c, err := fn()
+		_, err := fn()
 		if err != nil {
 			panic(err)
 		}
-		runtimeDependencies = append(runtimeDependencies, c)
 	}
-
-	// register a graceful shutdown to stop the dependencies when the application is stopped
-	// only in development mode
-	var gracefulStop = make(chan os.Signal)
-	signal.Notify(gracefulStop, syscall.SIGTERM)
-	signal.Notify(gracefulStop, syscall.SIGINT)
-	go func() {
-		// also use the shutdown function when the SIGTERM or SIGINT signals are received
-		sig := <-gracefulStop
-		fmt.Printf("caught sig: %+v\n", sig)
-		err := shutdownDependencies(runtimeDependencies...)
-		if err != nil {
-			os.Exit(1)
-		}
-		os.Exit(0)
-	}()
-}
-
-// helper function to stop the dependencies
-func shutdownDependencies(containers ...testcontainers.Container) error {
-	ctx := context.Background()
-	for _, c := range containers {
-		err := c.Terminate(ctx)
-		if err != nil {
-			return fmt.Errorf("failed to terminate container: %w", err)
-		}
-	}
-
-	return nil
 }
 
 // buildLambda return the path to the ZIP file used to deploy the lambda function.
@@ -608,15 +573,11 @@ go mod tidy
 GOOS=linux go build -tags lambda.norpc -o bootstrap main.go
 zip -j function.zip bootstrap
   adding: bootstrap (deflated 45%)
-TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
+go run -tags dev -v ./...
 github.com/testcontainers/testcontainers-go/modules/localstack
 github.com/testcontainers/workshop-go/internal/app
 github.com/testcontainers/workshop-go
 
-**********************************************************************************************
-Ryuk has been disabled for the current execution. This can cause unexpected behavior in your environment.
-More on this: https://golang.testcontainers.org/features/garbage_collector/
-**********************************************************************************************
 2023/10/26 12:09:37 github.com/testcontainers/testcontainers-go - Connected to docker: 
   Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
   API Version: 1.42

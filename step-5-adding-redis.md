@@ -76,10 +76,7 @@ package app
 import (
 	"context"
 	"fmt"
-	"os"
-	"os/signal"
 	"path/filepath"
-	"syscall"
 	"time"
 
 	"github.com/testcontainers/testcontainers-go"
@@ -100,44 +97,12 @@ func init() {
 		startRatingsStore,
 	}
 
-	runtimeDependencies := make([]testcontainers.Container, 0, len(startupDependenciesFns))
-
 	for _, fn := range startupDependenciesFns {
-		c, err := fn()
+		_, err := fn()
 		if err != nil {
 			panic(err)
 		}
-		runtimeDependencies = append(runtimeDependencies, c)
 	}
-
-	// register a graceful shutdown to stop the dependencies when the application is stopped
-	// only in development mode
-	var gracefulStop = make(chan os.Signal)
-	signal.Notify(gracefulStop, syscall.SIGTERM)
-	signal.Notify(gracefulStop, syscall.SIGINT)
-	go func() {
-		// also use the shutdown function when the SIGTERM or SIGINT signals are received
-		sig := <-gracefulStop
-		fmt.Printf("caught sig: %+v\n", sig)
-		err := shutdownDependencies(runtimeDependencies...)
-		if err != nil {
-			os.Exit(1)
-		}
-		os.Exit(0)
-	}()
-}
-
-// helper function to stop the dependencies
-func shutdownDependencies(containers ...testcontainers.Container) error {
-	ctx := context.Background()
-	for _, c := range containers {
-		err := c.Terminate(ctx)
-		if err != nil {
-			return fmt.Errorf("failed to terminate container: %w", err)
-		}
-	}
-
-	return nil
 }
 
 func startRatingsStore() (testcontainers.Container, error) {
@@ -189,13 +154,9 @@ Now run `go mod tidy` from the root of the project to download the Go dependenci
 Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the application again with `make dev`. This time, the application will start the Redis store and the application will be able to connect to it.
 
 ```text
-TESTCONTAINERS_RYUK_DISABLED=true go run -tags dev -v ./...
+go run -tags dev -v ./...
 # github.com/testcontainers/workshop-go
 
-**********************************************************************************************
-Ryuk has been disabled for the current execution. This can cause unexpected behavior in your environment.
-More on this: https://golang.testcontainers.org/features/garbage_collector/
-**********************************************************************************************
 2023/10/26 11:33:00 github.com/testcontainers/testcontainers-go - Connected to docker: 
   Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
   API Version: 1.42
