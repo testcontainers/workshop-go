@@ -147,13 +147,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"os"
 	osexec "os/exec"
-	"os/signal"
 	"path/filepath"
 	"runtime"
 	"strings"
-	"syscall"
 	"time"
 
 	"github.com/testcontainers/testcontainers-go"

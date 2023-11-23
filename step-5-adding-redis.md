@@ -10,10 +10,7 @@ Let's add a Redis instance using Testcontainers for Go.
 import (
        "context"
        "fmt"
-       "os"
-       "os/signal"
        "path/filepath"
-       "syscall"
        "time"
 
        "github.com/testcontainers/testcontainers-go"
