@@ -246,4 +246,4 @@ Running the tests again with `make test-e2e` shows that the new test is also pas
 ```
 
 ### 
-[Next](step-11-integration-tests-for-the-lambda.md)
+[Next: Integration tests for the lambda](step-11-integration-tests-for-the-lambda.md)

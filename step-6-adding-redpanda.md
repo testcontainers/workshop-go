@@ -277,4 +277,4 @@ in any POST request we'll still see the log entry for the AWS lambda failing to 
 It's time now to fix it, adding a cloud emulator for the AWS Lambda function.
 
 ### 
-[Next](step-7-adding-localstack.md)
+[Next: Adding Localstack](step-7-adding-localstack.md)

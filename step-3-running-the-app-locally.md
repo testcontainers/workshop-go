@@ -52,4 +52,4 @@ Unable to connect to database: failed to connect to `host=/private/tmp user=mdel
 It seems the application is not able to connect to the database. Let's fix it.
 
 ### 
-[Next](step-4-dev-mode-with-testcontainers.md)
+[Next: Dev Mode with Testcontainers](step-4-dev-mode-with-testcontainers.md)

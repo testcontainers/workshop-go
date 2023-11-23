@@ -96,4 +96,4 @@ ok      github.com/testcontainers/workshop-go/internal/app      0.308
 This unit test is not very useful, but it is a good starting point to understand how to test the HTTP endpoints.
 
 ### 
-[Next](step-10-e2e-tests-with-real-dependencies.md)
+[Next: E2E tests with real dependencies](step-10-e2e-tests-with-real-dependencies.md)

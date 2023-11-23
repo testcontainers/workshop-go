@@ -308,4 +308,4 @@ As expected, the test failed because the lambda function is returning an incorre
 Rollback the change in the `main.go` file, and run the tests again, they will pass again.
 
 ### 
-[Next](step-12-exploring-the-running-app.md)
+[Next: exploring the running app](step-12-exploring-the-running-app.md)

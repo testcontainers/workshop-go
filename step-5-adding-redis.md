@@ -248,4 +248,4 @@ Unable to ping the streams: unable to dial: dial tcp :9092: connect: connection 
 If we recall correctly, the application was using a message queue to send the ratings before storing them in Redis (see `internal/app/handlers.go`), so we need to add a message queue for that. Let's fix it, but first stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and the application and the dependencies will be terminated.
 
 ### 
-[Next](step-6-adding-redpanda.md)
+[Next: Adding the streaming queue](step-6-adding-redpanda.md)

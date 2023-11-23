@@ -88,4 +88,4 @@ docker pull localstack/localstack:2.3.0
 ```
 
 ### 
-[Next](step-2-exploring-the-app.md)
+[Next: Exploring the app](step-2-exploring-the-app.md)

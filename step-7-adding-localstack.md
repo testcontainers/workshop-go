@@ -656,4 +656,4 @@ The JSON response:
 Great! the response contains the average rating of the talk, and the total number of ratings, calculated in the lambda function.
 
 ### 
-[Next](step-8-adding-integration-tests.md)
+[Next: Adding integration tests](step-8-adding-integration-tests.md)

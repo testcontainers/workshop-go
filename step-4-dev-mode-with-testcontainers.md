@@ -167,4 +167,4 @@ Now it seems the application is able to connect to the database, but not to Redi
 Let's add Redis as a dependency in development mode.
 
 ### 
-[Next](step-5-adding-redis.md)
+[Next: Adding Redis](step-5-adding-redis.md)

@@ -584,4 +584,4 @@ _NOTE: if we experiment longer test execution times it could be caused by the ne
 We have now added integration tests for the three stores of our application, and our AWS lambda. Let's add some integration tests for the API.
 
 ### 
-[Next](step-9-integration-tests-for-api.md)
+[Next: Adding integration tests for the APIs](step-9-integration-tests-for-api.md)

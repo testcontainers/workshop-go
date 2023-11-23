@@ -51,4 +51,4 @@ The API is a [Gin](https://gin-gonic.com) REST controller and exposes three endp
 Check `internal/app/handlers.go`.
 
 ### 
-[Next](step-3-running-the-app-locally.md)
+[Next: Running the app locally](step-3-running-the-app-locally.md)
