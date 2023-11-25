@@ -10,6 +10,7 @@ import (
 
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
+	"github.com/testcontainers/testcontainers-go/modules/redis"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
@@ -21,6 +22,7 @@ import (
 func init() {
 	startupDependenciesFns := []func() (testcontainers.Container, error){
 		startTalksStore,
+		startRatingsStore,
 	}
 
 	for _, fn := range startupDependenciesFns {
@@ -53,5 +55,22 @@ func startTalksStore() (testcontainers.Container, error) {
 	}
 
 	Connections.Talks = talksConn
+	return c, nil
+}
+
+func startRatingsStore() (testcontainers.Container, error) {
+	ctx := context.Background()
+
+	c, err := redis.RunContainer(ctx, testcontainers.WithImage("redis:6-alpine"))
+	if err != nil {
+		return nil, err
+	}
+
+	ratingsConn, err := c.ConnectionString(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	Connections.Ratings = ratingsConn
 	return c, nil
 }
