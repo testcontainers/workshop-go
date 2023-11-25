@@ -1,5 +1,5 @@
-//go:build dev
-// +build dev
+//go:build dev || e2e
+// +build dev e2e
 
 package app
 
