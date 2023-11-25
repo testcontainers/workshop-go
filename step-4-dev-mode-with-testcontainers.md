@@ -162,7 +162,7 @@ On the contrary, if we open again the ratings endpoint from the API (http://loca
 {"message":"redis: invalid URL scheme: "}
 ```
 
-Now it seems the application is able to connect to the database, but not to Redis. Let's fix it, but first stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd>, so the application and the dependencies are terminated by the signals we added in the `init` function of the `internal/app/dev_dependencies.go` file.
+Now it seems the application is able to connect to the database, but not to Redis. Let's fix it, but first stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd>, so the application and the dependencies are terminated.
 
 Let's add Redis as a dependency in development mode.
 
