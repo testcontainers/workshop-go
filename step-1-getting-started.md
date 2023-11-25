@@ -10,7 +10,10 @@ GNU Make 3.81
 ```
 
 ## Check Go
-We'll need Go 1.20 or newer for this workshop. 
+
+We'll need Go 1.20 or newer for this workshop.
+
+For installing Go, please follow the instructions at [https://golang.org/doc/install](https://golang.org/doc/install), or use your favorite package manager, like [`gvm`](https://github.com/andrewkroh/gvm).
 
 This workshop uses a [Gin](https://gin-gonic.com) application, which requires Go 1.13 or newer, but Testcontainers for Go is compatible with Go 1.20+.
 
