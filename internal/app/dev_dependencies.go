@@ -11,6 +11,7 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/modules/redis"
+	"github.com/testcontainers/testcontainers-go/modules/redpanda"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
@@ -23,6 +24,7 @@ func init() {
 	startupDependenciesFns := []func() (testcontainers.Container, error){
 		startTalksStore,
 		startRatingsStore,
+		startStreamingQueue,
 	}
 
 	for _, fn := range startupDependenciesFns {
@@ -72,5 +74,23 @@ func startRatingsStore() (testcontainers.Container, error) {
 	}
 
 	Connections.Ratings = ratingsConn
+	return c, nil
+}
+
+func startStreamingQueue() (testcontainers.Container, error) {
+	ctx := context.Background()
+
+	c, err := redpanda.RunContainer(
+		ctx,
+		testcontainers.WithImage("docker.redpanda.com/redpandadata/redpanda:v23.1.7"),
+		redpanda.WithAutoCreateTopics(),
+	)
+
+	seedBroker, err := c.KafkaSeedBroker(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	Connections.Streams = seedBroker
 	return c, nil
 }

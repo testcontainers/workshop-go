@@ -9,6 +9,7 @@ require (
 	github.com/testcontainers/testcontainers-go v0.26.0
 	github.com/testcontainers/testcontainers-go/modules/postgres v0.26.0
 	github.com/testcontainers/testcontainers-go/modules/redis v0.26.0
+	github.com/testcontainers/testcontainers-go/modules/redpanda v0.26.0
 	github.com/twmb/franz-go v1.15.0
 )
 
