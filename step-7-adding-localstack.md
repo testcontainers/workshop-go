@@ -305,12 +305,13 @@ The first function will perform a `make zip-lambda` to build the lambda function
 
 The second function will:
 - start a LocalStack instance, copying the zip file into the container before it starts. See the `Files` attribute in the container request.
-- using the `Exec` methods of the container API, execute `awslocal lambda` commands inside the LocalStack container to:
+- leverate the container lifecycle hooks to execute commands in the container right after it has started. We are going to execute `awslocal lambda` commands inside the LocalStack container to:
   - create the lambda from the zip file
   - create the URL function configuration for the lambda function
   - wait for the lambda function to be active
-- read the response of executing an `awslocal lambda` command to get the URL of the lambda function, parsing the JSON response to get the URL of the lambda function.
-- add the URL of the lambda function to the `Connections` struct.
+  - read the response of executing an `awslocal lambda` command to get the URL of the lambda function, parsing the JSON response to get the URL of the lambda function.
+  - finally store the URL of the lambda function in a variable
+- update the `Connections` struct with the lambda function URL.
 
 3. Update the comments for the init function `startupDependenciesFn` slice to include the LocalStack store:
 
