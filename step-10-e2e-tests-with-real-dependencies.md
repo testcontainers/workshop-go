@@ -102,7 +102,7 @@ func TestRoutesWithDependencies(t *testing.T) {
 - It's an exact copy of the `routes_test.go` file, which checked for the errors, but updating the test names to not indicate that the tests are failing.
 - It also updates the assertions to demonstrate that the endpoints are returning a `200` instead of a `500` because the dependencies are started.
 
-If we run the test in this file, we are going to see that it fails because the dependencies are indeed started, therefore no error should be thrown:
+If we run the test in this file, we are going to see that it passes because the dependencies are indeed started, therefore no error should be thrown:
 
 ```bash
 make test-e2e
