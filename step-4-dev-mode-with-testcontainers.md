@@ -39,7 +39,6 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"path/filepath"
 	"time"
 

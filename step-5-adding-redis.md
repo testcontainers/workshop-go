@@ -9,7 +9,6 @@ Let's add a Redis instance using Testcontainers for Go.
 ```go
 import (
        "context"
-       "fmt"
        "path/filepath"
        "time"
 
@@ -72,7 +71,6 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"path/filepath"
 	"time"
 
