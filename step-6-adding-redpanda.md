@@ -264,9 +264,9 @@ curl -X GET http://localhost:8080/ratings\?talkId\=testcontainers-integration-te
 {"ratings":{"5":"1"}}%
 ```
 
-Play around sending multiple POST requests for the two talks, and check the histogram that is created for the different rating values.
+Play around sending multiple POST requests for the two talks we created in the SQL script, and check the histogram that is created for the different rating values.
 
-in any POST request we'll still see the log entry for the AWS lambda failing to be called.
+In any POST request we'll still see the log entry for the AWS lambda failing to be called.
 
 ```text
 2023/10/26 11:48:42 error calling lambda function: Post "": unsupported protocol scheme ""
