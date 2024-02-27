@@ -9,7 +9,6 @@ Let's add a Redpanda instance using Testcontainers for Go.
 ```go
 import (
 	"context"
-	"fmt"
 	"path/filepath"
 	"time"
 
@@ -76,7 +75,6 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"path/filepath"
 	"time"
 
