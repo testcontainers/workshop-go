@@ -8,6 +8,7 @@ require (
 	github.com/jackc/pgx/v5 v5.5.3
 	github.com/testcontainers/testcontainers-go v0.28.0
 	github.com/testcontainers/testcontainers-go/modules/postgres v0.28.0
+	github.com/testcontainers/testcontainers-go/modules/redis v0.28.0
 	github.com/twmb/franz-go v1.16.1
 )
 
