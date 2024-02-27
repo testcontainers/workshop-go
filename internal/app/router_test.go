@@ -1,3 +1,6 @@
+//go:build e2e
+// +build e2e
+
 package app_test
 
 import (
@@ -11,20 +14,20 @@ import (
 	"github.com/testcontainers/workshop-go/internal/app"
 )
 
-func TestRoutesFailBecauseDependenciesAreNotStarted(t *testing.T) {
+func TestRoutesWithDependencies(t *testing.T) {
 	router := app.SetupRouter()
 
-	t.Run("GET /ratings fails", func(t *testing.T) {
+	t.Run("GET /ratings", func(t *testing.T) {
 		w := httptest.NewRecorder()
 		req, err := http.NewRequest("GET", "/ratings?talkId=testcontainers-integration-testing", nil)
 		require.NoError(t, err)
 		router.ServeHTTP(w, req)
 
-		// we are receiving a 500 because the ratings repository is not started
-		assert.Equal(t, http.StatusInternalServerError, w.Code)
+		// we are receiving a 200 because the ratings repository is started
+		assert.Equal(t, http.StatusOK, w.Code)
 	})
 
-	t.Run("POST /ratings fails", func(t *testing.T) {
+	t.Run("POST /ratings", func(t *testing.T) {
 		body := []byte(`{"talkId":"testcontainers-integration-testing","value":5}`)
 
 		w := httptest.NewRecorder()
@@ -36,7 +39,7 @@ func TestRoutesFailBecauseDependenciesAreNotStarted(t *testing.T) {
 
 		router.ServeHTTP(w, req)
 
-		// we are receiving a 500 because the ratings repository is not started
-		assert.Equal(t, http.StatusInternalServerError, w.Code)
+		// we are receiving a 200 because the ratings repository is started
+		assert.Equal(t, http.StatusOK, w.Code)
 	})
 }
