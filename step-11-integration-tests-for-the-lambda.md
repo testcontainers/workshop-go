@@ -170,7 +170,7 @@ func TestDeployLambda(t *testing.T) {
 	payload += "}}"
 
 	httpClient := http.Client{
-		Timeout: 5 * time.Second,
+		Timeout: 15 * time.Second,
 	}
 
 	resp, err := httpClient.Post(url, "application/json", bytes.NewBufferString(payload))
