@@ -8,7 +8,7 @@ LocalStack is a cloud service emulator that runs in a single container on your l
 
 ## Creating the lambda function
 
-The lambda function is a simple Go function that calculates the average rating of a talk. The function is defined in the `lambda-go` directory:
+The lambda function is a simple Go function that calculates the average rating of a talk. The function is defined in the `main.go` file under a `lambda-go` directory:
 
 ```go
 package main
