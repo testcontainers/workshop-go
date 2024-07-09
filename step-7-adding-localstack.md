@@ -199,8 +199,8 @@ func startRatingsLambda() (testcontainers.Container, error) {
 
 	var functionURL string
 
-	c, err := localstack.RunContainer(ctx,
-		testcontainers.WithImage("localstack/localstack:2.3.0"),
+	c, err := localstack.Run(ctx,
+		"localstack/localstack:2.3.0",
 		testcontainers.CustomizeRequest(testcontainers.GenericContainerRequest{
 			ContainerRequest: testcontainers.ContainerRequest{
 				Env: map[string]string{
@@ -422,8 +422,8 @@ func startRatingsLambda() (testcontainers.Container, error) {
 
 	var functionURL string
 
-	c, err := localstack.RunContainer(ctx,
-		testcontainers.WithImage("localstack/localstack:2.3.0"),
+	c, err := localstack.Run(ctx,
+		"localstack/localstack:2.3.0",
 		testcontainers.CustomizeRequest(testcontainers.GenericContainerRequest{
 			ContainerRequest: testcontainers.ContainerRequest{
 				Env: map[string]string{
@@ -526,7 +526,7 @@ func startRatingsLambda() (testcontainers.Container, error) {
 func startRatingsStore() (testcontainers.Container, error) {
 	ctx := context.Background()
 
-	c, err := redis.RunContainer(ctx, testcontainers.WithImage("redis:6-alpine"))
+	c, err := redis.Run(ctx, "redis:6-alpine")
 	if err != nil {
 		return nil, err
 	}
@@ -543,9 +543,9 @@ func startRatingsStore() (testcontainers.Container, error) {
 func startStreamingQueue() (testcontainers.Container, error) {
 	ctx := context.Background()
 
-	c, err := redpanda.RunContainer(
+	c, err := redpanda.Run(
 		ctx,
-		testcontainers.WithImage("docker.redpanda.com/redpandadata/redpanda:v23.1.7"),
+		"docker.redpanda.com/redpandadata/redpanda:v23.1.7",
 		redpanda.WithAutoCreateTopics(),
 	)
 
@@ -560,8 +560,8 @@ func startStreamingQueue() (testcontainers.Container, error) {
 
 func startTalksStore() (testcontainers.Container, error) {
 	ctx := context.Background()
-	c, err := postgres.RunContainer(ctx,
-		testcontainers.WithImage("postgres:15.3-alpine"),
+	c, err := postgres.Run(ctx,
+		"postgres:15.3-alpine",
 		postgres.WithInitScripts(filepath.Join(".", "testdata", "dev-db.sql")),
 		postgres.WithDatabase("talks-db"),
 		postgres.WithUsername("postgres"),

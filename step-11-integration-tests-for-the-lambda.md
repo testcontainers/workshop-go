@@ -59,8 +59,8 @@ func TestDeployLambda(t *testing.T) {
 
 	var functionURL string
 
-	c, err := localstack.RunContainer(ctx,
-		testcontainers.WithImage("localstack/localstack:2.3.0"),
+	c, err := localstack.Run(ctx,
+		"localstack/localstack:2.3.0",
 		testcontainers.CustomizeRequest(testcontainers.GenericContainerRequest{
 			ContainerRequest: testcontainers.ContainerRequest{
 				Env: map[string]string{
