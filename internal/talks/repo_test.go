@@ -17,8 +17,8 @@ import (
 func TestNewRepository(t *testing.T) {
 	ctx := context.Background()
 
-	pgContainer, err := postgres.RunContainer(ctx,
-		testcontainers.WithImage("postgres:15.3-alpine"),
+	pgContainer, err := postgres.Run(ctx,
+		"postgres:15.3-alpine",
 		postgres.WithInitScripts(filepath.Join("..", "..", "testdata", "dev-db.sql")), // path to the root of the project
 		postgres.WithDatabase("talks-db"),
 		postgres.WithUsername("postgres"),

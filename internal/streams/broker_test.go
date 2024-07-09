@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/redpanda"
 	"github.com/testcontainers/workshop-go/internal/ratings"
 	"github.com/testcontainers/workshop-go/internal/streams"
@@ -15,9 +14,9 @@ import (
 func TestBroker(t *testing.T) {
 	ctx := context.Background()
 
-	redpandaC, err := redpanda.RunContainer(
+	redpandaC, err := redpanda.Run(
 		ctx,
-		testcontainers.WithImage("docker.redpanda.com/redpandadata/redpanda:v23.1.7"),
+		"docker.redpanda.com/redpandadata/redpanda:v23.1.7",
 		redpanda.WithAutoCreateTopics(),
 	)
 	if err != nil {
