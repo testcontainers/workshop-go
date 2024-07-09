@@ -24,7 +24,7 @@ import (
 func TestNewRepository(t *testing.T) {
 	ctx := context.Background()
 
-	redisContainer, err := tcRedis.RunContainer(ctx, testcontainers.WithImage("docker.io/redis:6-alpine"))
+	redisContainer, err := tcRedis.Run(ctx, "docker.io/redis:6-alpine")
 	require.NoError(t, err)
 	t.Cleanup(func() {
 		if err := redisContainer.Terminate(ctx); err != nil {
@@ -144,9 +144,9 @@ import (
 func TestBroker(t *testing.T) {
 	ctx := context.Background()
 
-	redpandaC, err := redpanda.RunContainer(
+	redpandaC, err := redpanda.Run(
 		ctx,
-		testcontainers.WithImage("docker.redpanda.com/redpandadata/redpanda:v23.1.7"),
+		"docker.redpanda.com/redpandadata/redpanda:v23.1.7",
 		redpanda.WithAutoCreateTopics(),
 	)
 	if err != nil {
@@ -250,8 +250,8 @@ import (
 func TestNewRepository(t *testing.T) {
 	ctx := context.Background()
 
-	pgContainer, err := postgres.RunContainer(ctx,
-		testcontainers.WithImage("postgres:15.3-alpine"),
+	pgContainer, err := postgres.Run(ctx,
+		"postgres:15.3-alpine",
 		postgres.WithInitScripts(filepath.Join("..", "..", "testdata", "dev-db.sql")), // path to the root of the project
 		postgres.WithDatabase("talks-db"),
 		postgres.WithUsername("postgres"),
@@ -430,8 +430,8 @@ func TestGetStats(t *testing.T) {
 
 	var functionURL string
 
-	c, err := localstack.RunContainer(ctx,
-		testcontainers.WithImage("localstack/localstack:2.3.0"),
+	c, err := localstack.Run(ctx,
+		"localstack/localstack:2.3.0",
 		testcontainers.CustomizeRequest(testcontainers.GenericContainerRequest{
 			ContainerRequest: testcontainers.ContainerRequest{
 				Env: map[string]string{
