@@ -142,7 +142,7 @@ func TestBroker(t *testing.T) {
 
 	redpandaC, err := redpanda.Run(
 		ctx,
-		"docker.redpanda.com/redpandadata/redpanda:v23.1.7",
+		"docker.redpanda.com/redpandadata/redpanda:v24.3.7",
 		redpanda.WithAutoCreateTopics(),
 	)
 	if err != nil {
@@ -207,7 +207,7 @@ Finally, run your tests with `go test -v -count=1 ./internal/streams -run TestBr
 2023/10/26 15:35:50 🐳 Starting container: 06e23826a3e6
 2023/10/26 15:35:51 ✅ Container started: 06e23826a3e6
 2023/10/26 15:35:51 🚧 Waiting for container id 06e23826a3e6 image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
-2023/10/26 15:35:51 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v23.1.7
+2023/10/26 15:35:51 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v24.3.7
 2023/10/26 15:35:51 ✅ Container created: 125662db9cef
 2023/10/26 15:35:51 🐳 Starting container: 125662db9cef
 2023/10/26 15:35:51 ✅ Container started: 125662db9cef
