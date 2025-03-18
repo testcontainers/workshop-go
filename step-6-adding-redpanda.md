@@ -28,7 +28,7 @@ func startStreamingQueue() (testcontainers.Container, error) {
 
        c, err := redpanda.Run(
                ctx,
-               "docker.redpanda.com/redpandadata/redpanda:v23.1.7",
+               "docker.redpanda.com/redpandadata/redpanda:v24.3.7",
                redpanda.WithAutoCreateTopics(),
        )
 
@@ -129,7 +129,7 @@ func startStreamingQueue() (testcontainers.Container, error) {
 
 	c, err := redpanda.Run(
 		ctx,
-		"docker.redpanda.com/redpandadata/redpanda:v23.1.7",
+		"docker.redpanda.com/redpandadata/redpanda:v24.3.7",
 		redpanda.WithAutoCreateTopics(),
 	)
 
@@ -196,7 +196,7 @@ go run -tags dev -v ./...
 2023/10/26 11:44:11 🐳 Starting container: 373f523c83ac
 2023/10/26 11:44:12 ✅ Container started: 373f523c83ac
 2023/10/26 11:44:12 🚧 Waiting for container id 373f523c83ac image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
-2023/10/26 11:44:12 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v23.1.7
+2023/10/26 11:44:12 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v24.3.7
 2023/10/26 11:44:12 ✅ Container created: 1811a3de1f8f
 2023/10/26 11:44:12 🐳 Starting container: 1811a3de1f8f
 2023/10/26 11:44:13 ✅ Container started: 1811a3de1f8f
@@ -219,7 +219,7 @@ In the second terminal, check the containers, we will see the Redpanda streaming
 ```text
 $ docker ps
 CONTAINER ID   IMAGE                                               COMMAND                  CREATED         STATUS         PORTS                                                                                                                                             NAMES
-1811a3de1f8f   docker.redpanda.com/redpandadata/redpanda:v23.1.7   "/entrypoint-tc.sh r…"   3 minutes ago   Up 3 minutes   8082/tcp, 0.0.0.0:32781->8081/tcp, :::32781->8081/tcp, 0.0.0.0:32780->9092/tcp, :::32780->9092/tcp, 0.0.0.0:32779->9644/tcp, :::32779->9644/tcp   elegant_goldberg
+1811a3de1f8f   docker.redpanda.com/redpandadata/redpanda:v24.3.7   "/entrypoint-tc.sh r…"   3 minutes ago   Up 3 minutes   8082/tcp, 0.0.0.0:32781->8081/tcp, :::32781->8081/tcp, 0.0.0.0:32780->9092/tcp, :::32780->9092/tcp, 0.0.0.0:32779->9644/tcp, :::32779->9644/tcp   elegant_goldberg
 373f523c83ac   redis:6-alpine                                      "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes   0.0.0.0:32778->6379/tcp, :::32778->6379/tcp                                                                                                       stupefied_franklin
 00bca83e66ca   postgres:15.3-alpine                                "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes   0.0.0.0:32777->5432/tcp, :::32777->5432/tcp                                                                                                       wizardly_snyder
 ```

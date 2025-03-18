@@ -132,7 +132,7 @@ go test -v -count=1 -tags e2e ./internal/app
 2023/10/30 12:05:35 🐳 Starting container: bb2d325b0072
 2023/10/30 12:05:36 ✅ Container started: bb2d325b0072
 2023/10/30 12:05:36 🚧 Waiting for container id bb2d325b0072 image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
-2023/10/30 12:05:36 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v23.1.7
+2023/10/30 12:05:36 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v24.3.7
 2023/10/30 12:05:36 ✅ Container created: bcd56235bf6f
 2023/10/30 12:05:36 🐳 Starting container: bcd56235bf6f
 2023/10/30 12:05:37 ✅ Container started: bcd56235bf6f
