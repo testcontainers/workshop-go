@@ -24,7 +24,7 @@ import (
 func TestNewRepository(t *testing.T) {
 	ctx := context.Background()
 
-	redisContainer, err := tcRedis.Run(ctx, "docker.io/redis:6-alpine")
+	redisContainer, err := tcRedis.Run(ctx, "redis:6-alpine")
 	testcontainers.CleanupContainer(t, redisContainer)
 	require.NoError(t, err)
 
@@ -100,11 +100,11 @@ Finally, run your tests with `go test -v -count=1 ./internal/ratings -run TestNe
 2023/10/26 15:34:04 🐳 Starting container: 57807689ca9a
 2023/10/26 15:34:04 ✅ Container started: 57807689ca9a
 2023/10/26 15:34:04 🚧 Waiting for container id 57807689ca9a image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
-2023/10/26 15:34:04 🐳 Creating container for image docker.io/redis:6-alpine
+2023/10/26 15:34:04 🐳 Creating container for image redis:6-alpine
 2023/10/26 15:34:04 ✅ Container created: d831506102ae
 2023/10/26 15:34:04 🐳 Starting container: d831506102ae
 2023/10/26 15:34:04 ✅ Container started: d831506102ae
-2023/10/26 15:34:04 🚧 Waiting for container id d831506102ae image: docker.io/redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
+2023/10/26 15:34:04 🚧 Waiting for container id d831506102ae image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
 === RUN   TestNewRepository/Add_rating
 === RUN   TestNewRepository/Add_multiple_ratings
 2023/10/26 15:34:04 🐳 Terminating container: d831506102ae
