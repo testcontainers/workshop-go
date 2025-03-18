@@ -202,7 +202,7 @@ func startStreamingQueue() (testcontainers.Container, error) {
 
 	c, err := redpanda.Run(
 		ctx,
-		"docker.redpanda.com/redpandadata/redpanda:v23.1.7",
+		"docker.redpanda.com/redpandadata/redpanda:v24.3.7",
 		redpanda.WithAutoCreateTopics(),
 	)
 
