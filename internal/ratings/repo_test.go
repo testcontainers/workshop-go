@@ -15,7 +15,7 @@ import (
 func TestNewRepository(t *testing.T) {
 	ctx := context.Background()
 
-	redisContainer, err := tcRedis.Run(ctx, "docker.io/redis:6-alpine")
+	redisContainer, err := tcRedis.Run(ctx, "redis:6-alpine")
 	testcontainers.CleanupContainer(t, redisContainer)
 	require.NoError(t, err)
 
