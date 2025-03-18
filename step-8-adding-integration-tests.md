@@ -25,12 +25,8 @@ func TestNewRepository(t *testing.T) {
 	ctx := context.Background()
 
 	redisContainer, err := tcRedis.Run(ctx, "docker.io/redis:6-alpine")
+	testcontainers.CleanupContainer(t, redisContainer)
 	require.NoError(t, err)
-	t.Cleanup(func() {
-		if err := redisContainer.Terminate(ctx); err != nil {
-			t.Fatalf("failed to terminate container: %s", err)
-		}
-	})
 
 	connStr, err := redisContainer.ConnectionString(ctx)
 	require.NoError(t, err)
@@ -260,15 +256,8 @@ func TestNewRepository(t *testing.T) {
 			wait.ForLog("database system is ready to accept connections").
 				WithOccurrence(2).WithStartupTimeout(5*time.Second)),
 	)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	t.Cleanup(func() {
-		if err := pgContainer.Terminate(ctx); err != nil {
-			t.Fatalf("failed to terminate pgContainer: %s", err)
-		}
-	})
+	testcontainers.CleanupContainer(t, pgContainer)
+	assert.NoError(t, err)
 
 	connStr, err := pgContainer.ConnectionString(ctx, "sslmode=disable")
 	assert.NoError(t, err)
