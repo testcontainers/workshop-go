@@ -7,6 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/testcontainers/testcontainers-go"
 	tcRedis "github.com/testcontainers/testcontainers-go/modules/redis"
 	"github.com/testcontainers/workshop-go/internal/ratings"
 )
@@ -15,12 +16,8 @@ func TestNewRepository(t *testing.T) {
 	ctx := context.Background()
 
 	redisContainer, err := tcRedis.Run(ctx, "docker.io/redis:6-alpine")
+	testcontainers.CleanupContainer(t, redisContainer)
 	require.NoError(t, err)
-	t.Cleanup(func() {
-		if err := redisContainer.Terminate(ctx); err != nil {
-			t.Fatalf("failed to terminate container: %s", err)
-		}
-	})
 
 	connStr, err := redisContainer.ConnectionString(ctx)
 	require.NoError(t, err)
