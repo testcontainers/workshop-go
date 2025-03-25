@@ -221,7 +221,7 @@ build-lambda: mod-tidy
 	# If you are using Testcontainers Cloud, please add 'GOARCH=amd64' in order to get the localstack's lambdas using the right architecture
 	GOOS=linux go build -tags lambda.norpc -o bootstrap main.go
 
-test:
+test: mod-tidy
 	go test -v -count=1 ./...
 
 zip-lambda: build-lambda
