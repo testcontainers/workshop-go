@@ -1,9 +1,9 @@
 module github.com/testcontainers/workshop-go/lambda-go
 
-go 1.22
+go 1.24
 
 require (
-	github.com/aws/aws-lambda-go v1.46.0
+	github.com/aws/aws-lambda-go v1.47.0
 	github.com/testcontainers/testcontainers-go v0.33.0
 	github.com/testcontainers/testcontainers-go/modules/localstack v0.33.0
 )

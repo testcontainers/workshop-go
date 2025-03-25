@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/redpanda"
 	"github.com/testcontainers/workshop-go/internal/ratings"
 	"github.com/testcontainers/workshop-go/internal/streams"
@@ -19,9 +20,8 @@ func TestBroker(t *testing.T) {
 		"docker.redpanda.com/redpandadata/redpanda:v24.3.7",
 		redpanda.WithAutoCreateTopics(),
 	)
-	if err != nil {
-		t.Fatal(err)
-	}
+	testcontainers.CleanupContainer(t, redpandaC)
+	require.NoError(t, err)
 
 	seedBroker, err := redpandaC.KafkaSeedBroker(ctx)
 	require.NoError(t, err)
