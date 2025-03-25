@@ -408,7 +408,9 @@ import (
 )
 
 // buildLambda return the path to the ZIP file used to deploy the lambda function.
-func buildLambda() string {
+func buildLambda(t *testing.T) string {
+	t.Helper()
+
 	_, b, _, _ := runtime.Caller(0)
 	basepath := filepath.Dir(b)
 
@@ -418,9 +420,7 @@ func buildLambda() string {
 	makeCmd.Dir = lambdaPath
 
 	err := makeCmd.Run()
-	if err != nil {
-		panic(fmt.Errorf("failed to zip lambda: %w", err))
-	}
+	require.NoError(t, err)
 
 	return filepath.Join(lambdaPath, "function.zip")
 }
@@ -438,7 +438,7 @@ func TestGetStats(t *testing.T) {
 	}
 
 	// get the path to the function.zip file, which lives in the lambda-go folder of the project
-	zipFile := buildLambda()
+	zipFile := buildLambda(t)
 
 	var functionURL string
 
