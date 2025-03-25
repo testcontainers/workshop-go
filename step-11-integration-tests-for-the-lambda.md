@@ -146,15 +146,12 @@ func TestDeployLambda(t *testing.T) {
 			},
 		}),
 	)
-	if err != nil {
-		t.Fatalf("failed to start localstack container: %s", err)
-	}
+	testcontainers.CleanupContainer(t, c)
+	require.NoError(t, err)
 
 	// replace the port with the one exposed by the container
 	mappedPort, err := c.MappedPort(ctx, "4566/tcp")
-	if err != nil {
-		t.Fatalf("failed to get mapped port: %s", err)
-	}
+	require.NoError(t, err)
 
 	url := strings.ReplaceAll(functionURL, "4566", mappedPort.Port())
 
@@ -186,21 +183,14 @@ func TestDeployLambda(t *testing.T) {
 	}
 
 	resp, err := httpClient.Post(url, "application/json", bytes.NewBufferString(payload))
-	if err != nil {
-		t.Fatalf("failed to send request: %s", err)
-	}
+	require.NoError(t, err)
 
 	stats, err := io.ReadAll(resp.Body)
-	if err != nil {
-		t.Fatalf("failed to read response body: %s", err)
-	}
+	require.NoError(t, err)
 
 	expected := `{"avg":3.3333333333333335,"totalCount":210}`
-	if string(stats) != expected {
-		t.Fatalf("expected %s, got %s", expected, string(stats))
-	}
+	require.Equal(t, expected, string(stats))
 }
-
 ```
 
 The test above is doing the following:
