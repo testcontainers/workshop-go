@@ -151,9 +151,8 @@ func TestBroker(t *testing.T) {
 		"docker.redpanda.com/redpandadata/redpanda:v24.3.7",
 		redpanda.WithAutoCreateTopics(),
 	)
-	if err != nil {
-		t.Fatal(err)
-	}
+	testcontainers.CleanupContainer(t, redpandaC)
+	require.NoError(t, err)
 
 	seedBroker, err := redpandaC.KafkaSeedBroker(ctx)
 	require.NoError(t, err)
@@ -401,6 +400,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/exec"
 	"github.com/testcontainers/testcontainers-go/modules/localstack"
@@ -529,15 +529,12 @@ func TestGetStats(t *testing.T) {
 			},
 		}),
 	)
-	if err != nil {
-		t.Fatalf("failed to start localstack container: %s", err)
-	}
+	testcontainers.CleanupContainer(t, c)
+	require.NoError(t, err)
 
 	// replace the port with the one exposed by the container
 	mappedPort, err := c.MappedPort(ctx, "4566/tcp")
-	if err != nil {
-		panic(err)
-	}
+	require.NoError(t, err)
 
 	url := strings.ReplaceAll(functionURL, "4566", mappedPort.Port())
 
@@ -554,14 +551,10 @@ func TestGetStats(t *testing.T) {
 	}
 
 	stats, err := lambdaClient.GetStats(histogram)
-	if err != nil {
-		t.Fatalf("failed to get stats: %s", err)
-	}
+	require.NoError(t, err)
 
 	expected := `{"avg":3.3333333333333335,"totalCount":210}`
-	if string(stats) != expected {
-		t.Fatalf("expected %s, got %s", expected, string(stats))
-	}
+	require.Equal(t, expected, string(stats))
 }
 
 ```
@@ -591,7 +584,7 @@ Finally, run your tests with `go test -v -count=1 ./internal/ratings -run TestGe
   Test SessionID: 4537b6af9f46af836f202c95ef2e5dadf3ba8c33ef605e0191ae857cb20e2ae3
   Test ProcessID: 975e388b-e4ee-4f73-8d5f-f16b26a07464
 2025/03/25 13:35:14 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
-2025/03/25 13:35:14 🐳 Creating container for image localstack/localstack:latest
+2025/03/25 13:35:14 🐳 Creating container for image localstack/localstack:2.3.0
 2025/03/25 13:35:15 🐳 Creating container for image testcontainers/ryuk:0.11.0
 2025/03/25 13:35:15 ✅ Container created: 0cfa2462825f
 2025/03/25 13:35:15 🐳 Starting container: 0cfa2462825f
@@ -601,7 +594,7 @@ Finally, run your tests with `go test -v -count=1 ./internal/ratings -run TestGe
 2025/03/25 13:35:15 ✅ Container created: 7bbf96d6bcca
 2025/03/25 13:35:16 🐳 Starting container: 7bbf96d6bcca
 2025/03/25 13:35:25 ✅ Container started: 7bbf96d6bcca
-2025/03/25 13:35:25 ⏳ Waiting for container id 7bbf96d6bcca image: localstack/localstack:latest. Waiting for: &{timeout:0x140003b7b40 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x1009efae0 ResponseMatcher:0x100a435e0 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x100a435f0 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
+2025/03/25 13:35:25 ⏳ Waiting for container id 7bbf96d6bcca image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x140003b7b40 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x1009efae0 ResponseMatcher:0x100a435e0 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x100a435f0 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
 2025/03/25 13:35:25 🔔 Container is ready: 7bbf96d6bcca
 2025/03/25 13:35:25 🐳 Stopping container: 7bbf96d6bcca
 2025/03/25 13:35:31 ✅ Container stopped: 7bbf96d6bcca

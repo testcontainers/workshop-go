@@ -100,9 +100,9 @@ Now, in the `lambda-go` directory, create the `go.mod` file for the lambda funct
 ```go
 module github.com/testcontainers/workshop-go/lambda-go
 
-go 1.20
+go 1.24
 
-require github.com/aws/aws-lambda-go v1.46.0
+require github.com/aws/aws-lambda-go v1.47.0
 
 ```
 
