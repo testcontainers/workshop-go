@@ -102,7 +102,23 @@ func TestRoutesWithDependencies(t *testing.T) {
 - It's an exact copy of the `routes_test.go` file, which checked for the errors, but updating the test names to not indicate that the tests are failing.
 - It also updates the assertions to demonstrate that the endpoints are returning a `200` instead of a `500` because the dependencies are started.
 
-If we run the test in this file, we are going to see that it passes because the dependencies are indeed started, therefore no error should be thrown:
+If we run the test in this file, the test panics because the SQL file for the Postgres database is not found.
+
+```bash
+panic: generic container: create container: created hook: can't copy testdata/dev-db.sql to container: open testdata/dev-db.sql: no such file or directory
+
+goroutine 1 [running]:
+github.com/testcontainers/workshop-go/internal/app.init.0()
+        /Users/mdelapenya/sourcecode/src/github.com/testcontainers/workshop-go/internal/app/dev_dependencies.go:45 +0x94
+```
+
+Let's fix that by adding the SQL file to the `testdata` directory in the `internal/app` directory. From the root directory of the project, run the following command:
+
+```bash
+cp -R ./testdata internal/app/
+```
+
+Now, if we run the tests again with `make test-e2e`, we are going to see that it passes because the dependencies are indeed started, therefore no error should be thrown:
 
 ```bash
 make test-e2e
