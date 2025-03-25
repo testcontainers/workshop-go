@@ -221,7 +221,7 @@ And in the logs, we'll see the following error:
 
 ```text
 Unable to ping the streams: unable to dial: dial tcp :9092: connect: connection refused
-[GIN] 2023/10/26 - 11:39:14 | 500 |   40.996542ms |       127.0.0.1 | POST     "/ratings"
+[GIN] 2025/03/25 - 13:04:09 | 500 |  309.441375ms |             ::1 | POST     "/ratings"
 ```
 
 If we recall correctly, the application was using a message queue to send the ratings before storing them in Redis (see `internal/app/handlers.go`), so we need to add a message queue for that. Let's fix it, but first stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and the application and the dependencies will be terminated.

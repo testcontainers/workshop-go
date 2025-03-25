@@ -45,8 +45,8 @@ On the contrary, if we open the ratings endpoint from the API (http://localhost:
 The logs will show the following:
 
 ```text
-Unable to connect to database: failed to connect to `host=/private/tmp user=mdelapenya database=`: dial error (dial unix /private/tmp/.s.PGSQL.5432: connect: no such file or directory)
-[GIN] 2023/10/26 - 10:48:47 | 500 |    4.249166ms |             ::1 | GET      "/ratings?talkId=testcontainers-integration-testing"
+Unable to connect to database: failed to connect to `user=mdelapenya database=`: /private/tmp/.s.PGSQL.5432 (/private/tmp): dial error: dial unix /private/tmp/.s.PGSQL.5432: connect: no such file or directory
+[GIN] 2025/03/25 - 12:49:11 | 500 |   10.338208ms |             ::1 | GET      "/ratings?talkId=testcontainers-integration-testing"
 ```
 
 It seems the application is not able to connect to the database. Let's fix it.

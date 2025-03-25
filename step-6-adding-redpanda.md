@@ -225,7 +225,7 @@ The response should be a 200 OK:
 The log entry for the POST request:
 
 ```text
-[GIN] 2023/10/26 - 11:48:25 | 200 |  597.468542ms |       127.0.0.1 | POST     "/ratings"
+[GIN] 2025/03/25 - 13:10:04 | 200 |  1.214765209s |             ::1 | POST     "/ratings"
 ```
 
 If we open now the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), then a 200 OK response code is returned, and the first ratings for the given talk is there. It was a five! ⭐️⭐️⭐️⭐️⭐️
@@ -246,7 +246,7 @@ Play around sending multiple POST requests for the two talks we created in the S
 In any POST request we'll still see the log entry for the AWS lambda failing to be called.
 
 ```text
-2023/10/26 11:48:42 error calling lambda function: Post "": unsupported protocol scheme ""
+2025/03/25 13:10:30 error calling lambda function: Post "": unsupported protocol scheme ""
 ```
 
 It's time now to fix it, adding a cloud emulator for the AWS Lambda function.

@@ -162,14 +162,14 @@ go test -v -count=1 -tags e2e ./internal/app
 [GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
 [GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
 === RUN   TestRoutesWithDependencies/GET_/ratings
-[GIN] 2023/10/30 - 12:05:54 | 200 |    1.1012535s |                 | GET      "/ratings?talkId=testcontainers-integration-testing"
+[GIN] 2025/03/25 - 13:50:43 | 200 |  829.313209ms |                 | GET      "/ratings?talkId=testcontainers-integration-testing"
 === RUN   TestRoutesWithDependencies/POST_/ratings
-[GIN] 2023/10/30 - 12:05:55 | 200 |  453.160167ms |                 | POST     "/ratings"
---- PASS: TestRoutesWithDependencies (1.55s)
-    --- PASS: TestRoutesWithDependencies/GET_/ratings (1.10s)
-    --- PASS: TestRoutesWithDependencies/POST_/ratings (0.45s)
+[GIN] 2025/03/25 - 13:50:45 | 200 |  1.126681083s |                 | POST     "/ratings"
+--- PASS: TestRoutesWithDependencies (1.96s)
+    --- PASS: TestRoutesWithDependencies/GET_/ratings (0.83s)
+    --- PASS: TestRoutesWithDependencies/POST_/ratings (1.13s)
 PASS
-ok      github.com/testcontainers/workshop-go/internal/app      35.541s
+ok      github.com/testcontainers/workshop-go/internal/app      20.301s
 ```
 
 Please take a look at these things:
@@ -251,7 +251,7 @@ Running the tests again with `make test-e2e` shows that the new test is also pas
 [GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
 [GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
 [GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
-[GIN] 2023/10/30 - 12:07:33 | 200 |     111.583µs |                 | GET      "/"
+[GIN] 2025/03/25 - 13:52:47 | 200 |     199.458µs |                 | GET      "/"
 --- PASS: TestRootRouteWithDependencies (0.00s)
 ```
 
