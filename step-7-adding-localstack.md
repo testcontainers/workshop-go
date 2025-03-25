@@ -597,39 +597,8 @@ GOOS=linux go build -tags lambda.norpc -o bootstrap main.go
 zip -j function.zip bootstrap
   adding: bootstrap (deflated 45%)
 go run -tags dev -v ./...
-github.com/testcontainers/testcontainers-go/modules/localstack
-github.com/testcontainers/workshop-go/internal/app
-github.com/testcontainers/workshop-go
+# github.com/testcontainers/workshop-go
 
-2023/10/26 12:09:37 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
-  API Version: 1.42
-  Operating System: Alpine Linux v3.18
-  Total Memory: 5256 MB
-  Resolved Docker Host: tcp://127.0.0.1:49342
-  Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: daefc07421b8d6bafd1212dbe6e8e550c6fa29cac9a025b46385f75eb5e2cb57
-  Test ProcessID: 884e159f-f492-41d8-b9ee-7fe78b576108
-2023/10/26 12:09:37 🐳 Creating container for image postgres:15.3-alpine
-2023/10/26 12:09:38 ✅ Container created: d5ec7cecb562
-2023/10/26 12:09:38 🐳 Starting container: d5ec7cecb562
-2023/10/26 12:09:38 ✅ Container started: d5ec7cecb562
-2023/10/26 12:09:38 🚧 Waiting for container id d5ec7cecb562 image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x140003fb400 Strategies:[0x1400040b1a0]}
-2023/10/26 12:09:50 🐳 Creating container for image redis:6-alpine
-2023/10/26 12:09:50 ✅ Container created: bf4fcb4cd74c
-2023/10/26 12:09:50 🐳 Starting container: bf4fcb4cd74c
-2023/10/26 12:09:51 ✅ Container started: bf4fcb4cd74c
-2023/10/26 12:09:51 🚧 Waiting for container id bf4fcb4cd74c image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
-2023/10/26 12:09:51 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v24.3.7
-2023/10/26 12:09:51 ✅ Container created: 07fb1e908b1e
-2023/10/26 12:09:51 🐳 Starting container: 07fb1e908b1e
-2023/10/26 12:09:52 ✅ Container started: 07fb1e908b1e
-2023/10/26 12:09:53 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
-2023/10/26 12:09:53 🐳 Creating container for image localstack/localstack:2.3.0
-2023/10/26 12:09:53 ✅ Container created: c514896580c1
-2023/10/26 12:09:53 🐳 Starting container: c514896580c1
-2023/10/26 12:09:53 ✅ Container started: c514896580c1
-2023/10/26 12:09:53 🚧 Waiting for container id c514896580c1 image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x14000369ca0 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x1024f5090 ResponseMatcher:0x1025c66a0 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> PollInterval:100ms UserInfo:}
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.

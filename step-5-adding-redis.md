@@ -152,25 +152,6 @@ Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the appl
 go run -tags dev -v ./...
 # github.com/testcontainers/workshop-go
 
-2023/10/26 11:33:00 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
-  API Version: 1.42
-  Operating System: Alpine Linux v3.18
-  Total Memory: 5256 MB
-  Resolved Docker Host: tcp://127.0.0.1:49342
-  Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: 6ce27d7b447abcd3c04411262c1d734b443219537b237d1edd2a68ec986c6719
-  Test ProcessID: bbd74fe6-11fb-47bf-ae4e-3ef87d0a7ab3
-2023/10/26 11:33:00 🐳 Creating container for image postgres:15.3-alpine
-2023/10/26 11:33:00 ✅ Container created: 964dde9252ec
-2023/10/26 11:33:00 🐳 Starting container: 964dde9252ec
-2023/10/26 11:33:01 ✅ Container started: 964dde9252ec
-2023/10/26 11:33:01 🚧 Waiting for container id 964dde9252ec image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x140003f33f0 Strategies:[0x140004031a0]}
-2023/10/26 11:33:12 🐳 Creating container for image redis:6-alpine
-2023/10/26 11:33:12 ✅ Container created: 27fd807da27b
-2023/10/26 11:33:12 🐳 Starting container: 27fd807da27b
-2023/10/26 11:33:13 ✅ Container started: 27fd807da27b
-2023/10/26 11:33:13 🚧 Waiting for container id 27fd807da27b image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
