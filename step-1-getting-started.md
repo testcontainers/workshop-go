@@ -11,7 +11,7 @@ GNU Make 3.81
 
 ## Check Go
 
-We'll need Go 1.20 or newer for this workshop.
+We'll need Go 1.24 or newer for this workshop.
 
 For installing Go, please follow the instructions at [https://golang.org/doc/install](https://golang.org/doc/install), or use your favorite package manager, like [`gvm`](https://github.com/andrewkroh/gvm).
 
@@ -32,33 +32,32 @@ We can check our container runtime by simply running:
 ```shell
 $ docker version
 Client:
- Cloud integration: v1.0.35
- Version:           24.0.2
- API version:       1.42 (downgraded from 1.43)
- Go version:        go1.20.4
- Git commit:        cb74dfc
- Built:             Thu May 25 21:51:16 2023
+ Version:           27.2.1-rd
+ API version:       1.43 (downgraded from 1.47)
+ Go version:        go1.22.7
+ Git commit:        cc0ee3e
+ Built:             Tue Sep 10 15:41:09 2024
  OS/Arch:           darwin/arm64
  Context:           tcd
 
-Server:
+Server: Docker Engine - Community
  Engine:
-  Version:          23.0.6
-  API version:      1.42 (minimum version 1.12)
-  Go version:       go1.20.10
-  Git commit:       9dbdbd4b6d7681bd18c897a6ba0376073c2a72ff
-  Built:            Thu Oct 12 14:14:03 2023
-  OS/Arch:          linux/arm64
+  Version:          27.5.0
+  API version:      1.47 (minimum version 1.24)
+  Go version:       go1.22.10
+  Git commit:       38b84dc
+  Built:            Thu Jan 16 09:42:44 2025
+  OS/Arch:          linux/amd64
   Experimental:     false
  containerd:
-  Version:          v1.7.2
-  GitCommit:        0cae528dd6cb557f7201036e9f43420650207b58
+  Version:          1.7.24
+  GitCommit:        
  runc:
-  Version:          1.1.7
-  GitCommit:        860f061b76bb4fc671f0f9e900f7d80ff93d4eb7
+  Version:          1.1.12-0ubuntu2~22.04.1
+  GitCommit:        
  docker-init:
   Version:          0.19.0
-  GitCommit: 
+  GitCommit:        de40ad0
 ```
 
 ## Download the project
