@@ -2,7 +2,7 @@
 
 Remember the Makefile in the root of the project with the `dev` target, the one that starts the application in `local dev mode`? We are going to learn in this workshop how to leverage Go's build tags and init functions to selectively execute code when a `dev` tag is passed to the Go toolchain, only while developing our application. So when the application is started, it will start the runtime dependencies as Docker containers, leveraging Testcontainers for Go.
 
-To understand how the `local dev mode` with Testcontainers for Go works, please read the following blog post: https://www.atomicjar.com/2023/08/local-development-of-go-applications-with-testcontainers/
+To understand how the `local dev mode` with Testcontainers for Go works, please read the following blog post: https://www.docker.com/blog/local-development-of-go-applications-with-testcontainers/
 
 ## Adding Talks store
 
