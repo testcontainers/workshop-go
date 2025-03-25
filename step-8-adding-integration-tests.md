@@ -85,35 +85,41 @@ Finally, run your tests with `go test -v -count=1 ./internal/ratings -run TestNe
 
 ```text
 === RUN   TestNewRepository
-=== RUN   TestNewRepository
-2023/10/26 15:34:04 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
-  API Version: 1.42
-  Operating System: Alpine Linux v3.18
-  Total Memory: 5256 MB
-  Resolved Docker Host: tcp://127.0.0.1:62516
+2025/03/25 13:28:43 github.com/testcontainers/testcontainers-go - Connected to docker: 
+  Server Version: 27.5.0 (via Testcontainers Desktop 1.19.0)
+  API Version: 1.46
+  Operating System: Ubuntu 22.04.5 LTS
+  Total Memory: 15368 MB
+  Labels:
+    cloud.docker.run.version=259.c712f5fd
+  Testcontainers for Go Version: v0.35.0
+  Resolved Docker Host: tcp://127.0.0.1:49982
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: 8a48163f15565f205b07aa6020b119ec9c37eea28fd3bfebdda79746d7a4e35c
-  Test ProcessID: 233b242a-1da4-4135-8dc4-d64c74b12169
-2023/10/26 15:34:04 🐳 Creating container for image docker.io/testcontainers/ryuk:0.5.1
-2023/10/26 15:34:04 ✅ Container created: 57807689ca9a
-2023/10/26 15:34:04 🐳 Starting container: 57807689ca9a
-2023/10/26 15:34:04 ✅ Container started: 57807689ca9a
-2023/10/26 15:34:04 🚧 Waiting for container id 57807689ca9a image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
-2023/10/26 15:34:04 🐳 Creating container for image redis:6-alpine
-2023/10/26 15:34:04 ✅ Container created: d831506102ae
-2023/10/26 15:34:04 🐳 Starting container: d831506102ae
-2023/10/26 15:34:04 ✅ Container started: d831506102ae
-2023/10/26 15:34:04 🚧 Waiting for container id d831506102ae image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
+  Test SessionID: 108e56b58c673b34136ef7aff4cc8629b6101a9737009f275fed7592aa75d3af
+  Test ProcessID: f3796459-23e9-4320-a1db-328094645da2
+2025/03/25 13:28:43 🐳 Creating container for image redis:6-alpine
+2025/03/25 13:28:44 🐳 Creating container for image testcontainers/ryuk:0.11.0
+2025/03/25 13:28:44 ✅ Container created: 609a132f79e0
+2025/03/25 13:28:44 🐳 Starting container: 609a132f79e0
+2025/03/25 13:28:44 ✅ Container started: 609a132f79e0
+2025/03/25 13:28:44 ⏳ Waiting for container id 609a132f79e0 image: testcontainers/ryuk:0.11.0. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms skipInternalCheck:false}
+2025/03/25 13:28:44 🔔 Container is ready: 609a132f79e0
+2025/03/25 13:28:44 ✅ Container created: dac0babc7b42
+2025/03/25 13:28:44 🐳 Starting container: dac0babc7b42
+2025/03/25 13:28:45 ✅ Container started: dac0babc7b42
+2025/03/25 13:28:45 ⏳ Waiting for container id dac0babc7b42 image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms check:<nil> submatchCallback:<nil> re:<nil> log:[]}
+2025/03/25 13:28:45 🔔 Container is ready: dac0babc7b42
 === RUN   TestNewRepository/Add_rating
 === RUN   TestNewRepository/Add_multiple_ratings
-2023/10/26 15:34:04 🐳 Terminating container: d831506102ae
-2023/10/26 15:34:04 🚫 Container terminated: d831506102ae
---- PASS: TestNewRepository (0.75s)
-    --- PASS: TestNewRepository/Add_rating (0.00s)
-    --- PASS: TestNewRepository/Add_multiple_ratings (0.04s)
+2025/03/25 13:28:48 🐳 Stopping container: dac0babc7b42
+2025/03/25 13:28:48 ✅ Container stopped: dac0babc7b42
+2025/03/25 13:28:48 🐳 Terminating container: dac0babc7b42
+2025/03/25 13:28:48 🚫 Container terminated: dac0babc7b42
+--- PASS: TestNewRepository (5.18s)
+    --- PASS: TestNewRepository/Add_rating (0.03s)
+    --- PASS: TestNewRepository/Add_multiple_ratings (3.35s)
 PASS
-ok      github.com/testcontainers/workshop-go/internal/ratings  0.915s
+ok      github.com/testcontainers/workshop-go/internal/ratings  5.492s
 ```
 
 _NOTE: if we experiment longer test execution times it could be caused by the need of pulling the images from the registry._
@@ -193,31 +199,41 @@ Finally, run your tests with `go test -v -count=1 ./internal/streams -run TestBr
 
 ```text
 === RUN   TestBroker
-2023/10/26 15:35:50 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
-  API Version: 1.42
-  Operating System: Alpine Linux v3.18
-  Total Memory: 5256 MB
-  Resolved Docker Host: tcp://127.0.0.1:62516
+2025/03/25 13:27:43 github.com/testcontainers/testcontainers-go - Connected to docker: 
+  Server Version: 27.5.0 (via Testcontainers Desktop 1.19.0)
+  API Version: 1.46
+  Operating System: Ubuntu 22.04.5 LTS
+  Total Memory: 15368 MB
+  Labels:
+    cloud.docker.run.version=259.c712f5fd
+  Testcontainers for Go Version: v0.35.0
+  Resolved Docker Host: tcp://127.0.0.1:49982
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: 38e98e183213936ff72705d5df8e99537879dffcc5361a7062d14dd1f250b6b8
-  Test ProcessID: d31a09a5-50df-4723-bfa6-b11f6f08e323
-2023/10/26 15:35:50 🐳 Creating container for image docker.io/testcontainers/ryuk:0.5.1
-2023/10/26 15:35:50 ✅ Container created: 06e23826a3e6
-2023/10/26 15:35:50 🐳 Starting container: 06e23826a3e6
-2023/10/26 15:35:51 ✅ Container started: 06e23826a3e6
-2023/10/26 15:35:51 🚧 Waiting for container id 06e23826a3e6 image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
-2023/10/26 15:35:51 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v24.3.7
-2023/10/26 15:35:51 ✅ Container created: 125662db9cef
-2023/10/26 15:35:51 🐳 Starting container: 125662db9cef
-2023/10/26 15:35:51 ✅ Container started: 125662db9cef
+  Test SessionID: f3efe8aa74049e456c1d8711ec74a7ac666105ea4996c5f5166099592f93160c
+  Test ProcessID: 803f586a-f2aa-41aa-adb5-e5bb2a8ce85e
+2025/03/25 13:27:43 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v24.3.7
+2025/03/25 13:27:43 🐳 Creating container for image testcontainers/ryuk:0.11.0
+2025/03/25 13:27:43 ✅ Container created: 220b54e84226
+2025/03/25 13:27:43 🐳 Starting container: 220b54e84226
+2025/03/25 13:27:43 ✅ Container started: 220b54e84226
+2025/03/25 13:27:43 ⏳ Waiting for container id 220b54e84226 image: testcontainers/ryuk:0.11.0. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms skipInternalCheck:false}
+2025/03/25 13:27:44 🔔 Container is ready: 220b54e84226
+2025/03/25 13:27:44 ✅ Container created: 801391cb30bf
+2025/03/25 13:27:44 🐳 Starting container: 801391cb30bf
+2025/03/25 13:27:44 ✅ Container started: 801391cb30bf
+2025/03/25 13:27:44 ⏳ Waiting for container id 801391cb30bf image: docker.redpanda.com/redpandadata/redpanda:v24.3.7. Waiting for: &{timeout:<nil> deadline:<nil> Strategies:[0x1400041cae0 0x1400041cb10 0x1400041cb40]}
+2025/03/25 13:27:44 🔔 Container is ready: 801391cb30bf
 === RUN   TestBroker/Send_Rating_without_callback
 === RUN   TestBroker/Send_Rating_with_error_in_callback
---- PASS: TestBroker (1.57s)
-    --- PASS: TestBroker/Send_Rating_without_callback (0.57s)
-    --- PASS: TestBroker/Send_Rating_with_error_in_callback (0.00s)
+2025/03/25 13:27:47 🐳 Stopping container: 801391cb30bf
+2025/03/25 13:27:47 ✅ Container stopped: 801391cb30bf
+2025/03/25 13:27:47 🐳 Terminating container: 801391cb30bf
+2025/03/25 13:27:47 🚫 Container terminated: 801391cb30bf
+--- PASS: TestBroker (4.59s)
+    --- PASS: TestBroker/Send_Rating_without_callback (0.72s)
+    --- PASS: TestBroker/Send_Rating_with_error_in_callback (0.03s)
 PASS
-ok      github.com/testcontainers/workshop-go/internal/streams  1.714s
+ok      github.com/testcontainers/workshop-go/internal/streams  4.938s
 ```
 
 _NOTE: if we experiment longer test execution times it could be caused by the need of pulling the images from the registry._
@@ -326,36 +342,43 @@ Finally, run your tests with `go test -v -count=1 ./internal/talks -run TestNewR
 
 ```text
 === RUN   TestNewRepository
-2023/10/26 15:37:24 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
-  API Version: 1.42
-  Operating System: Alpine Linux v3.18
-  Total Memory: 5256 MB
-  Resolved Docker Host: tcp://127.0.0.1:62516
+2025/03/25 13:31:18 github.com/testcontainers/testcontainers-go - Connected to docker: 
+  Server Version: 27.5.0 (via Testcontainers Desktop 1.19.0)
+  API Version: 1.46
+  Operating System: Ubuntu 22.04.5 LTS
+  Total Memory: 15368 MB
+  Labels:
+    cloud.docker.run.version=259.c712f5fd
+  Testcontainers for Go Version: v0.35.0
+  Resolved Docker Host: tcp://127.0.0.1:49982
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: 0755278e5207f829c9e4a1ee277604705ee78931ce1df769b6e9e77e57159258
-  Test ProcessID: 729be1dc-ef48-4df4-bcac-b33551ef98e7
-2023/10/26 15:37:24 🐳 Creating container for image docker.io/testcontainers/ryuk:0.5.1
-2023/10/26 15:37:24 ✅ Container created: 602d40bb5aa5
-2023/10/26 15:37:24 🐳 Starting container: 602d40bb5aa5
-2023/10/26 15:37:25 ✅ Container started: 602d40bb5aa5
-2023/10/26 15:37:25 🚧 Waiting for container id 602d40bb5aa5 image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
-2023/10/26 15:37:25 🐳 Creating container for image postgres:15.3-alpine
-2023/10/26 15:37:25 ✅ Container created: 38de68a70e57
-2023/10/26 15:37:25 🐳 Starting container: 38de68a70e57
-2023/10/26 15:37:25 ✅ Container started: 38de68a70e57
-2023/10/26 15:37:25 🚧 Waiting for container id 38de68a70e57 image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x140000362e0 Strategies:[0x140004ae720]}
+  Test SessionID: f2ef0f015b36b470b519d04f7a37ceed9394461a3e34adc604278fcbb1a4d0b3
+  Test ProcessID: b107a0b2-5185-46ca-b78a-1527cc6c54ce
+2025/03/25 13:31:18 🐳 Creating container for image postgres:15.3-alpine
+2025/03/25 13:31:18 🐳 Creating container for image testcontainers/ryuk:0.11.0
+2025/03/25 13:31:18 ✅ Container created: 6dd266218b3f
+2025/03/25 13:31:18 🐳 Starting container: 6dd266218b3f
+2025/03/25 13:31:18 ✅ Container started: 6dd266218b3f
+2025/03/25 13:31:18 ⏳ Waiting for container id 6dd266218b3f image: testcontainers/ryuk:0.11.0. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms skipInternalCheck:false}
+2025/03/25 13:31:19 🔔 Container is ready: 6dd266218b3f
+2025/03/25 13:31:19 ✅ Container created: 73c4474e064e
+2025/03/25 13:31:19 🐳 Starting container: 73c4474e064e
+2025/03/25 13:31:19 ✅ Container started: 73c4474e064e
+2025/03/25 13:31:19 ⏳ Waiting for container id 73c4474e064e image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x140003d5f88 Strategies:[0x14000116840]}
+2025/03/25 13:31:20 🔔 Container is ready: 73c4474e064e
 === RUN   TestNewRepository/Create_a_talk_and_retrieve_it_by_UUID
 === RUN   TestNewRepository/Exists_by_UUID
 === RUN   TestNewRepository/Does_not_exist_by_UUID
-2023/10/26 15:37:26 🐳 Terminating container: 38de68a70e57
-2023/10/26 15:37:26 🚫 Container terminated: 38de68a70e57
---- PASS: TestNewRepository (1.55s)
-    --- PASS: TestNewRepository/Create_a_talk_and_retrieve_it_by_UUID (0.00s)
-    --- PASS: TestNewRepository/Exists_by_UUID (0.00s)
-    --- PASS: TestNewRepository/Does_not_exist_by_UUID (0.00s)
+2025/03/25 13:31:21 🐳 Stopping container: 73c4474e064e
+2025/03/25 13:31:21 ✅ Container stopped: 73c4474e064e
+2025/03/25 13:31:21 🐳 Terminating container: 73c4474e064e
+2025/03/25 13:31:21 🚫 Container terminated: 73c4474e064e
+--- PASS: TestNewRepository (3.70s)
+    --- PASS: TestNewRepository/Create_a_talk_and_retrieve_it_by_UUID (0.18s)
+    --- PASS: TestNewRepository/Exists_by_UUID (0.07s)
+    --- PASS: TestNewRepository/Does_not_exist_by_UUID (0.04s)
 PASS
-ok      github.com/testcontainers/workshop-go/internal/talks    1.685s
+ok      github.com/testcontainers/workshop-go/internal/talks    4.433s
 ```
 
 _NOTE: if we experiment longer test execution times it could be caused by the need of pulling the images from the registry._
@@ -555,29 +578,38 @@ Finally, run your tests with `go test -v -count=1 ./internal/ratings -run TestGe
 
 ```text
 === RUN   TestGetStats
-2023/10/30 11:47:46 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
-  API Version: 1.42
-  Operating System: Alpine Linux v3.18
-  Total Memory: 5256 MB
-  Resolved Docker Host: tcp://127.0.0.1:54034
+2025/03/25 13:35:14 github.com/testcontainers/testcontainers-go - Connected to docker: 
+  Server Version: 27.5.0 (via Testcontainers Desktop 1.19.0)
+  API Version: 1.46
+  Operating System: Ubuntu 22.04.5 LTS
+  Total Memory: 15368 MB
+  Labels:
+    cloud.docker.run.version=259.c712f5fd
+  Testcontainers for Go Version: v0.35.0
+  Resolved Docker Host: tcp://127.0.0.1:49982
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: d2849817a4d14c4fbe4346b3c71ceb2924189b5803ab7eeec60647bd2437cd1d
-  Test ProcessID: 8412c7c5-05fa-4056-9df5-5a86e97ea977
-2023/10/30 11:47:46 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
-2023/10/30 11:47:46 🐳 Creating container for image docker.io/testcontainers/ryuk:0.5.1
-2023/10/30 11:47:46 ✅ Container created: 030f77295e0a
-2023/10/30 11:47:46 🐳 Starting container: 030f77295e0a
-2023/10/30 11:47:47 ✅ Container started: 030f77295e0a
-2023/10/30 11:47:47 🚧 Waiting for container id 030f77295e0a image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
-2023/10/30 11:47:47 🐳 Creating container for image localstack/localstack:2.3.0
-2023/10/30 11:47:47 ✅ Container created: 3c5a990779db
-2023/10/30 11:47:47 🐳 Starting container: 3c5a990779db
-2023/10/30 11:47:48 ✅ Container started: 3c5a990779db
-2023/10/30 11:47:48 🚧 Waiting for container id 3c5a990779db image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x140003dbe18 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x1009d06f0 ResponseMatcher:0x100aa1690 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> PollInterval:100ms UserInfo:}
---- PASS: TestGetStats (16.88s)
+  Test SessionID: 4537b6af9f46af836f202c95ef2e5dadf3ba8c33ef605e0191ae857cb20e2ae3
+  Test ProcessID: 975e388b-e4ee-4f73-8d5f-f16b26a07464
+2025/03/25 13:35:14 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
+2025/03/25 13:35:14 🐳 Creating container for image localstack/localstack:latest
+2025/03/25 13:35:15 🐳 Creating container for image testcontainers/ryuk:0.11.0
+2025/03/25 13:35:15 ✅ Container created: 0cfa2462825f
+2025/03/25 13:35:15 🐳 Starting container: 0cfa2462825f
+2025/03/25 13:35:15 ✅ Container started: 0cfa2462825f
+2025/03/25 13:35:15 ⏳ Waiting for container id 0cfa2462825f image: testcontainers/ryuk:0.11.0. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms skipInternalCheck:false}
+2025/03/25 13:35:15 🔔 Container is ready: 0cfa2462825f
+2025/03/25 13:35:15 ✅ Container created: 7bbf96d6bcca
+2025/03/25 13:35:16 🐳 Starting container: 7bbf96d6bcca
+2025/03/25 13:35:25 ✅ Container started: 7bbf96d6bcca
+2025/03/25 13:35:25 ⏳ Waiting for container id 7bbf96d6bcca image: localstack/localstack:latest. Waiting for: &{timeout:0x140003b7b40 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x1009efae0 ResponseMatcher:0x100a435e0 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x100a435f0 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
+2025/03/25 13:35:25 🔔 Container is ready: 7bbf96d6bcca
+2025/03/25 13:35:25 🐳 Stopping container: 7bbf96d6bcca
+2025/03/25 13:35:31 ✅ Container stopped: 7bbf96d6bcca
+2025/03/25 13:35:31 🐳 Terminating container: 7bbf96d6bcca
+2025/03/25 13:35:31 🚫 Container terminated: 7bbf96d6bcca
+--- PASS: TestGetStats (16.97s)
 PASS
-ok      github.com/testcontainers/workshop-go/internal/ratings  17.061s
+ok      github.com/testcontainers/workshop-go/internal/ratings  17.966s
 ```
 
 _NOTE: if we experiment longer test execution times it could be caused by the need of pulling the images from the registry._

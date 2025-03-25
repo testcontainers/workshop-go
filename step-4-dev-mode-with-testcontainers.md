@@ -118,21 +118,6 @@ Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the appl
 
 ```text
 go run -tags dev -v ./...
-
-2023/10/26 11:24:40 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
-  API Version: 1.42
-  Operating System: Alpine Linux v3.18
-  Total Memory: 5256 MB
-  Resolved Docker Host: tcp://127.0.0.1:49342
-  Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: 81b67cdfeb4575f43b46473fcf4b211e01e4729370afd2fe7bfe697183890bf5
-  Test ProcessID: c759c04a-3f04-427f-a91d-95dbe8ed3b3c
-2023/10/26 11:24:40 🐳 Creating container for image postgres:15.3-alpine
-2023/10/26 11:24:40 ✅ Container created: 2d5155cb8e58
-2023/10/26 11:24:40 🐳 Starting container: 2d5155cb8e58
-2023/10/26 11:24:41 ✅ Container started: 2d5155cb8e58
-2023/10/26 11:24:41 🚧 Waiting for container id 2d5155cb8e58 image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x140003a3470 Strategies:[0x140003bd1a0]}
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.

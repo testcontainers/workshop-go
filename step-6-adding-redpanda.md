@@ -177,29 +177,6 @@ Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the appl
 go run -tags dev -v ./...
 # github.com/testcontainers/workshop-go
 
-2023/10/26 11:43:59 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
-  API Version: 1.42
-  Operating System: Alpine Linux v3.18
-  Total Memory: 5256 MB
-  Resolved Docker Host: tcp://127.0.0.1:49342
-  Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: e13901151c68b9c4fac245114619b7caf8fea93050aadd29152276b91fce6330
-  Test ProcessID: 598de86d-1870-42c4-ad0e-2d9c9b676fc4
-2023/10/26 11:43:59 🐳 Creating container for image postgres:15.3-alpine
-2023/10/26 11:43:59 ✅ Container created: 00bca83e66ca
-2023/10/26 11:43:59 🐳 Starting container: 00bca83e66ca
-2023/10/26 11:44:00 ✅ Container started: 00bca83e66ca
-2023/10/26 11:44:00 🚧 Waiting for container id 00bca83e66ca image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x1400043d420 Strategies:[0x1400044f1d0]}
-2023/10/26 11:44:11 🐳 Creating container for image redis:6-alpine
-2023/10/26 11:44:11 ✅ Container created: 373f523c83ac
-2023/10/26 11:44:11 🐳 Starting container: 373f523c83ac
-2023/10/26 11:44:12 ✅ Container started: 373f523c83ac
-2023/10/26 11:44:12 🚧 Waiting for container id 373f523c83ac image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms}
-2023/10/26 11:44:12 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v24.3.7
-2023/10/26 11:44:12 ✅ Container created: 1811a3de1f8f
-2023/10/26 11:44:12 🐳 Starting container: 1811a3de1f8f
-2023/10/26 11:44:13 ✅ Container started: 1811a3de1f8f
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.

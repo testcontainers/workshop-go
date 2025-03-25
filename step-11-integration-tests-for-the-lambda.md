@@ -232,33 +232,38 @@ Now run the integration tests with your IDE or from a terminal, in the lambda di
 
 ```shell
 $ cd lambda-go
-$ make mod-tidy test
+$ make test
+go mod tidy
 go test -v -count=1 ./...
-# github.com/testcontainers/workshop-go/lambda-go.test
 === RUN   TestDeployLambda
-2023/10/30 12:54:35 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
-  API Version: 1.42
-  Operating System: Alpine Linux v3.18
-  Total Memory: 5256 MB
-  Resolved Docker Host: tcp://127.0.0.1:54034
+2025/03/25 14:02:12 github.com/testcontainers/testcontainers-go - Connected to docker: 
+  Server Version: 27.5.0 (via Testcontainers Desktop 1.19.0)
+  API Version: 1.46
+  Operating System: Ubuntu 22.04.5 LTS
+  Total Memory: 15368 MB
+  Labels:
+    cloud.docker.run.version=259.c712f5fd
+  Testcontainers for Go Version: v0.35.0
+  Resolved Docker Host: tcp://127.0.0.1:49982
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: 322d823de6e48bc23ed27eb788ce9e7af040a98061329aa861bcf9b0d075bbc8
-  Test ProcessID: 6bf2f3be-b3f1-40fb-91a6-9038a23b5d9c
-2023/10/30 12:54:35 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
-2023/10/30 12:54:35 🐳 Creating container for image docker.io/testcontainers/ryuk:0.5.1
-2023/10/30 12:54:35 ✅ Container created: 8b6d4a9cc768
-2023/10/30 12:54:35 🐳 Starting container: 8b6d4a9cc768
-2023/10/30 12:54:35 ✅ Container started: 8b6d4a9cc768
-2023/10/30 12:54:35 🚧 Waiting for container id 8b6d4a9cc768 image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
-2023/10/30 12:54:36 🐳 Creating container for image localstack/localstack:2.3.0
-2023/10/30 12:54:36 ✅ Container created: f0055b217203
-2023/10/30 12:54:36 🐳 Starting container: f0055b217203
-2023/10/30 12:54:36 ✅ Container started: f0055b217203
-2023/10/30 12:54:36 🚧 Waiting for container id f0055b217203 image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x140003d3238 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x1030748e0 ResponseMatcher:0x1031453a0 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> PollInterval:100ms UserInfo:}
---- PASS: TestDeployLambda (17.87s)
+  Test SessionID: 32a04170fb07432f051c21db7aea06591d4537edfe5d3a798003ec1a9516539e
+  Test ProcessID: d0b47b4c-d5fe-4836-b0d5-e1356491ba24
+2025/03/25 14:02:12 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
+2025/03/25 14:02:12 🐳 Creating container for image localstack/localstack:2.3.0
+2025/03/25 14:02:12 🐳 Creating container for image testcontainers/ryuk:0.11.0
+2025/03/25 14:02:12 ✅ Container created: e351225e5172
+2025/03/25 14:02:12 🐳 Starting container: e351225e5172
+2025/03/25 14:02:12 ✅ Container started: e351225e5172
+2025/03/25 14:02:12 ⏳ Waiting for container id e351225e5172 image: testcontainers/ryuk:0.11.0. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms skipInternalCheck:false}
+2025/03/25 14:02:13 🔔 Container is ready: e351225e5172
+2025/03/25 14:02:13 ✅ Container created: 5bb9dd2564d8
+2025/03/25 14:02:13 🐳 Starting container: 5bb9dd2564d8
+2025/03/25 14:02:23 ✅ Container started: 5bb9dd2564d8
+2025/03/25 14:02:23 ⏳ Waiting for container id 5bb9dd2564d8 image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x1400037d400 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x104af72a0 ResponseMatcher:0x104b89a80 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x104b89a90 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
+2025/03/25 14:02:24 🔔 Container is ready: 5bb9dd2564d8
+--- PASS: TestDeployLambda (14.03s)
 PASS
-ok      github.com/testcontainers/workshop-go/lambda-go 18.207s
+ok      github.com/testcontainers/workshop-go/lambda-go 14.380s
 ```
 
 You'll probably see the `go.mod` and `go.sum` file to change, adding the `testcontainers-go` library and its Go dependencies.
@@ -281,34 +286,38 @@ Now run the tests, with your IDE or from a terminal:
 ```shell
 $ make test
 go test -v -count=1 ./...
-# github.com/testcontainers/workshop-go/lambda-go.test
 === RUN   TestDeployLambda
-2023/10/30 12:59:40 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 23.0.6 (via Testcontainers Desktop 1.5.0)
-  API Version: 1.42
-  Operating System: Alpine Linux v3.18
-  Total Memory: 5256 MB
-  Resolved Docker Host: tcp://127.0.0.1:54034
+2025/03/25 14:09:13 github.com/testcontainers/testcontainers-go - Connected to docker: 
+  Server Version: 27.5.0 (via Testcontainers Desktop 1.19.0)
+  API Version: 1.46
+  Operating System: Ubuntu 22.04.5 LTS
+  Total Memory: 15368 MB
+  Labels:
+    cloud.docker.run.version=259.c712f5fd
+  Testcontainers for Go Version: v0.35.0
+  Resolved Docker Host: tcp://127.0.0.1:49982
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: 16f6d59f4ea8d50a6114bb57f3d495bc869d5afa9cb78711b7e6ef22d692a88b
-  Test ProcessID: ecde6c0f-2957-4f11-ae5a-85d61d5ff882
-2023/10/30 12:59:40 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
-2023/10/30 12:59:40 🐳 Creating container for image docker.io/testcontainers/ryuk:0.5.1
-2023/10/30 12:59:40 ✅ Container created: ebd4bbd7d64d
-2023/10/30 12:59:40 🐳 Starting container: ebd4bbd7d64d
-2023/10/30 12:59:41 ✅ Container started: ebd4bbd7d64d
-2023/10/30 12:59:41 🚧 Waiting for container id ebd4bbd7d64d image: docker.io/testcontainers/ryuk:0.5.1. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
-2023/10/30 12:59:41 🐳 Creating container for image localstack/localstack:2.3.0
-2023/10/30 12:59:41 ✅ Container created: 40cb2869f67e
-2023/10/30 12:59:41 🐳 Starting container: 40cb2869f67e
-2023/10/30 12:59:42 ✅ Container started: 40cb2869f67e
-2023/10/30 12:59:42 🚧 Waiting for container id 40cb2869f67e image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x14000485148 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x10523c8e0 ResponseMatcher:0x10530d3a0 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> PollInterval:100ms UserInfo:}
-    main_test.go:177: expected {"avg":3.3333333333333335,"totalCount":210}, got {"avg":147000,"totalCount":210}
---- FAIL: TestDeployLambda (17.60s)
+  Test SessionID: 70e53e714c6ad65ab190099ba80262d1d14325fb6171596466683f56db98c1c1
+  Test ProcessID: 8a35b781-968b-42a8-b8aa-7ab4cfcd3bbf
+2025/03/25 14:09:13 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
+2025/03/25 14:09:13 🐳 Creating container for image localstack/localstack:2.3.0
+2025/03/25 14:09:13 🐳 Creating container for image testcontainers/ryuk:0.11.0
+2025/03/25 14:09:13 ✅ Container created: 8ef67818a0be
+2025/03/25 14:09:13 🐳 Starting container: 8ef67818a0be
+2025/03/25 14:09:14 ✅ Container started: 8ef67818a0be
+2025/03/25 14:09:14 ⏳ Waiting for container id 8ef67818a0be image: testcontainers/ryuk:0.11.0. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms skipInternalCheck:false}
+2025/03/25 14:09:14 🔔 Container is ready: 8ef67818a0be
+2025/03/25 14:09:14 ✅ Container created: fbc64ad5cd7f
+2025/03/25 14:09:15 🐳 Starting container: fbc64ad5cd7f
+2025/03/25 14:09:24 ✅ Container started: fbc64ad5cd7f
+2025/03/25 14:09:24 ⏳ Waiting for container id fbc64ad5cd7f image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x140004e2530 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x100bfb2a0 ResponseMatcher:0x100c8da80 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x100c8da90 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
+2025/03/25 14:09:25 🔔 Container is ready: fbc64ad5cd7f
+    main_test.go:188: expected {"avg":3.3333333333333335,"totalCount":210}, got {"avg":147000,"totalCount":210}
+--- FAIL: TestDeployLambda (15.64s)
 FAIL
-FAIL    github.com/testcontainers/workshop-go/lambda-go 17.880s
+FAIL    github.com/testcontainers/workshop-go/lambda-go 16.414s
 FAIL
-make: *** [test] Error 1
+make: *** [test] Error 
 ```
 
 As expected, the test failed because the lambda function is returning an incorrect average:
