@@ -24,20 +24,21 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/exec"
 	"github.com/testcontainers/testcontainers-go/modules/localstack"
 )
 
 // buildLambda return the path to the ZIP file used to deploy the lambda function.
-func buildLambda() string {
+func buildLambda(t *testing.T) string {
+	t.Helper()
+
 	makeCmd := osexec.Command("make", "zip-lambda")
 	makeCmd.Dir = "."
 
 	err := makeCmd.Run()
-	if err != nil {
-		panic(fmt.Errorf("failed to zip lambda: %w", err))
-	}
+	require.NoError(t, err)
 
 	return filepath.Join("function.zip")
 }
@@ -55,7 +56,7 @@ func TestDeployLambda(t *testing.T) {
 	}
 
 	// get the path to the function.zip file, which lives in the lambda-go folder of the project
-	zipFile := buildLambda()
+	zipFile := buildLambda(t)
 
 	var functionURL string
 
