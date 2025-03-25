@@ -81,16 +81,16 @@ go test -v -count=1 ./internal/app -run TestRoutesFailBecauseDependenciesAreNotS
 [GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
 [GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
 === RUN   TestRoutesFailBecauseDependenciesAreNotStarted/GET_/ratings_fails
-Unable to connect to database: failed to connect to `host=/private/tmp user=mdelapenya database=`: dial error (dial unix /private/tmp/.s.PGSQL.5432: connect: no such file or directory)
-[GIN] 2023/10/30 - 14:29:12 | 500 |    3.623292ms |                 | GET      "/ratings?talkId=testcontainers-integration-testing"
+Unable to connect to database: failed to connect to `user=mdelapenya database=`: /private/tmp/.s.PGSQL.5432 (/private/tmp): dial error: dial unix /private/tmp/.s.PGSQL.5432: connect: no such file or directory
+[GIN] 2025/03/25 - 13:44:16 | 500 |    4.431959ms |                 | GET      "/ratings?talkId=testcontainers-integration-testing"
 === RUN   TestRoutesFailBecauseDependenciesAreNotStarted/POST_/ratings_fails
-Unable to connect to database: failed to connect to `host=/private/tmp user=mdelapenya database=`: dial error (dial unix /private/tmp/.s.PGSQL.5432: connect: no such file or directory)
-[GIN] 2023/10/30 - 14:29:12 | 500 |     105.791µs |                 | POST     "/ratings"
---- PASS: TestRoutesFailBecauseDependenciesAreNotStarted (0.00s)
+Unable to connect to database: failed to connect to `user=mdelapenya database=`: /private/tmp/.s.PGSQL.5432 (/private/tmp): dial error: dial unix /private/tmp/.s.PGSQL.5432: connect: no such file or directory
+[GIN] 2025/03/25 - 13:44:16 | 500 |     212.208µs |                 | POST     "/ratings"
+--- PASS: TestRoutesFailBecauseDependenciesAreNotStarted (0.01s)
     --- PASS: TestRoutesFailBecauseDependenciesAreNotStarted/GET_/ratings_fails (0.00s)
     --- PASS: TestRoutesFailBecauseDependenciesAreNotStarted/POST_/ratings_fails (0.00s)
 PASS
-ok      github.com/testcontainers/workshop-go/internal/app      0.308
+ok      github.com/testcontainers/workshop-go/internal/app      0.357s
 ```
 
 This unit test is not very useful, but it is a good starting point to understand how to test the HTTP endpoints.
