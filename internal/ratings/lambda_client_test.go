@@ -54,7 +54,7 @@ func TestGetStats(t *testing.T) {
 	var functionURL string
 
 	c, err := localstack.Run(ctx,
-		"localstack/localstack:2.3.0",
+		"localstack/localstack:latest",
 		testcontainers.WithEnv(map[string]string{
 			"SERVICES":            "lambda",
 			"LAMBDA_DOCKER_FLAGS": flagsFn(),
@@ -149,6 +149,10 @@ func TestGetStats(t *testing.T) {
 	}
 
 	url := strings.ReplaceAll(functionURL, "4566", mappedPort.Port())
+
+	// The latest version of localstack does not add ".localstack.cloud" by default,
+	// that's why need to add it to the URL.
+	url = strings.ReplaceAll(url, ".localhost", ".localhost.localstack.cloud")
 
 	// now we can test the lambda function
 	lambdaClient := ratings.NewLambdaClient(url)

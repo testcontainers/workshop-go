@@ -80,7 +80,7 @@ func startRatingsLambda() (testcontainers.Container, error) {
 	var functionURL string
 
 	c, err := localstack.Run(ctx,
-		"localstack/localstack:2.3.0",
+		"localstack/localstack:latest",
 		testcontainers.WithEnv(map[string]string{
 			"SERVICES":            "lambda",
 			"LAMBDA_DOCKER_FLAGS": flagsFn(),
