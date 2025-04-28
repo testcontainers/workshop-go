@@ -200,7 +200,7 @@ func startRatingsLambda() (testcontainers.Container, error) {
 	var functionURL string
 
 	c, err := localstack.Run(ctx,
-		"localstack/localstack:2.3.0",
+		"localstack/localstack:latest",
 		testcontainers.WithEnv(map[string]string{
 			"SERVICES":            "lambda",
 			"LAMBDA_DOCKER_FLAGS": flagsFn(),
@@ -421,7 +421,7 @@ func startRatingsLambda() (testcontainers.Container, error) {
 	var functionURL string
 
 	c, err := localstack.Run(ctx,
-		"localstack/localstack:2.3.0",
+		"localstack/localstack:latest",
 		testcontainers.WithEnv(map[string]string{
 			"SERVICES":            "lambda",
 			"LAMBDA_DOCKER_FLAGS": flagsFn(),
@@ -614,7 +614,7 @@ In the second terminal, check the containers, we will see the LocalStack instanc
 ```text
 $ docker ps
 CONTAINER ID   IMAGE                                               COMMAND                  CREATED         STATUS                   PORTS                                                                                                                                             NAMES
-c514896580c1   localstack/localstack:2.3.0                         "docker-entrypoint.sh"   2 minutes ago   Up 2 minutes (healthy)   4510-4559/tcp, 5678/tcp, 0.0.0.0:32792->4566/tcp, :::32792->4566/tcp                                                                              priceless_antonelli
+c514896580c1   localstack/localstack:latest                         "docker-entrypoint.sh"   2 minutes ago   Up 2 minutes (healthy)   4510-4559/tcp, 5678/tcp, 0.0.0.0:32792->4566/tcp, :::32792->4566/tcp                                                                              priceless_antonelli
 07fb1e908b1e   docker.redpanda.com/redpandadata/redpanda:v24.3.7   "/entrypoint-tc.sh r…"   3 minutes ago   Up 3 minutes             8082/tcp, 0.0.0.0:32791->8081/tcp, :::32791->8081/tcp, 0.0.0.0:32790->9092/tcp, :::32790->9092/tcp, 0.0.0.0:32789->9644/tcp, :::32789->9644/tcp   loving_murdock
 bf4fcb4cd74c   redis:6-alpine                                      "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes             0.0.0.0:32788->6379/tcp, :::32788->6379/tcp                                                                                                       angry_shirley
 d5ec7cecb562   postgres:15.3-alpine                                "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes             0.0.0.0:32787->5432/tcp, :::32787->5432/tcp                                                                                                       laughing_kare

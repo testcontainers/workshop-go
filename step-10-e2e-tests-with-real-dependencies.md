@@ -161,11 +161,11 @@ go test -v -count=1 -tags e2e ./internal/app
 2025/03/25 13:50:29 ⏳ Waiting for container id 88a516425dc9 image: docker.redpanda.com/redpandadata/redpanda:v24.3.7. Waiting for: &{timeout:<nil> deadline:<nil> Strategies:[0x1400078e1b0 0x1400078e1e0 0x1400078e210]}
 2025/03/25 13:50:29 🔔 Container is ready: 88a516425dc9
 2025/03/25 13:50:31 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
-2025/03/25 13:50:31 🐳 Creating container for image localstack/localstack:2.3.0
+2025/03/25 13:50:31 🐳 Creating container for image localstack/localstack:latest
 2025/03/25 13:50:31 ✅ Container created: 1432c0fc080d
 2025/03/25 13:50:32 🐳 Starting container: 1432c0fc080d
 2025/03/25 13:50:42 ✅ Container started: 1432c0fc080d
-2025/03/25 13:50:42 ⏳ Waiting for container id 1432c0fc080d image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x140002c06e0 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x1005a9a90 ResponseMatcher:0x100649ce0 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x100649cf0 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
+2025/03/25 13:50:42 ⏳ Waiting for container id 1432c0fc080d image: localstack/localstack:latest. Waiting for: &{timeout:0x140002c06e0 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x1005a9a90 ResponseMatcher:0x100649ce0 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x100649cf0 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
 2025/03/25 13:50:43 🔔 Container is ready: 1432c0fc080d
 === RUN   TestRoutesWithDependencies
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
