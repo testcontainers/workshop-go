@@ -61,7 +61,7 @@ func TestDeployLambda(t *testing.T) {
 	var functionURL string
 
 	c, err := localstack.Run(ctx,
-		"localstack/localstack:2.3.0",
+		"localstack/localstack:latest",
 		testcontainers.WithEnv(map[string]string{
 			"SERVICES":            "lambda",
 			"LAMBDA_DOCKER_FLAGS": flagsFn(),
@@ -153,6 +153,10 @@ func TestDeployLambda(t *testing.T) {
 
 	url := strings.ReplaceAll(functionURL, "4566", mappedPort.Port())
 
+	// The latest version of localstack does not add ".localstack.cloud" by default,
+	// that's why need to add it to the URL.
+	url = strings.ReplaceAll(url, ".localhost", ".localhost.localstack.cloud")
+
 	// now we can test the lambda function
 
 	histogram := map[string]string{
@@ -238,7 +242,7 @@ go test -v -count=1 ./...
   Test SessionID: 32a04170fb07432f051c21db7aea06591d4537edfe5d3a798003ec1a9516539e
   Test ProcessID: d0b47b4c-d5fe-4836-b0d5-e1356491ba24
 2025/03/25 14:02:12 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
-2025/03/25 14:02:12 🐳 Creating container for image localstack/localstack:2.3.0
+2025/03/25 14:02:12 🐳 Creating container for image localstack/localstack:latest
 2025/03/25 14:02:12 🐳 Creating container for image testcontainers/ryuk:0.11.0
 2025/03/25 14:02:12 ✅ Container created: e351225e5172
 2025/03/25 14:02:12 🐳 Starting container: e351225e5172
@@ -248,7 +252,7 @@ go test -v -count=1 ./...
 2025/03/25 14:02:13 ✅ Container created: 5bb9dd2564d8
 2025/03/25 14:02:13 🐳 Starting container: 5bb9dd2564d8
 2025/03/25 14:02:23 ✅ Container started: 5bb9dd2564d8
-2025/03/25 14:02:23 ⏳ Waiting for container id 5bb9dd2564d8 image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x1400037d400 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x104af72a0 ResponseMatcher:0x104b89a80 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x104b89a90 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
+2025/03/25 14:02:23 ⏳ Waiting for container id 5bb9dd2564d8 image: localstack/localstack:latest. Waiting for: &{timeout:0x1400037d400 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x104af72a0 ResponseMatcher:0x104b89a80 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x104b89a90 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
 2025/03/25 14:02:24 🔔 Container is ready: 5bb9dd2564d8
 --- PASS: TestDeployLambda (14.03s)
 PASS
@@ -289,7 +293,7 @@ go test -v -count=1 ./...
   Test SessionID: 70e53e714c6ad65ab190099ba80262d1d14325fb6171596466683f56db98c1c1
   Test ProcessID: 8a35b781-968b-42a8-b8aa-7ab4cfcd3bbf
 2025/03/25 14:09:13 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
-2025/03/25 14:09:13 🐳 Creating container for image localstack/localstack:2.3.0
+2025/03/25 14:09:13 🐳 Creating container for image localstack/localstack:latest
 2025/03/25 14:09:13 🐳 Creating container for image testcontainers/ryuk:0.11.0
 2025/03/25 14:09:13 ✅ Container created: 8ef67818a0be
 2025/03/25 14:09:13 🐳 Starting container: 8ef67818a0be
@@ -299,7 +303,7 @@ go test -v -count=1 ./...
 2025/03/25 14:09:14 ✅ Container created: fbc64ad5cd7f
 2025/03/25 14:09:15 🐳 Starting container: fbc64ad5cd7f
 2025/03/25 14:09:24 ✅ Container started: fbc64ad5cd7f
-2025/03/25 14:09:24 ⏳ Waiting for container id fbc64ad5cd7f image: localstack/localstack:2.3.0. Waiting for: &{timeout:0x140004e2530 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x100bfb2a0 ResponseMatcher:0x100c8da80 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x100c8da90 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
+2025/03/25 14:09:24 ⏳ Waiting for container id fbc64ad5cd7f image: localstack/localstack:latest. Waiting for: &{timeout:0x140004e2530 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x100bfb2a0 ResponseMatcher:0x100c8da80 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x100c8da90 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
 2025/03/25 14:09:25 🔔 Container is ready: fbc64ad5cd7f
     main_test.go:188: expected {"avg":3.3333333333333335,"totalCount":210}, got {"avg":147000,"totalCount":210}
 --- FAIL: TestDeployLambda (15.64s)
