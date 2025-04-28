@@ -444,12 +444,12 @@ func TestGetStats(t *testing.T) {
 
 	c, err := localstack.Run(ctx,
 		"localstack/localstack:2.3.0",
+		testcontainers.WithEnv(map[string]string{
+			"SERVICES":            "lambda",
+			"LAMBDA_DOCKER_FLAGS": flagsFn(),
+		}),
 		testcontainers.CustomizeRequest(testcontainers.GenericContainerRequest{
 			ContainerRequest: testcontainers.ContainerRequest{
-				Env: map[string]string{
-					"SERVICES":            "lambda",
-					"LAMBDA_DOCKER_FLAGS": flagsFn(),
-				},
 				Files: []testcontainers.ContainerFile{
 					{
 						HostFilePath:      zipFile,
