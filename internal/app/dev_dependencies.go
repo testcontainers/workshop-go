@@ -85,14 +85,12 @@ func startRatingsLambda() (testcontainers.Container, error) {
 			"SERVICES":            "lambda",
 			"LAMBDA_DOCKER_FLAGS": flagsFn(),
 		}),
+		testcontainers.WithFiles(testcontainers.ContainerFile{
+			HostFilePath:      buildLambda(),
+			ContainerFilePath: "/tmp/function.zip",
+		}),
 		testcontainers.CustomizeRequest(testcontainers.GenericContainerRequest{
 			ContainerRequest: testcontainers.ContainerRequest{
-				Files: []testcontainers.ContainerFile{
-					{
-						HostFilePath:      buildLambda(),
-						ContainerFilePath: "/tmp/function.zip",
-					},
-				},
 				LifecycleHooks: []testcontainers.ContainerLifecycleHooks{
 					{
 						PostStarts: []testcontainers.ContainerHook{
