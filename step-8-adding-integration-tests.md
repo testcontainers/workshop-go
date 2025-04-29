@@ -537,7 +537,7 @@ func TestGetStats(t *testing.T) {
 	url := strings.ReplaceAll(functionURL, "4566", mappedPort.Port())
 
 	// The latest version of localstack does not add ".localstack.cloud" by default,
-	// that's why need to add it to the URL.
+	// that's why we need to add it to the URL.
 	url = strings.ReplaceAll(url, ".localhost", ".localhost.localstack.cloud")
 
 	// now we can test the lambda function
