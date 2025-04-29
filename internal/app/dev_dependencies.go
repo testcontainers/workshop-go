@@ -174,7 +174,14 @@ func startRatingsLambda() (testcontainers.Container, error) {
 		return nil, err
 	}
 
-	Connections.Lambda = strings.ReplaceAll(functionURL, "4566", mappedPort.Port())
+	functionURL = strings.ReplaceAll(functionURL, "4566", mappedPort.Port())
+
+	// The latest version of localstack does not add ".localstack.cloud" by default,
+	// that's why we need to add it to the URL.
+	functionURL = strings.ReplaceAll(functionURL, ".localhost", ".localhost.localstack.cloud")
+
+	Connections.Lambda = functionURL
+
 	return c, nil
 }
 
