@@ -7,8 +7,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
-	"net/http/httptest"
 	"regexp"
 	"testing"
 
@@ -17,21 +17,26 @@ import (
 	"github.com/testcontainers/workshop-go/internal/app"
 )
 
+// the "GET /" endpoint returns a JSON with metadata including
+// the connection strings for the dependencies
+type responseType struct {
+	Connections app.Metadata `json:"metadata"`
+}
+
 func TestRootRouteWithDependencies(t *testing.T) {
-	router := app.SetupRouter()
+	app := app.SetupApp()
 
-	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/", nil)
-	router.ServeHTTP(w, req)
+	res, err := app.Test(req, -1)
+	require.NoError(t, err)
 
-	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, http.StatusOK, res.StatusCode)
 
-	// the "GET /" endpoint returns a JSON with metadata including
-	// the connection strings for the dependencies
-	var response struct {
-		Connections app.Metadata `json:"metadata"`
-	}
-	err := json.Unmarshal(w.Body.Bytes(), &response)
+	body, err := io.ReadAll(res.Body)
+	require.NoError(t, err)
+
+	var response responseType
+	err = json.Unmarshal(body, &response)
 	require.NoError(t, err)
 
 	// assert that the different connection strings are set
@@ -49,31 +54,31 @@ func matches(t *testing.T, actual string, re string) {
 }
 
 func TestRoutesWithDependencies(t *testing.T) {
-	router := app.SetupRouter()
+	app := app.SetupApp()
 
 	t.Run("GET /ratings", func(t *testing.T) {
-		w := httptest.NewRecorder()
 		req, err := http.NewRequest("GET", "/ratings?talkId=testcontainers-integration-testing", nil)
 		require.NoError(t, err)
-		router.ServeHTTP(w, req)
+		res, err := app.Test(req, -1)
+		require.NoError(t, err)
 
 		// we are receiving a 200 because the ratings repository is started
-		assert.Equal(t, http.StatusOK, w.Code)
+		assert.Equal(t, http.StatusOK, res.StatusCode)
 	})
 
 	t.Run("POST /ratings", func(t *testing.T) {
 		body := []byte(`{"talkId":"testcontainers-integration-testing","value":5}`)
 
-		w := httptest.NewRecorder()
 		req, err := http.NewRequest("POST", "/ratings", bytes.NewReader(body))
 		require.NoError(t, err)
 
 		// we need to set the content type header because we are sending a body
 		req.Header.Add("Content-Type", "application/json")
 
-		router.ServeHTTP(w, req)
+		res, err := app.Test(req, -1)
+		require.NoError(t, err)
 
 		// we are receiving a 200 because the ratings repository is started
-		assert.Equal(t, http.StatusOK, w.Code)
+		assert.Equal(t, http.StatusOK, res.StatusCode)
 	})
 }

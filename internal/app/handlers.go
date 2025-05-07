@@ -2,18 +2,19 @@ package app
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 	"github.com/testcontainers/workshop-go/internal/ratings"
 	"github.com/testcontainers/workshop-go/internal/streams"
 	"github.com/testcontainers/workshop-go/internal/talks"
 )
 
-func Root(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
+func Root(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{
 		"metadata": Connections,
 	})
 }
@@ -37,35 +38,30 @@ type ratingForPost struct {
 // If the talk with the given UUID exists in the Talks repository, it will send the rating
 // to the Streams repository, which will send it to the broker. If the talk does not exist,
 // or any of the repositories cannot be created, it will return an error.
-func AddRating(c *gin.Context) {
+func AddRating(c *fiber.Ctx) error {
 	var r ratingForPost
-	err := c.ShouldBind(&r)
-	if err != nil {
-		handleError(c, http.StatusInternalServerError, err)
-		return
+
+	if err := c.BodyParser(&r); err != nil {
+		return handleError(c, http.StatusInternalServerError, err)
 	}
 
-	talksRepo, err := talks.NewRepository(c, Connections.Talks)
+	talksRepo, err := talks.NewRepository(c.Context(), Connections.Talks)
 	if err != nil {
-		handleError(c, http.StatusInternalServerError, err)
-		return
+		return handleError(c, http.StatusInternalServerError, err)
 	}
 
-	if !talksRepo.Exists(c, r.UUID) {
-		handleError(c, http.StatusNotFound, fmt.Errorf("talk with UUID %s does not exist", r.UUID))
-		return
+	if !talksRepo.Exists(c.Context(), r.UUID) {
+		return handleError(c, http.StatusNotFound, fmt.Errorf("talk with UUID %s does not exist", r.UUID))
 	}
 
-	streamsRepo, err := streams.NewStream(c, Connections.Streams)
+	streamsRepo, err := streams.NewStream(c.Context(), Connections.Streams)
 	if err != nil {
-		handleError(c, http.StatusInternalServerError, err)
-		return
+		return handleError(c, http.StatusInternalServerError, err)
 	}
 
-	ratingsRepo, err := ratings.NewRepository(c, Connections.Ratings)
+	ratingsRepo, err := ratings.NewRepository(c.Context(), Connections.Ratings)
 	if err != nil {
-		handleError(c, http.StatusInternalServerError, err)
-		return
+		return handleError(c, http.StatusInternalServerError, err)
 	}
 
 	rating := ratings.Rating{
@@ -74,17 +70,16 @@ func AddRating(c *gin.Context) {
 	}
 
 	ratingsCallback := func() error {
-		_, err := ratingsRepo.Add(c, rating)
+		_, err := ratingsRepo.Add(c.Context(), rating)
 		return err
 	}
 
-	err = streamsRepo.SendRating(c, rating, ratingsCallback)
+	err = streamsRepo.SendRating(c.Context(), rating, ratingsCallback)
 	if err != nil {
-		handleError(c, http.StatusInternalServerError, err)
-		return
+		return handleError(c, http.StatusInternalServerError, err)
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	return c.Status(http.StatusOK).JSON(fiber.Map{
 		"rating": rating,
 	})
 }
@@ -102,31 +97,29 @@ type statsResponse struct {
 
 // Ratings is the handler for the `GET /ratings?talkId=xxx` endpoint. It will require a talkId parameter
 // in the query string and will return all the ratings for the given talk UUID.
-func Ratings(c *gin.Context) {
-	var talk talkForRatings
-	if err := c.ShouldBind(&talk); err != nil {
-		handleError(c, http.StatusInternalServerError, err)
-		return
+func Ratings(c *fiber.Ctx) error {
+	talkID := c.Query("talkId", "")
+	if talkID == "" {
+		return handleError(c, http.StatusInternalServerError, errors.New("talkId is required"))
 	}
 
-	talksRepo, err := talks.NewRepository(c, Connections.Talks)
+	talk := talkForRatings{UUID: talkID}
+
+	talksRepo, err := talks.NewRepository(c.Context(), Connections.Talks)
 	if err != nil {
-		handleError(c, http.StatusInternalServerError, err)
-		return
+		return handleError(c, http.StatusInternalServerError, err)
 	}
 
-	if !talksRepo.Exists(c, talk.UUID) {
-		handleError(c, http.StatusNotFound, fmt.Errorf("talk with UUID %s does not exist", talk.UUID))
-		return
+	if !talksRepo.Exists(c.Context(), talk.UUID) {
+		return handleError(c, http.StatusNotFound, fmt.Errorf("talk with UUID %s does not exist", talk.UUID))
 	}
 
-	ratingsRepo, err := ratings.NewRepository(c, Connections.Ratings)
+	ratingsRepo, err := ratings.NewRepository(c.Context(), Connections.Ratings)
 	if err != nil {
-		handleError(c, http.StatusInternalServerError, err)
-		return
+		return handleError(c, http.StatusInternalServerError, err)
 	}
 
-	histogram := ratingsRepo.FindAllByUUID(c, talk.UUID)
+	histogram := ratingsRepo.FindAllByUUID(c.Context(), talk.UUID)
 
 	// call the lambda function to get the stats
 	lambdaClient := ratings.NewLambdaClient(Connections.Lambda)
@@ -134,10 +127,9 @@ func Ratings(c *gin.Context) {
 	if err != nil {
 		// do not fail if the lambda function is not available, simply do not aggregate the stats
 		log.Printf("error calling lambda function: %s", err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		return c.Status(http.StatusOK).JSON(fiber.Map{
 			"ratings": histogram,
 		})
-		return
 	}
 
 	statsResp := &statsResponse{}
@@ -145,20 +137,19 @@ func Ratings(c *gin.Context) {
 	if err != nil {
 		// do not fail if the lambda function is not available, simply do not aggregate the stats
 		log.Printf("error unmarshalling lambda response: %s", err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		return c.Status(http.StatusOK).JSON(fiber.Map{
 			"ratings": histogram,
 		})
-		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	return c.Status(http.StatusOK).JSON(fiber.Map{
 		"ratings": histogram,
 		"stats":   statsResp,
 	})
 }
 
-func handleError(c *gin.Context, code int, err error) {
-	c.JSON(code, gin.H{
+func handleError(c *fiber.Ctx, code int, err error) error {
+	return c.Status(code).JSON(fiber.Map{
 		"message": err.Error(),
 	})
 }
