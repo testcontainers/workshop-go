@@ -175,20 +175,16 @@ Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the appl
 
 ```text
 go run -tags dev -v ./...
-# github.com/testcontainers/workshop-go
 
-[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.6                   │ 
+ │               http://127.0.0.1:8080               │ 
+ │       (bound on host 0.0.0.0 and port 8080)       │ 
+ │                                                   │ 
+ │ Handlers ............. 6  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 24313 │ 
+ └───────────────────────────────────────────────────┘ 
 
-[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
- - using env:   export GIN_MODE=release
- - using code:  gin.SetMode(gin.ReleaseMode)
-
-[GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
-[GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
-[GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
-[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
-Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
-[GIN-debug] Listening and serving HTTP on :8080
 ```
 
 In the second terminal, check the containers, we will see the Redpanda streaming queue is running alongside the Postgres database and the Redis store:
@@ -225,7 +221,7 @@ The response should be a 200 OK:
 The log entry for the POST request:
 
 ```text
-[GIN] 2025/03/25 - 13:10:04 | 200 |  1.214765209s |             ::1 | POST     "/ratings"
+13:13:10 | 200 |  2.578671833s | 127.0.0.1 | POST | /ratings | -
 ```
 
 If we open now the ratings endpoint from the API (http://localhost:8080/ratings?talkId=testcontainers-integration-testing), then a 200 OK response code is returned, and the first ratings for the given talk is there. It was a five! ⭐️⭐️⭐️⭐️⭐️
@@ -243,10 +239,11 @@ curl -X GET http://localhost:8080/ratings\?talkId\=testcontainers-integration-te
 
 Play around sending multiple POST requests for the two talks we created in the SQL script, and check the histogram that is created for the different rating values.
 
-In any POST request we'll still see the log entry for the AWS lambda failing to be called.
+In any GET request we'll still see the log entry for the AWS lambda failing to be called.
 
 ```text
-2025/03/25 13:10:30 error calling lambda function: Post "": unsupported protocol scheme ""
+2025/05/07 13:13:41 error calling lambda function: Post "": unsupported protocol scheme ""
+13:13:39 | 200 |  1.298763167s | 127.0.0.1 | GET | /ratings | -
 ```
 
 It's time now to fix it, adding a cloud emulator for the AWS Lambda function.

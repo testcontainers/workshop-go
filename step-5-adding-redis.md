@@ -150,20 +150,16 @@ Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the appl
 
 ```text
 go run -tags dev -v ./...
-# github.com/testcontainers/workshop-go
 
-[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.6                   │ 
+ │               http://127.0.0.1:8080               │ 
+ │       (bound on host 0.0.0.0 and port 8080)       │ 
+ │                                                   │ 
+ │ Handlers ............. 6  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 22626 │ 
+ └───────────────────────────────────────────────────┘ 
 
-[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
- - using env:   export GIN_MODE=release
- - using code:  gin.SetMode(gin.ReleaseMode)
-
-[GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
-[GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
-[GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
-[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
-Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
-[GIN-debug] Listening and serving HTTP on :8080
 ```
 
 In the second terminal, check the containers, we will see the Redis store running alongside the Postgres database:
@@ -191,7 +187,8 @@ curl -X GET http://localhost:8080/ratings\?talkId\=testcontainers-integration-te
 If we check the logs, we'll notice an error regarding the connection to the AWS lambda function that is used to calculate some statistics for a given rating. By design, if the AWS lambda is not available, the application will not add the statistics to the response, so it's expected to see this error but a valid HTTP response:
 
 ```text
-2023/10/26 11:34:46 error calling lambda function: Post "": unsupported protocol scheme ""
+2025/05/07 13:10:15 error calling lambda function: Post "": unsupported protocol scheme ""
+13:10:13 | 200 |  1.253877458s | 127.0.0.1 | GET | /ratings | -
 ```
 
 We are going to fix that in the next steps, adding a way to reproduce the AWS lambda but in a local environment, using LocalStack and Testcontainers for Go.
@@ -214,14 +211,14 @@ curl -X POST -H "Content-Type: application/json" http://localhost:8080/ratings -
 This time, the response is a 500 error, but different:
 
 ```json
-{"message":"unable to dial: dial tcp :9092: connect: connection refused"}% 
+{"message":"unable to dial: dial tcp :9092: connect: connection refused"}%
 ```
 
 And in the logs, we'll see the following error:
 
 ```text
 Unable to ping the streams: unable to dial: dial tcp :9092: connect: connection refused
-[GIN] 2025/03/25 - 13:04:09 | 500 |  309.441375ms |             ::1 | POST     "/ratings"
+13:11:05 | 500 |  967.728458ms | 127.0.0.1 | POST | /ratings | -
 ```
 
 If we recall correctly, the application was using a message queue to send the ratings before storing them in Redis (see `internal/app/handlers.go`), so we need to add a message queue for that. Let's fix it, but first stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and the application and the dependencies will be terminated.

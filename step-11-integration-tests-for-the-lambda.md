@@ -229,34 +229,40 @@ $ make test
 go mod tidy
 go test -v -count=1 ./...
 === RUN   TestDeployLambda
-2025/03/25 14:02:12 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 27.5.0 (via Testcontainers Desktop 1.19.0)
-  API Version: 1.46
+2025/05/07 13:27:48 github.com/testcontainers/testcontainers-go - Connected to docker: 
+  Server Version: 27.5.0
+  API Version: 1.47
   Operating System: Ubuntu 22.04.5 LTS
   Total Memory: 15368 MB
   Labels:
     cloud.docker.run.version=259.c712f5fd
-  Testcontainers for Go Version: v0.35.0
-  Resolved Docker Host: tcp://127.0.0.1:49982
+    cloud.docker.run.plugin.version=0.2.20
+    com.docker.desktop.address=unix:///Users/mdelapenya/Library/Containers/com.docker.docker/Data/docker-cli.sock
+  Testcontainers for Go Version: v0.37.0
+  Resolved Docker Host: unix:///var/run/docker.sock
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: 32a04170fb07432f051c21db7aea06591d4537edfe5d3a798003ec1a9516539e
-  Test ProcessID: d0b47b4c-d5fe-4836-b0d5-e1356491ba24
-2025/03/25 14:02:12 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
-2025/03/25 14:02:12 🐳 Creating container for image localstack/localstack:latest
-2025/03/25 14:02:12 🐳 Creating container for image testcontainers/ryuk:0.11.0
-2025/03/25 14:02:12 ✅ Container created: e351225e5172
-2025/03/25 14:02:12 🐳 Starting container: e351225e5172
-2025/03/25 14:02:12 ✅ Container started: e351225e5172
-2025/03/25 14:02:12 ⏳ Waiting for container id e351225e5172 image: testcontainers/ryuk:0.11.0. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms skipInternalCheck:false}
-2025/03/25 14:02:13 🔔 Container is ready: e351225e5172
-2025/03/25 14:02:13 ✅ Container created: 5bb9dd2564d8
-2025/03/25 14:02:13 🐳 Starting container: 5bb9dd2564d8
-2025/03/25 14:02:23 ✅ Container started: 5bb9dd2564d8
-2025/03/25 14:02:23 ⏳ Waiting for container id 5bb9dd2564d8 image: localstack/localstack:latest. Waiting for: &{timeout:0x1400037d400 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x104af72a0 ResponseMatcher:0x104b89a80 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x104b89a90 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
-2025/03/25 14:02:24 🔔 Container is ready: 5bb9dd2564d8
---- PASS: TestDeployLambda (14.03s)
+  Test SessionID: e2a7d32bf743b96698083a73e6d8e091f30cd208028037421e783e8a3840fd43
+  Test ProcessID: 7fe35795-7665-491d-9523-f1a6118fb8a9
+2025/05/07 13:27:48 Setting LOCALSTACK_HOST to localhost (to match host-routable address for container)
+2025/05/07 13:27:48 🐳 Creating container for image localstack/localstack:latest
+2025/05/07 13:27:48 🐳 Creating container for image testcontainers/ryuk:0.11.0
+2025/05/07 13:27:49 ✅ Container created: 1af05cd523b9
+2025/05/07 13:27:49 🐳 Starting container: 1af05cd523b9
+2025/05/07 13:27:49 ✅ Container started: 1af05cd523b9
+2025/05/07 13:27:49 ⏳ Waiting for container id 1af05cd523b9 image: testcontainers/ryuk:0.11.0. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms skipInternalCheck:false}
+2025/05/07 13:27:50 🔔 Container is ready: 1af05cd523b9
+2025/05/07 13:27:50 ✅ Container created: 4df47531ebad
+2025/05/07 13:27:51 🐳 Starting container: 4df47531ebad
+2025/05/07 13:27:59 ✅ Container started: 4df47531ebad
+2025/05/07 13:27:59 ⏳ Waiting for container id 4df47531ebad image: localstack/localstack:latest. Waiting for: &{timeout:0x140001265b0 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x1011f3930 ResponseMatcher:0x10125b620 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x10125b630 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
+2025/05/07 13:28:00 🔔 Container is ready: 4df47531ebad
+2025/05/07 13:28:01 🐳 Stopping container: 4df47531ebad
+2025/05/07 13:28:04 ✅ Container stopped: 4df47531ebad
+2025/05/07 13:28:04 🐳 Terminating container: 4df47531ebad
+2025/05/07 13:28:04 🚫 Container terminated: 4df47531ebad
+--- PASS: TestDeployLambda (17.93s)
 PASS
-ok      github.com/testcontainers/workshop-go/lambda-go 14.380s
+ok      github.com/testcontainers/workshop-go/lambda-go 18.756s
 ```
 
 You'll probably see the `go.mod` and `go.sum` file to change, adding the `testcontainers-go` library and its Go dependencies.
@@ -280,43 +286,65 @@ Now run the tests, with your IDE or from a terminal:
 $ make test
 go test -v -count=1 ./...
 === RUN   TestDeployLambda
-2025/03/25 14:09:13 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 27.5.0 (via Testcontainers Desktop 1.19.0)
-  API Version: 1.46
+2025/05/07 13:30:26 github.com/testcontainers/testcontainers-go - Connected to docker: 
+  Server Version: 27.5.0
+  API Version: 1.47
   Operating System: Ubuntu 22.04.5 LTS
   Total Memory: 15368 MB
   Labels:
     cloud.docker.run.version=259.c712f5fd
-  Testcontainers for Go Version: v0.35.0
-  Resolved Docker Host: tcp://127.0.0.1:49982
+    cloud.docker.run.plugin.version=0.2.20
+    com.docker.desktop.address=unix:///Users/mdelapenya/Library/Containers/com.docker.docker/Data/docker-cli.sock
+  Testcontainers for Go Version: v0.37.0
+  Resolved Docker Host: unix:///var/run/docker.sock
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: 70e53e714c6ad65ab190099ba80262d1d14325fb6171596466683f56db98c1c1
-  Test ProcessID: 8a35b781-968b-42a8-b8aa-7ab4cfcd3bbf
-2025/03/25 14:09:13 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
-2025/03/25 14:09:13 🐳 Creating container for image localstack/localstack:latest
-2025/03/25 14:09:13 🐳 Creating container for image testcontainers/ryuk:0.11.0
-2025/03/25 14:09:13 ✅ Container created: 8ef67818a0be
-2025/03/25 14:09:13 🐳 Starting container: 8ef67818a0be
-2025/03/25 14:09:14 ✅ Container started: 8ef67818a0be
-2025/03/25 14:09:14 ⏳ Waiting for container id 8ef67818a0be image: testcontainers/ryuk:0.11.0. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms skipInternalCheck:false}
-2025/03/25 14:09:14 🔔 Container is ready: 8ef67818a0be
-2025/03/25 14:09:14 ✅ Container created: fbc64ad5cd7f
-2025/03/25 14:09:15 🐳 Starting container: fbc64ad5cd7f
-2025/03/25 14:09:24 ✅ Container started: fbc64ad5cd7f
-2025/03/25 14:09:24 ⏳ Waiting for container id fbc64ad5cd7f image: localstack/localstack:latest. Waiting for: &{timeout:0x140004e2530 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x100bfb2a0 ResponseMatcher:0x100c8da80 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x100c8da90 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
-2025/03/25 14:09:25 🔔 Container is ready: fbc64ad5cd7f
-    main_test.go:188: expected {"avg":3.3333333333333335,"totalCount":210}, got {"avg":147000,"totalCount":210}
---- FAIL: TestDeployLambda (15.64s)
+  Test SessionID: 7ed8e0d5c1fb58d25e1c52f105288d105b645d89f000355c46de9acd9d622ec5
+  Test ProcessID: e35bd5f4-db46-4a61-afce-4279c957cb82
+2025/05/07 13:30:26 Setting LOCALSTACK_HOST to localhost (to match host-routable address for container)
+2025/05/07 13:30:26 🐳 Creating container for image localstack/localstack:latest
+2025/05/07 13:30:27 🐳 Creating container for image testcontainers/ryuk:0.11.0
+2025/05/07 13:30:27 ✅ Container created: 0a30b25b9bf9
+2025/05/07 13:30:27 🐳 Starting container: 0a30b25b9bf9
+2025/05/07 13:30:27 ✅ Container started: 0a30b25b9bf9
+2025/05/07 13:30:27 ⏳ Waiting for container id 0a30b25b9bf9 image: testcontainers/ryuk:0.11.0. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms skipInternalCheck:false}
+2025/05/07 13:30:28 🔔 Container is ready: 0a30b25b9bf9
+2025/05/07 13:30:28 ✅ Container created: 30af32569a44
+2025/05/07 13:30:29 🐳 Starting container: 30af32569a44
+2025/05/07 13:30:38 ✅ Container started: 30af32569a44
+2025/05/07 13:30:38 ⏳ Waiting for container id 30af32569a44 image: localstack/localstack:latest. Waiting for: &{timeout:0x1400048ea90 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x105437930 ResponseMatcher:0x10549f620 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x10549f630 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
+2025/05/07 13:30:39 🔔 Container is ready: 30af32569a44
+    main_test.go:183: 
+                Error Trace:    /Users/mdelapenya/sourcecode/src/github.com/testcontainers/workshop-go/lambda-go/main_test.go:183
+                Error:          Not equal: 
+                                expected: "{\"avg\":3.3333333333333335,\"totalCount\":210}"
+                                actual  : "{\"avg\":147000,\"totalCount\":210}"
+                            
+                                Diff:
+                                --- Expected
+                                +++ Actual
+                                @@ -1 +1 @@
+                                -{"avg":3.3333333333333335,"totalCount":210}
+                                +{"avg":147000,"totalCount":210}
+                Test:           TestDeployLambda
+2025/05/07 13:30:39 🐳 Stopping container: 30af32569a44
+2025/05/07 13:30:44 ✅ Container stopped: 30af32569a44
+2025/05/07 13:30:44 🐳 Terminating container: 30af32569a44
+2025/05/07 13:30:44 🚫 Container terminated: 30af32569a44
+--- FAIL: TestDeployLambda (20.30s)
 FAIL
-FAIL    github.com/testcontainers/workshop-go/lambda-go 16.414s
+FAIL    github.com/testcontainers/workshop-go/lambda-go 21.239s
 FAIL
-make: *** [test] Error 
+make: *** [test] Error 1
 ```
 
 As expected, the test failed because the lambda function is returning an incorrect average:
 
 ```text
-    main_test.go:177: expected {"avg":3.3333333333333335,"totalCount":210}, got {"avg":147000,"totalCount":210}
+    main_test.go:183: 
+                Error Trace:    /Users/mdelapenya/sourcecode/src/github.com/testcontainers/workshop-go/lambda-go/main_test.go:183
+                Error:          Not equal: 
+                                expected: "{\"avg\":3.3333333333333335,\"totalCount\":210}"
+                                actual  : "{\"avg\":147000,\"totalCount\":210}"
 ```
 
 Rollback the change in the `main.go` file, and run the tests again, they will pass again.
