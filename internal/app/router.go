@@ -1,13 +1,15 @@
 package app
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gofiber/fiber/v2"
+)
 
-func SetupRouter() *gin.Engine {
-	router := gin.Default()
+func SetupApp() *fiber.App {
+	app := fiber.New()
 
-	router.GET("/", Root)
-	router.GET("/ratings", Ratings)
-	router.POST("/ratings", AddRating)
+	app.Get("/", Root)
+	app.Get("/ratings", Ratings)
+	app.Post("/ratings", AddRating)
 
-	return router
+	return app
 }
