@@ -607,20 +607,16 @@ GOOS=linux go build -tags lambda.norpc -o bootstrap main.go
 zip -j function.zip bootstrap
   adding: bootstrap (deflated 45%)
 go run -tags dev -v ./...
-# github.com/testcontainers/workshop-go
 
-[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.6                   │ 
+ │               http://127.0.0.1:8080               │ 
+ │       (bound on host 0.0.0.0 and port 8080)       │ 
+ │                                                   │ 
+ │ Handlers ............. 6  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 26322 │ 
+ └───────────────────────────────────────────────────┘ 
 
-[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
- - using env:   export GIN_MODE=release
- - using code:  gin.SetMode(gin.ReleaseMode)
-
-[GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
-[GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
-[GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
-[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
-Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
-[GIN-debug] Listening and serving HTTP on :8080
 ```
 
 In the second terminal, check the containers, we will see the LocalStack instance is running alongside the Postgres database, the Redis store and the Redpanda streaming queue:
@@ -643,13 +639,13 @@ $ curl -X GET http://localhost:8080/
 The JSON response:
 
 ```json
-{"metadata":{"ratings_lambda":"http://bwtiue69l3njrfnm2v27qgql2n0dwbew.lambda-url.us-east-1.localhost.localstack.cloud:32773/","ratings":"redis://127.0.0.1:32769","streams":"127.0.0.1:32771","talks":"postgres://postgres:postgres@127.0.0.1:32768/talks-db?"}}
+{"metadata":{"ratings_lambda":"http://5xnih5q8vrjmzsmis1ic4740eszvzbao.lambda-url.us-east-1.localhost.localstack.cloud:32829/","ratings":"redis://localhost:32825","streams":"localhost:32827","talks":"postgres://postgres:postgres@localhost:32824/talks-db?"}}
 ```
 
 In your terminal, copy the `ratings_lambda` URL from the response and send a POST request to it with `curl` (please remember to replace the URL with the one we got from the response):
 
 ```bash
-curl -X POST http://bwtiue69l3njrfnm2v27qgql2n0dwbew.lambda-url.us-east-1.localhost.localstack.cloud:32773/ -d '{"ratings":{"2":1,"4":3,"5":1}}' -H "Content-Type: application/json"
+curl -X POST http://5xnih5q8vrjmzsmis1ic4740eszvzbao.lambda-url.us-east-1.localhost.localstack.cloud:32829/ -d '{"ratings":{"2":1,"4":3,"5":1}}' -H "Content-Type: application/json"
 ```
 
 The JSON response:

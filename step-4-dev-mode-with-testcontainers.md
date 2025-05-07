@@ -118,18 +118,16 @@ Finally, stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd> and run the appl
 
 ```text
 go run -tags dev -v ./...
-[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
-[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
- - using env:   export GIN_MODE=release
- - using code:  gin.SetMode(gin.ReleaseMode)
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.6                   │ 
+ │               http://127.0.0.1:8080               │ 
+ │       (bound on host 0.0.0.0 and port 8080)       │ 
+ │                                                   │ 
+ │ Handlers ............. 6  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 20390 │ 
+ └───────────────────────────────────────────────────┘ 
 
-[GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
-[GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
-[GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
-[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
-Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
-[GIN-debug] Listening and serving HTTP on :8080
 ```
 
 If we open a second terminal and check the containers, we will see the Postgres database running:
@@ -144,6 +142,13 @@ On the contrary, if we open again the ratings endpoint from the API (http://loca
 
 ```text
 {"message":"redis: invalid URL scheme: "}
+```
+
+The logs will show the following:
+
+```text
+Unable to connect to Redis: redis: invalid URL scheme: 
+13:07:51 | 500 |  903.018542ms | 127.0.0.1 | GET | /ratings | -
 ```
 
 Now it seems the application is able to connect to the database, but not to Redis. Let's fix it, but first stop the application with <kbd>Ctrl</kbd>+<kbd>C</kbd>, so the application and the dependencies are terminated.

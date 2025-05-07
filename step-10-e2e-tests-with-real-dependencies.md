@@ -58,7 +58,6 @@ package app_test
 import (
 	"bytes"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -67,32 +66,32 @@ import (
 )
 
 func TestRoutesWithDependencies(t *testing.T) {
-	router := app.SetupRouter()
+	app := app.SetupApp()
 
 	t.Run("GET /ratings", func(t *testing.T) {
-		w := httptest.NewRecorder()
 		req, err := http.NewRequest("GET", "/ratings?talkId=testcontainers-integration-testing", nil)
 		require.NoError(t, err)
-		router.ServeHTTP(w, req)
+		res, err := app.Test(req, -1)
+		require.NoError(t, err)
 
 		// we are receiving a 200 because the ratings repository is started
-		assert.Equal(t, http.StatusOK, w.Code)
+		assert.Equal(t, http.StatusOK, res.StatusCode)
 	})
 
 	t.Run("POST /ratings", func(t *testing.T) {
 		body := []byte(`{"talkId":"testcontainers-integration-testing","value":5}`)
 
-		w := httptest.NewRecorder()
 		req, err := http.NewRequest("POST", "/ratings", bytes.NewReader(body))
 		require.NoError(t, err)
 
 		// we need to set the content type header because we are sending a body
 		req.Header.Add("Content-Type", "application/json")
 
-		router.ServeHTTP(w, req)
+		res, err := app.Test(req, -1)
+		require.NoError(t, err)
 
 		// we are receiving a 200 because the ratings repository is started
-		assert.Equal(t, http.StatusOK, w.Code)
+		assert.Equal(t, http.StatusOK, res.StatusCode)
 	})
 }
 
@@ -124,68 +123,61 @@ Now, if we run the tests again with `make test-e2e`, we are going to see that it
 make test-e2e
 go test -v -count=1 -tags e2e ./internal/app
 # github.com/testcontainers/workshop-go/internal/app.test
-2025/03/25 13:50:25 github.com/testcontainers/testcontainers-go - Connected to docker: 
-  Server Version: 27.5.0 (via Testcontainers Desktop 1.19.0)
-  API Version: 1.46
+2025/05/07 13:26:12 github.com/testcontainers/testcontainers-go - Connected to docker: 
+  Server Version: 27.5.0
+  API Version: 1.47
   Operating System: Ubuntu 22.04.5 LTS
   Total Memory: 15368 MB
   Labels:
     cloud.docker.run.version=259.c712f5fd
-  Testcontainers for Go Version: v0.35.0
-  Resolved Docker Host: tcp://127.0.0.1:49982
+    cloud.docker.run.plugin.version=0.2.20
+    com.docker.desktop.address=unix:///Users/mdelapenya/Library/Containers/com.docker.docker/Data/docker-cli.sock
+  Testcontainers for Go Version: v0.37.0
+  Resolved Docker Host: unix:///var/run/docker.sock
   Resolved Docker Socket Path: /var/run/docker.sock
-  Test SessionID: 094121355e42fbf23fb20d8d780dccac0c596e450ec2bcc6fd28ea5924b3508e
-  Test ProcessID: e899cf8e-446e-4c5a-bbd6-ecfd6b3dcc09
-2025/03/25 13:50:25 🐳 Creating container for image postgres:15.3-alpine
-2025/03/25 13:50:25 🐳 Creating container for image testcontainers/ryuk:0.11.0
-2025/03/25 13:50:25 ✅ Container created: ae76421e1dff
-2025/03/25 13:50:25 🐳 Starting container: ae76421e1dff
-2025/03/25 13:50:25 ✅ Container started: ae76421e1dff
-2025/03/25 13:50:26 ⏳ Waiting for container id ae76421e1dff image: testcontainers/ryuk:0.11.0. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms skipInternalCheck:false}
-2025/03/25 13:50:26 🔔 Container is ready: ae76421e1dff
-2025/03/25 13:50:26 ✅ Container created: a1d5cd255b87
-2025/03/25 13:50:26 🐳 Starting container: a1d5cd255b87
-2025/03/25 13:50:26 ✅ Container started: a1d5cd255b87
-2025/03/25 13:50:26 ⏳ Waiting for container id a1d5cd255b87 image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x14000417fe8 Strategies:[0x14000118420]}
-2025/03/25 13:50:28 🔔 Container is ready: a1d5cd255b87
-2025/03/25 13:50:28 🐳 Creating container for image redis:6-alpine
-2025/03/25 13:50:28 ✅ Container created: 59f541bad21c
-2025/03/25 13:50:28 🐳 Starting container: 59f541bad21c
-2025/03/25 13:50:28 ✅ Container started: 59f541bad21c
-2025/03/25 13:50:28 ⏳ Waiting for container id 59f541bad21c image: redis:6-alpine. Waiting for: &{timeout:<nil> Log:* Ready to accept connections IsRegexp:false Occurrence:1 PollInterval:100ms check:<nil> submatchCallback:<nil> re:<nil> log:[]}
-2025/03/25 13:50:28 🔔 Container is ready: 59f541bad21c
-2025/03/25 13:50:28 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v24.3.7
-2025/03/25 13:50:28 ✅ Container created: 88a516425dc9
-2025/03/25 13:50:28 🐳 Starting container: 88a516425dc9
-2025/03/25 13:50:29 ✅ Container started: 88a516425dc9
-2025/03/25 13:50:29 ⏳ Waiting for container id 88a516425dc9 image: docker.redpanda.com/redpandadata/redpanda:v24.3.7. Waiting for: &{timeout:<nil> deadline:<nil> Strategies:[0x1400078e1b0 0x1400078e1e0 0x1400078e210]}
-2025/03/25 13:50:29 🔔 Container is ready: 88a516425dc9
-2025/03/25 13:50:31 Setting LOCALSTACK_HOST to 127.0.0.1 (to match host-routable address for container)
-2025/03/25 13:50:31 🐳 Creating container for image localstack/localstack:latest
-2025/03/25 13:50:31 ✅ Container created: 1432c0fc080d
-2025/03/25 13:50:32 🐳 Starting container: 1432c0fc080d
-2025/03/25 13:50:42 ✅ Container started: 1432c0fc080d
-2025/03/25 13:50:42 ⏳ Waiting for container id 1432c0fc080d image: localstack/localstack:latest. Waiting for: &{timeout:0x140002c06e0 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x1005a9a90 ResponseMatcher:0x100649ce0 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x100649cf0 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
-2025/03/25 13:50:43 🔔 Container is ready: 1432c0fc080d
+  Test SessionID: 8b58086044ecb57abf4e109ce45216352370ea529b9b2fc364680b7147d3e754
+  Test ProcessID: 8932d66c-ae7c-42ff-ac11-339cc58fc906
+2025/05/07 13:26:12 🐳 Creating container for image postgres:15.3-alpine
+2025/05/07 13:26:13 🐳 Creating container for image testcontainers/ryuk:0.11.0
+2025/05/07 13:26:13 ✅ Container created: e103b4e3c91f
+2025/05/07 13:26:13 🐳 Starting container: e103b4e3c91f
+2025/05/07 13:26:13 ✅ Container started: e103b4e3c91f
+2025/05/07 13:26:13 ⏳ Waiting for container id e103b4e3c91f image: testcontainers/ryuk:0.11.0. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms skipInternalCheck:false}
+2025/05/07 13:26:14 🔔 Container is ready: e103b4e3c91f
+2025/05/07 13:26:14 ✅ Container created: 120a41a9d627
+2025/05/07 13:26:15 🐳 Starting container: 120a41a9d627
+2025/05/07 13:26:15 ✅ Container started: 120a41a9d627
+2025/05/07 13:26:15 ⏳ Waiting for container id 120a41a9d627 image: postgres:15.3-alpine. Waiting for: &{timeout:<nil> deadline:0x14000120dc0 Strategies:[0x14000118120]}
+2025/05/07 13:26:16 🔔 Container is ready: 120a41a9d627
+2025/05/07 13:26:17 🐳 Creating container for image redis:6-alpine
+2025/05/07 13:26:17 ✅ Container created: a46d56c7b406
+2025/05/07 13:26:17 🐳 Starting container: a46d56c7b406
+2025/05/07 13:26:17 ✅ Container started: a46d56c7b406
+2025/05/07 13:26:18 ⏳ Waiting for container id a46d56c7b406 image: redis:6-alpine. Waiting for: &{timeout:<nil> deadline:0x14000299348 Strategies:[0x14000380e70 0x14000118840]}
+2025/05/07 13:26:18 🔔 Container is ready: a46d56c7b406
+2025/05/07 13:26:19 🐳 Creating container for image docker.redpanda.com/redpandadata/redpanda:v24.3.7
+2025/05/07 13:26:19 ✅ Container created: d69622d55af7
+2025/05/07 13:26:19 🐳 Starting container: d69622d55af7
+2025/05/07 13:26:20 ✅ Container started: d69622d55af7
+2025/05/07 13:26:20 ⏳ Waiting for container id d69622d55af7 image: docker.redpanda.com/redpandadata/redpanda:v24.3.7. Waiting for: &{timeout:<nil> deadline:<nil> Strategies:[0x140004c1590 0x140004c15c0 0x140004c15f0]}
+2025/05/07 13:26:21 🔔 Container is ready: d69622d55af7
+2025/05/07 13:26:25 Setting LOCALSTACK_HOST to localhost (to match host-routable address for container)
+2025/05/07 13:26:25 🐳 Creating container for image localstack/localstack:latest
+2025/05/07 13:26:25 ✅ Container created: 32f69766f770
+2025/05/07 13:26:28 🐳 Starting container: 32f69766f770
+2025/05/07 13:26:37 ✅ Container started: 32f69766f770
+2025/05/07 13:26:37 ⏳ Waiting for container id 32f69766f770 image: localstack/localstack:latest. Waiting for: &{timeout:0x14000298528 Port:4566/tcp Path:/_localstack/health StatusCodeMatcher:0x100f58740 ResponseMatcher:0x100ff7750 UseTLS:false AllowInsecure:false TLSConfig:<nil> Method:GET Body:<nil> Headers:map[] ResponseHeadersMatcher:0x100ff7760 PollInterval:100ms UserInfo: ForceIPv4LocalHost:false}
+2025/05/07 13:26:37 🔔 Container is ready: 32f69766f770
 === RUN   TestRoutesWithDependencies
-[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
-
-[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
- - using env:   export GIN_MODE=release
- - using code:  gin.SetMode(gin.ReleaseMode)
-
-[GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
-[GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
-[GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
 === RUN   TestRoutesWithDependencies/GET_/ratings
-[GIN] 2025/03/25 - 13:50:43 | 200 |  829.313209ms |                 | GET      "/ratings?talkId=testcontainers-integration-testing"
+13:26:38 | 200 |  2.132803083s | 0.0.0.0 | GET | /ratings | -
 === RUN   TestRoutesWithDependencies/POST_/ratings
-[GIN] 2025/03/25 - 13:50:45 | 200 |  1.126681083s |                 | POST     "/ratings"
---- PASS: TestRoutesWithDependencies (1.96s)
-    --- PASS: TestRoutesWithDependencies/GET_/ratings (0.83s)
-    --- PASS: TestRoutesWithDependencies/POST_/ratings (1.13s)
+13:26:40 | 200 |  2.559743666s | 0.0.0.0 | POST | /ratings | -
+--- PASS: TestRoutesWithDependencies (4.69s)
+    --- PASS: TestRoutesWithDependencies/GET_/ratings (2.13s)
+    --- PASS: TestRoutesWithDependencies/POST_/ratings (2.56s)
 PASS
-ok      github.com/testcontainers/workshop-go/internal/app      20.301s
+ok      github.com/testcontainers/workshop-go/internal/app      32.315s
 ```
 
 Please take a look at these things:
@@ -205,8 +197,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
-	"net/http/httptest"
 	"regexp"
 	"testing"
 
@@ -219,21 +211,27 @@ import (
 Then please add the following test function into the `internal/app/router_test.go` file:
 
 ```go
+
+// the "GET /" endpoint returns a JSON with metadata including
+// the connection strings for the dependencies
+type responseType struct {
+	Connections app.Metadata `json:"metadata"`
+}
+
 func TestRootRouteWithDependencies(t *testing.T) {
-	router := app.SetupRouter()
+	app := app.SetupApp()
 
-	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/", nil)
-	router.ServeHTTP(w, req)
+	res, err := app.Test(req, -1)
+	require.NoError(t, err)
 
-	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, http.StatusOK, res.StatusCode)
 
-	// the "GET /" endpoint returns a JSON with metadata including
-	// the connection strings for the dependencies
-	var response struct {
-		Connections app.Metadata `json:"metadata"`
-	}
-	err := json.Unmarshal(w.Body.Bytes(), &response)
+	body, err := io.ReadAll(res.Body)
+	require.NoError(t, err)
+
+	var response responseType
+	err = json.Unmarshal(body, &response)
 	require.NoError(t, err)
 
 	// assert that the different connection strings are set
@@ -258,17 +256,14 @@ Running the tests again with `make test-e2e` shows that the new test is also pas
 
 ```bash
 === RUN   TestRootRouteWithDependencies
-[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
-
-[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
- - using env:   export GIN_MODE=release
- - using code:  gin.SetMode(gin.ReleaseMode)
-
-[GIN-debug] GET    /                         --> github.com/testcontainers/workshop-go/internal/app.Root (3 handlers)
-[GIN-debug] GET    /ratings                  --> github.com/testcontainers/workshop-go/internal/app.Ratings (3 handlers)
-[GIN-debug] POST   /ratings                  --> github.com/testcontainers/workshop-go/internal/app.AddRating (3 handlers)
-[GIN] 2025/03/25 - 13:52:47 | 200 |     199.458µs |                 | GET      "/"
+13:24:34 | 200 |      75.166µs | 0.0.0.0 | GET | / | -
 --- PASS: TestRootRouteWithDependencies (0.00s)
+=== RUN   TestRoutesWithDependencies
+=== RUN   TestRoutesWithDependencies/GET_/ratings
+13:24:34 | 200 |  1.882394541s | 0.0.0.0 | GET | /ratings | -
+=== RUN   TestRoutesWithDependencies/POST_/ratings
+13:24:35 | 200 |  2.551489917s | 0.0.0.0 | POST | /ratings | -
+--- PASS: TestRoutesWithDependencies (4.43s)
 ```
 
 ### 

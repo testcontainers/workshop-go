@@ -15,7 +15,7 @@ We'll need Go 1.24 or newer for this workshop.
 
 For installing Go, please follow the instructions at [https://golang.org/doc/install](https://golang.org/doc/install), or use your favorite package manager, like [`gvm`](https://github.com/andrewkroh/gvm).
 
-This workshop uses a [Gin](https://gin-gonic.com) application, which requires Go 1.13 or newer, but Testcontainers for Go is compatible with Go 1.20+.
+This workshop uses a [GoFiber](https://gofiber.io/) application.
 
 ## Check Docker
 
@@ -68,14 +68,17 @@ Clone the following project from GitHub to your computer:
 ## Download the dependencies
 
 ```shell
+go get github.com/go-redis/redis/v8
+go get github.com/gofiber/fiber/v2
 go get github.com/google/uuid
 go get github.com/jackc/pgx/v5
+go get github.com/stretchr/testify
 go get github.com/testcontainers/testcontainers-go
 go get github.com/testcontainers/testcontainers-go/modules/localstack
 go get github.com/testcontainers/testcontainers-go/modules/postgres
 go get github.com/testcontainers/testcontainers-go/modules/redis
 go get github.com/testcontainers/testcontainers-go/modules/redpanda
-go get github.com/stretchr/testify
+go get github.com/twmb/franz-go
 ```
 
 ## \(optionally\) Pull the required images before doing the workshop

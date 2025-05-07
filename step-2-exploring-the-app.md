@@ -42,7 +42,7 @@ We'll start adding the code for the lambda in the `Step 7`.
 
 ### API
 
-The API is a [Gin](https://gin-gonic.com) REST controller and exposes three endpoints:
+The API is a [GoFiber](https://gofiber.io/) REST controller and exposes three endpoints:
 
 * `POST /ratings { "talkId": ?, "value": 1-5 }` to add a rating for a talk
 * `GET /ratings?talkId=?` to get the histogram of ratings of the given talk
