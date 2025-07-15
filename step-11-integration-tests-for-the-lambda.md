@@ -70,76 +70,70 @@ func TestDeployLambda(t *testing.T) {
 			HostFilePath:      zipFile,
 			ContainerFilePath: "/tmp/function.zip",
 		}),
-		testcontainers.CustomizeRequest(testcontainers.GenericContainerRequest{
-			ContainerRequest: testcontainers.ContainerRequest{
-				LifecycleHooks: []testcontainers.ContainerLifecycleHooks{
-					{
-						PostStarts: []testcontainers.ContainerHook{
-							func(ctx context.Context, c testcontainers.Container) error {
-								lambdaName := "localstack-lambda-url-example"
+		testcontainers.WithAdditionalLifecycleHooks(testcontainers.ContainerLifecycleHooks{
+			PostStarts: []testcontainers.ContainerHook{
+				func(ctx context.Context, c testcontainers.Container) error {
+					lambdaName := "localstack-lambda-url-example"
 
-								// the three commands below are doing the following:
-								// 1. create a lambda function
-								// 2. create the URL function configuration for the lambda function
-								// 3. wait for the lambda function to be active
-								lambdaCommands := [][]string{
-									{
-										"awslocal", "lambda",
-										"create-function", "--function-name", lambdaName,
-										"--runtime", "provided.al2",
-										"--handler", "bootstrap",
-										"--role", "arn:aws:iam::111122223333:role/lambda-ex",
-										"--zip-file", "fileb:///tmp/function.zip",
-									},
-									{"awslocal", "lambda", "create-function-url-config", "--function-name", lambdaName, "--auth-type", "NONE"},
-									{"awslocal", "lambda", "wait", "function-active-v2", "--function-name", lambdaName},
-								}
-								for _, cmd := range lambdaCommands {
-									_, _, err := c.Exec(ctx, cmd)
-									if err != nil {
-										t.Fatalf("failed to execute command %s: %s", cmd, err)
-									}
-								}
-
-								// 4. get the URL for the lambda function
-								cmd := []string{
-									"awslocal", "lambda", "list-function-url-configs", "--function-name", lambdaName,
-								}
-								_, reader, err := c.Exec(ctx, cmd, exec.Multiplexed())
-								if err != nil {
-									t.Fatalf("failed to execute command %s: %s", cmd, err)
-								}
-
-								buf := new(bytes.Buffer)
-								_, err = buf.ReadFrom(reader)
-								if err != nil {
-									t.Fatalf("failed to read from reader: %s", err)
-								}
-
-								content := buf.Bytes()
-
-								type FunctionURLConfig struct {
-									FunctionURLConfigs []struct {
-										FunctionURL      string `json:"FunctionUrl"`
-										FunctionArn      string `json:"FunctionArn"`
-										CreationTime     string `json:"CreationTime"`
-										LastModifiedTime string `json:"LastModifiedTime"`
-										AuthType         string `json:"AuthType"`
-									} `json:"FunctionUrlConfigs"`
-								}
-
-								v := &FunctionURLConfig{}
-								err = json.Unmarshal(content, v)
-								if err != nil {
-									t.Fatalf("failed to unmarshal content: %s", err)
-								}
-
-								functionURL = v.FunctionURLConfigs[0].FunctionURL
-
-								return nil
-							},
+					// the three commands below are doing the following:
+					// 1. create a lambda function
+					// 2. create the URL function configuration for the lambda function
+					// 3. wait for the lambda function to be active
+					lambdaCommands := [][]string{
+						{
+							"awslocal", "lambda",
+							"create-function", "--function-name", lambdaName,
+							"--runtime", "provided.al2",
+							"--handler", "bootstrap",
+							"--role", "arn:aws:iam::111122223333:role/lambda-ex",
+							"--zip-file", "fileb:///tmp/function.zip",
 						},
-					},
+						{"awslocal", "lambda", "create-function-url-config", "--function-name", lambdaName, "--auth-type", "NONE"},
+						{"awslocal", "lambda", "wait", "function-active-v2", "--function-name", lambdaName},
+					}
+					for _, cmd := range lambdaCommands {
+						_, _, err := c.Exec(ctx, cmd)
+						if err != nil {
+							t.Fatalf("failed to execute command %s: %s", cmd, err)
+						}
+					}
+
+					// 4. get the URL for the lambda function
+					cmd := []string{
+						"awslocal", "lambda", "list-function-url-configs", "--function-name", lambdaName,
+					}
+					_, reader, err := c.Exec(ctx, cmd, exec.Multiplexed())
+					if err != nil {
+						t.Fatalf("failed to execute command %s: %s", cmd, err)
+					}
+
+					buf := new(bytes.Buffer)
+					_, err = buf.ReadFrom(reader)
+					if err != nil {
+						t.Fatalf("failed to read from reader: %s", err)
+					}
+
+					content := buf.Bytes()
+
+					type FunctionURLConfig struct {
+						FunctionURLConfigs []struct {
+							FunctionURL      string `json:"FunctionUrl"`
+							FunctionArn      string `json:"FunctionArn"`
+							CreationTime     string `json:"CreationTime"`
+							LastModifiedTime string `json:"LastModifiedTime"`
+							AuthType         string `json:"AuthType"`
+						} `json:"FunctionUrlConfigs"`
+					}
+
+					v := &FunctionURLConfig{}
+					err = json.Unmarshal(content, v)
+					if err != nil {
+						t.Fatalf("failed to unmarshal content: %s", err)
+					}
+
+					functionURL = v.FunctionURLConfigs[0].FunctionURL
+
+					return nil
 				},
 			},
 		}),
