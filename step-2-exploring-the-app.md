@@ -88,6 +88,9 @@ sequenceDiagram
   Client ->> API: POST /talks/{id}/ratings {score}
   API ->> PG: SELECT * FROM talks WHERE id={id}
   PG -->> API: Talk exists / not found
+  opt Not found
+    API -->> Client: 500 Internal Server Error
+  end
   API ->> RP: Publish rating event (topic: ratings)
   par Asynchronous callback
     RP ->> RD: INCR rating (callback event)
@@ -109,6 +112,9 @@ sequenceDiagram
   Client ->> API: GET /talks/{id}/stats
   API ->> PG: SELECT * FROM talks WHERE id={id}
   PG -->> API: Talk exists / not found
+  opt Not found
+    API -->> Client: 500 Internal Server Error
+  end
   API ->> RD: Get stats for id={id}
   RD -->> API: Stats for id={id}
   API ->> L: HTTP request for stats (talkId)
