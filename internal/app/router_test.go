@@ -12,7 +12,6 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/workshop-go/internal/app"
 )
@@ -30,7 +29,7 @@ func TestRootRouteWithDependencies(t *testing.T) {
 	res, err := app.Test(req, -1)
 	require.NoError(t, err)
 
-	assert.Equal(t, http.StatusOK, res.StatusCode)
+	require.Equal(t, http.StatusOK, res.StatusCode)
 
 	body, err := io.ReadAll(res.Body)
 	require.NoError(t, err)
@@ -50,7 +49,7 @@ func matches(t *testing.T, actual string, re string) {
 	matched, err := regexp.MatchString(re, actual)
 	require.NoError(t, err)
 
-	assert.True(t, matched, fmt.Sprintf("expected %s to be an URL: %s", actual, re))
+	require.True(t, matched, fmt.Sprintf("expected %s to be an URL: %s", actual, re))
 }
 
 func TestRoutesWithDependencies(t *testing.T) {
@@ -63,7 +62,7 @@ func TestRoutesWithDependencies(t *testing.T) {
 		require.NoError(t, err)
 
 		// we are receiving a 200 because the ratings repository is started
-		assert.Equal(t, http.StatusOK, res.StatusCode)
+		require.Equal(t, http.StatusOK, res.StatusCode)
 	})
 
 	t.Run("POST /ratings", func(t *testing.T) {
@@ -79,6 +78,6 @@ func TestRoutesWithDependencies(t *testing.T) {
 		require.NoError(t, err)
 
 		// we are receiving a 200 because the ratings repository is started
-		assert.Equal(t, http.StatusOK, res.StatusCode)
+		require.Equal(t, http.StatusOK, res.StatusCode)
 	})
 }

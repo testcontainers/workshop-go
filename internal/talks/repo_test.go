@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/wait"
@@ -28,13 +28,13 @@ func TestNewRepository(t *testing.T) {
 				WithOccurrence(2).WithStartupTimeout(5*time.Second)),
 	)
 	testcontainers.CleanupContainer(t, pgContainer)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	connStr, err := pgContainer.ConnectionString(ctx, "sslmode=disable")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	talksRepo, err := talks.NewRepository(ctx, connStr)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	t.Run("Create a talk and retrieve it by UUID", func(t *testing.T) {
 		uid := uuid.NewString()
@@ -46,15 +46,15 @@ func TestNewRepository(t *testing.T) {
 		}
 
 		err = talksRepo.Create(ctx, &talk)
-		assert.NoError(t, err)
-		assert.Equal(t, talk.ID, 3) // the third, as there are two talks in the testdata/dev-db.sql file
+		require.NoError(t, err)
+		require.Equal(t, talk.ID, 3) // the third, as there are two talks in the testdata/dev-db.sql file
 
 		dbTalk, err := talksRepo.GetByUUID(ctx, uid)
-		assert.NoError(t, err)
-		assert.NotNil(t, dbTalk)
-		assert.Equal(t, 3, talk.ID)
-		assert.Equal(t, uid, talk.UUID)
-		assert.Equal(t, title, talk.Title)
+		require.NoError(t, err)
+		require.NotNil(t, dbTalk)
+		require.Equal(t, 3, talk.ID)
+		require.Equal(t, uid, talk.UUID)
+		require.Equal(t, title, talk.Title)
 	})
 
 	t.Run("Exists by UUID", func(t *testing.T) {
@@ -67,16 +67,16 @@ func TestNewRepository(t *testing.T) {
 		}
 
 		err = talksRepo.Create(ctx, &talk)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 
 		found := talksRepo.Exists(ctx, uid)
-		assert.True(t, found)
+		require.True(t, found)
 	})
 
 	t.Run("Does not exist by UUID", func(t *testing.T) {
 		uid := uuid.NewString()
 
 		found := talksRepo.Exists(ctx, uid)
-		assert.False(t, found)
+		require.False(t, found)
 	})
 }

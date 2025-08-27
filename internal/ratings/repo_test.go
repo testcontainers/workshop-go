@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	tcRedis "github.com/testcontainers/testcontainers-go/modules/redis"
@@ -24,7 +23,7 @@ func TestNewRepository(t *testing.T) {
 
 	repo, err := ratings.NewRepository(ctx, connStr)
 	require.NoError(t, err)
-	assert.NotNil(t, repo)
+	require.NotNil(t, repo)
 
 	t.Run("Add rating", func(t *testing.T) {
 		rating := ratings.Rating{
@@ -33,8 +32,8 @@ func TestNewRepository(t *testing.T) {
 		}
 
 		result, err := repo.Add(ctx, rating)
-		assert.NoError(t, err)
-		assert.Equal(t, int64(1), result)
+		require.NoError(t, err)
+		require.Equal(t, int64(1), result)
 	})
 
 	t.Run("Add multiple ratings", func(t *testing.T) {
@@ -53,10 +52,10 @@ func TestNewRepository(t *testing.T) {
 		}
 
 		values := repo.FindAllByUUID(ctx, takUUID)
-		assert.Len(t, values, distribution)
+		require.Len(t, values, distribution)
 
 		for i := 0; i < distribution; i++ {
-			assert.Equal(t, fmt.Sprintf("%d", (max/distribution)), values[fmt.Sprintf("%d", i)])
+			require.Equal(t, fmt.Sprintf("%d", (max/distribution)), values[fmt.Sprintf("%d", i)])
 		}
 	})
 }
