@@ -10,6 +10,7 @@ flowchart LR
     n7 <--> n6["Redpanda"]
     n9 <--> n8["AWS Lambda"]
     n8 <--> n10["Lambda Go"]
+    n7 --> n4
 
     n3@{ shape: tag-proc}
     n2@{ shape: db}
