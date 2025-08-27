@@ -20,7 +20,6 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/workshop-go/internal/app"
 )
@@ -35,7 +34,7 @@ func TestRoutesFailBecauseDependenciesAreNotStarted(t *testing.T) {
 		require.NoError(t, err)
 
 		// we are receiving a 500 because the ratings repository is not started
-		assert.Equal(t, http.StatusInternalServerError, res.StatusCode)
+		require.Equal(t, http.StatusInternalServerError, res.StatusCode)
 	})
 
 	t.Run("POST /ratings fails", func(t *testing.T) {
@@ -51,7 +50,7 @@ func TestRoutesFailBecauseDependenciesAreNotStarted(t *testing.T) {
 		require.NoError(t, err)
 
 		// we are receiving a 500 because the ratings repository is not started
-		assert.Equal(t, http.StatusInternalServerError, res.StatusCode)
+		require.Equal(t, http.StatusInternalServerError, res.StatusCode)
 	})
 }
 
