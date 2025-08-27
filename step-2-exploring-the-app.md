@@ -72,7 +72,9 @@ The API is a [GoFiber](https://gofiber.io/) REST controller and exposes three en
 
 Check `internal/app/handlers.go`.
 
-The sequence diagram for the entire flow is the following:
+The sequence diagram for each flow is the following:
+
+#### POST /talks/{id}/ratings
 
 ```mermaid
 sequenceDiagram
@@ -81,7 +83,6 @@ sequenceDiagram
   participant PG as PostgreSQL (pgx)
   participant RD as Redis (go-redis)
   participant RP as Redpanda (franz-go)
-  participant L as Lambda (HTTP stats)
 
   autonumber
   Client ->> API: POST /talks/{id}/ratings {score}
@@ -91,6 +92,19 @@ sequenceDiagram
   API -->> Client: 201 Created
   Note over RP: Redpanda stores rating events for streaming
   RP ->> RD: INCR rating (callback event)
+```
+
+#### GET /talks/{id}/ratings
+
+```mermaid
+sequenceDiagram
+  participant Client as Client
+  participant API as API Service (GoFiber)
+  participant PG as PostgreSQL (pgx)
+  participant RD as Redis (go-redis)
+  participant L as Lambda (HTTP stats)
+
+  autonumber
   Client ->> API: GET /talks/{id}/stats
   API ->> PG: SELECT * FROM talks WHERE id={id}
   PG -->> API: Talk exists / not found
@@ -98,9 +112,20 @@ sequenceDiagram
   API ->> L: HTTP request for stats (talkId)
   L -->> API: JSON {avg, count, ...}
   API -->> Client: 200 OK {stats}
+```
+
+#### GET /
+
+```mermaid
+sequenceDiagram
+  participant Client as Client
+  participant API as API Service (GoFiber)
+
+  autonumber
   Client ->> API: GET /
   API -->> Client: 200 OK {metadata}
 ```
+
 
 ### 
 [Next: Running the app locally](step-3-running-the-app-locally.md)
