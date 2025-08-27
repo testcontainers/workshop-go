@@ -110,6 +110,7 @@ sequenceDiagram
   API ->> PG: SELECT * FROM talks WHERE id={id}
   PG -->> API: Talk exists / not found
   API ->> RD: Get stats for id={id}
+  RD -->> API: Stats for id={id}
   API ->> L: HTTP request for stats (talkId)
   L -->> API: JSON {avg, count, ...}
   API -->> Client: 200 OK {stats}
