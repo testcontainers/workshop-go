@@ -89,9 +89,10 @@ sequenceDiagram
   API ->> PG: SELECT * FROM talks WHERE id={id}
   PG -->> API: Talk exists / not found
   API ->> RP: Publish rating event (topic: ratings)
+  par Asynchronous callback
+    RP ->> RD: INCR rating (callback event)
+  end
   API -->> Client: 201 Created
-  Note over RP: Redpanda stores rating events for streaming
-  RP ->> RD: INCR rating (callback event)
 ```
 
 #### GET /talks/{id}/ratings
