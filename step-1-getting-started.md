@@ -90,6 +90,8 @@ docker pull postgres:15.3-alpine
 docker pull redis:6-alpine
 docker pull docker.redpanda.com/redpandadata/redpanda:v24.3.7
 docker pull localstack/localstack:latest
+docker pull testcontainers/ryuk:0.13.0
+docker pull public.ecr.aws/lambda/provided:al2
 ```
 
 ### 
